@@ -1,0 +1,65 @@
+{
+  "manifest_version": 2,
+  "name": "Tagesplaner",
+  "description": "Verbindet Termine, datumsbezogene Mails und dauerhafte To-dos in einem Tagesplaner.",
+  "version": "2.0.5",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "daily-planner@example.local",
+      "strict_min_version": "128.0"
+    }
+  },
+  "icons": {
+    "32": "icons/planner.svg",
+    "64": "icons/planner.svg"
+  },
+  "browser_action": {
+    "default_title": "Tagesplaner öffnen",
+    "default_icon": "icons/planner.svg"
+  },
+  "message_display_action": {
+    "default_title": "Mail zum Tagesplaner hinzufügen",
+    "default_label": "Planen",
+    "default_icon": "icons/planner.svg",
+    "default_popup": "popup/action.html"
+  },
+  "options_ui": {
+    "page": "planner/options.html",
+    "open_in_tab": true,
+    "browser_style": false
+  },
+  "background": {
+    "scripts": [
+      "core.js",
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "accountsRead",
+    "alarms",
+    "compose",
+    "menus",
+    "messagesRead",
+    "notifications",
+    "storage",
+    "tabs",
+    "unlimitedStorage",
+    "http://127.0.0.1/*"
+  ],
+  "experiment_apis": {
+    "hour_grid_bridge": {
+      "schema": "api/hourGridBridge/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "hourGridBridge"
+          ]
+        ],
+        "script": "api/hourGridBridge/implementation.js"
+      }
+    }
+  }
+}

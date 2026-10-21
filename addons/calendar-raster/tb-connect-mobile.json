@@ -1,0 +1,10 @@
+{
+  "format": "tb-connect-mobile-package/1",
+  "id": "de.tbconnect.modules.calendar",
+  "entry": "calendar",
+  "version": 3,
+  "renderer": "native",
+  "dataContract": "tb-connect-module-bridge/1",
+  "capabilities": ["calendar.events.read", "calendar.calendars.read", "calendar.access-profiles.read"],
+  "note": "Deskriptives Paket: Die mobile Kalenderansicht ist Teil von TB-Connect Mobil; ein Repository kann keinen Android-Code nachladen."
+}

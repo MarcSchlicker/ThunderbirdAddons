@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "de.tbconnect.modules.calendar",
+  "name": "Kalender",
+  "description": "Thunderbird-Kalender als mobile Agenda. Sichtbare Desktop-Kalender werden automatisch übertragen.",
+  "icon": "icons/calendar-focus.svg",
+  "transport": "tb-connect-module-bridge-v1",
+  "desktop": {
+    "extensionId": "hour-grid-month-view@example.local"
+  },
+  "mobile": {
+    "entry": "calendar",
+    "minimumAppVersion": 2,
+    "package": {
+      "url": "tb-connect-mobile.json"
+    }
+  },
+  "permissions": [
+    "calendar.events.read",
+    "calendar.calendars.read",
+    "calendar.access-profiles.read"
+  ]
+}

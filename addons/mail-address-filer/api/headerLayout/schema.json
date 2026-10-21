@@ -1,0 +1,33 @@
+[
+  {
+    "namespace": "headerLayout",
+    "schema_version": 1,
+    "description": "Adds the filing controls to Thunderbird's message header and compacts native actions.",
+    "functions": [
+      {
+        "name": "start",
+        "type": "function",
+        "description": "Start customizing current and future message header documents.",
+        "parameters": []
+      }
+    ],
+    "events": [
+      {
+        "name": "onAction",
+        "type": "function",
+        "description": "Fired when one of the custom message header buttons is pressed.",
+        "parameters": [
+          {
+            "name": "action",
+            "type": "string",
+            "enum": [
+              "unread",
+              "file",
+              "junk"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

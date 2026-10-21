@@ -1,0 +1,48 @@
+html {
+  min-width: 300px;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font: menu;
+}
+
+form {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+header {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 15px;
+}
+
+p {
+  color: color-mix(in srgb, currentColor 68%, transparent);
+  font-size: 12px;
+}
+
+.hint {
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+button {
+  justify-self: end;
+  padding: 6px 10px;
+}

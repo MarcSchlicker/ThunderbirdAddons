@@ -1,0 +1,69 @@
+{
+  "manifest_version": 2,
+  "name": "Mail-Ablage nach Adresse",
+  "description": "Legt Nachrichten per Knopfdruck in einen je eigener Mailadresse konfigurierten Ordner und markiert sie auf Wunsch als ungelesen.",
+  "version": "1.4.1",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mail-address-filer@example.local",
+      "strict_min_version": "128.0"
+    }
+  },
+  "icons": {
+    "32": "icons/extension.svg",
+    "64": "icons/extension.svg"
+  },
+  "message_display_action": {
+    "default_title": "In den persönlichen Ablageordner verschieben",
+    "default_label": "Ablegen",
+    "default_icon": "icons/file-message.svg",
+    "theme_icons": [
+      {
+        "dark": "icons/file-message.svg",
+        "light": "icons/file-message-light.svg",
+        "size": 16
+      },
+      {
+        "dark": "icons/file-message.svg",
+        "light": "icons/file-message-light.svg",
+        "size": 32
+      }
+    ]
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true,
+    "browser_style": true
+  },
+  "background": {
+    "scripts": [
+      "routing.js",
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "accountsRead",
+    "messagesRead",
+    "messagesMove",
+    "messagesUpdate",
+    "notifications",
+    "storage",
+    "tabs"
+  ],
+  "experiment_apis": {
+    "header_layout": {
+      "schema": "api/headerLayout/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "headerLayout"
+          ]
+        ],
+        "script": "api/headerLayout/implementation.js"
+      }
+    }
+  }
+}

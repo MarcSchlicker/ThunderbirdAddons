@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ansichtsprofil</title>
+    <link rel="stylesheet" href="profile.css">
+  </head>
+  <body>
+    <form id="profile-form">
+      <header>
+        <h1 id="profile-title">Ansichtsprofil</h1>
+        <p>Darstellung und Tagesraster dieses Profils</p>
+      </header>
+
+      <section>
+        <label>
+          <span>Name</span>
+          <input id="profile-name" type="text" autocomplete="off" required>
+        </label>
+
+        <label>
+          <span>Zeitmarkierung</span>
+          <select id="profile-effect">
+            <option value="none">Keine Markierung</option>
+            <option value="work">Arbeitszeit hervorheben</option>
+            <option value="leisure">Freizeit hervorheben</option>
+          </select>
+        </label>
+
+        <div id="work-time-fields" class="field-row">
+          <label>
+            <span>Arbeitszeit von</span>
+            <input id="work-start" type="number" min="0" max="23" step="1">
+          </label>
+          <label>
+            <span>Bis</span>
+            <input id="work-end" type="number" min="1" max="24" step="1">
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tagesraster</h2>
+        <label>
+          <span>Zeitraum</span>
+          <select id="profile-view-mode">
+            <option value="full">24 Stunden</option>
+            <option value="custom">Benutzerdefiniert</option>
+          </select>
+        </label>
+
+        <div id="custom-time-fields" class="field-row" hidden>
+          <label>
+            <span>Von</span>
+            <input id="custom-start" type="number" min="0" max="23" step="1">
+          </label>
+          <label>
+            <span>Bis</span>
+            <input id="custom-end" type="number" min="1" max="24" step="1">
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tage</h2>
+        <div id="profile-weekday-options" class="profile-weekday-options"></div>
+        <label class="profile-check-setting">
+          <input id="profile-compact-weekends" type="checkbox">
+          <span>Wochenende schmaler</span>
+        </label>
+      </section>
+
+      <p id="profile-status" class="status"></p>
+
+      <footer>
+        <button id="delete-profile" class="danger" type="button">Profil entfernen</button>
+        <span class="footer-spacer"></span>
+        <button id="cancel-profile" type="button">Abbrechen</button>
+        <button type="submit">Speichern</button>
+      </footer>
+    </form>
+
+    <script src="i18n.js"></script>
+    <script src="profile.js"></script>
+  </body>
+</html>

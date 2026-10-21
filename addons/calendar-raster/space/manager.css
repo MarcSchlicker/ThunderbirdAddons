@@ -1,0 +1,397 @@
+:root {
+  color-scheme: light dark;
+  --page: Canvas;
+  --text: CanvasText;
+  --muted: color-mix(in srgb, currentColor 62%, transparent);
+  --line: color-mix(in srgb, currentColor 20%, transparent);
+  --strong-line: color-mix(in srgb, currentColor 34%, transparent);
+  --soft: color-mix(in srgb, currentColor 6%, transparent);
+  --accent: #087f8c;
+  --danger: #b3261e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-block-size: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font: menu;
+}
+
+button,
+input,
+select {
+  min-block-size: 32px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--page);
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--strong-line);
+  background: var(--soft);
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+input,
+select {
+  padding: 4px 7px;
+}
+
+.manager-shell {
+  min-block-size: 100vh;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.manager-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 18px;
+  border-block-end: 1px solid var(--line);
+  background: color-mix(in srgb, var(--page) 94%, var(--accent));
+}
+
+.manager-title,
+.header-actions,
+.section-heading,
+.section-actions,
+.dialog-actions {
+  display: flex;
+  align-items: center;
+}
+
+.manager-title {
+  min-inline-size: 0;
+  gap: 11px;
+}
+
+.manager-title img {
+  inline-size: 34px;
+  block-size: 34px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 19px;
+}
+
+h2 {
+  font-size: 15px;
+}
+
+.manager-title p,
+.section-heading p,
+.calendar-meta,
+.security-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.header-actions,
+.section-actions,
+.dialog-actions {
+  gap: 7px;
+}
+
+.primary-command {
+  border-color: color-mix(in srgb, var(--accent) 70%, currentColor);
+  background: var(--accent);
+  color: white;
+}
+
+.primary-command:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 86%, black);
+}
+
+.danger-command {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.icon-command {
+  inline-size: 34px;
+  padding: 0;
+  font-size: 18px;
+}
+
+.manager-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 18px;
+  border-block-end: 1px solid var(--line);
+}
+
+.manager-tab {
+  min-inline-size: 110px;
+  border: 0;
+  border-block-end: 3px solid transparent;
+  border-radius: 0;
+  padding-block: 9px 7px;
+}
+
+.manager-tab.active {
+  border-block-end-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+main {
+  min-block-size: 0;
+}
+
+.manager-panel {
+  display: none;
+  block-size: 100%;
+  overflow: auto;
+  padding: 14px 18px 22px;
+}
+
+.manager-panel.active {
+  display: block;
+}
+
+.panel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-end: 10px;
+}
+
+.manager-search {
+  inline-size: min(360px, 100%);
+}
+
+.manager-search input {
+  inline-size: 100%;
+}
+
+.calendar-count {
+  color: var(--muted);
+}
+
+.managed-calendar-list {
+  display: grid;
+  gap: 8px;
+}
+
+.managed-calendar {
+  display: grid;
+  grid-template-columns: 34px minmax(170px, 1.2fr) minmax(130px, 0.8fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-block-size: 66px;
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--calendar-color, var(--accent));
+  border-radius: 6px;
+  padding: 9px 10px;
+}
+
+.managed-calendar.is-disabled {
+  opacity: 0.68;
+}
+
+.calendar-color-input {
+  inline-size: 30px;
+  block-size: 30px;
+  padding: 2px;
+}
+
+.calendar-main-fields,
+.calendar-state-controls {
+  min-inline-size: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.calendar-name-input {
+  inline-size: 100%;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.calendar-name-input:focus {
+  border-color: var(--accent);
+}
+
+.calendar-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-state-controls label,
+.toggle-setting {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.calendar-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.default-badge {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 22px;
+  border-radius: 3px;
+  padding: 2px 6px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.backup-section {
+  padding: 14px 0 18px;
+  border-block-end: 1px solid var(--line);
+}
+
+.section-heading {
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.backup-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(140px, 1fr));
+  align-items: end;
+  gap: 12px;
+  margin-block-start: 16px;
+}
+
+.backup-form > label:not(.toggle-setting) {
+  display: grid;
+  gap: 5px;
+}
+
+.backup-form select,
+.backup-form input[type="email"] {
+  inline-size: 100%;
+}
+
+.toggle-setting,
+.form-actions {
+  min-block-size: 32px;
+}
+
+.security-note,
+.inline-status {
+  margin-block-start: 10px;
+}
+
+.inline-status {
+  min-block-size: 20px;
+  color: var(--muted);
+}
+
+.inline-status.error {
+  color: var(--danger);
+}
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.dialog-backdrop[hidden] {
+  display: none;
+}
+
+.manager-dialog {
+  inline-size: min(560px, 100%);
+  border: 1px solid var(--strong-line);
+  border-radius: 7px;
+  padding: 15px;
+  background: var(--page);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+}
+
+.manager-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 14px;
+}
+
+.dialog-calendar-name {
+  margin-block-end: 8px;
+  font-weight: 700;
+}
+
+.dialog-actions {
+  justify-content: flex-end;
+  margin-block-start: 18px;
+}
+
+.restore-summary {
+  display: grid;
+  gap: 7px;
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .managed-calendar {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+  }
+
+  .calendar-state-controls {
+    grid-column: 2 / -1;
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+  }
+
+  .backup-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

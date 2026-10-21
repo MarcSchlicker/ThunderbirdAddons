@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mail einplanen</title>
+    <link rel="stylesheet" href="action.css">
+  </head>
+  <body>
+    <header>
+      <img src="../icons/planner.svg" alt="" width="34" height="34">
+      <div>
+        <strong>Mail einplanen</strong>
+        <span>Wann möchtest du sie bearbeiten?</span>
+      </div>
+    </header>
+    <main>
+      <button type="button" data-target="today">
+        <span class="marker today"></span>
+        <span><strong>Heute</strong><small>In den heutigen Tagesplan</small></span>
+      </button>
+      <button type="button" data-target="tomorrow">
+        <span class="marker tomorrow"></span>
+        <span><strong>Morgen</strong><small>In den Plan für morgen</small></span>
+      </button>
+      <button type="button" data-target="someday">
+        <span class="marker someday"></span>
+        <span><strong>Ewige Liste</strong><small>Ohne festes Datum merken</small></span>
+      </button>
+    </main>
+    <form id="custom-date-form">
+      <label for="custom-date">Bestimmtes Datum</label>
+      <div>
+        <input id="custom-date" name="dueDate" type="date" required>
+        <button type="submit">Einplanen</button>
+      </div>
+    </form>
+    <footer>
+      <button id="open-planner" type="button">Tagesplaner öffnen</button>
+      <span id="status" role="status" aria-live="polite"></span>
+    </footer>
+    <script src="action.js"></script>
+  </body>
+</html>

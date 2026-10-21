@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Kalender</title>
+    <link rel="stylesheet" href="month.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="toolbar">
+        <div class="month-picker">
+          <div class="month-buttons" aria-label="Monat auswaehlen">
+            <button id="previous" class="icon-button" type="button" title="Voriger Monat" aria-label="Voriger Monat">&lt;</button>
+            <button id="today" class="icon-button" type="button" title="Dieser Monat" aria-label="Dieser Monat">
+              <img src="../icons/calendar-focus.svg" alt="">
+            </button>
+            <button id="next" class="icon-button" type="button" title="Naechster Monat" aria-label="Naechster Monat">&gt;</button>
+          </div>
+          <h1 id="month-title"></h1>
+        </div>
+
+        <div class="view-controls">
+          <label class="event-search">
+            <span class="visually-hidden">Termine suchen</span>
+            <input id="event-search" type="search" autocomplete="off" placeholder="Suchen">
+          </label>
+          <button id="filter-toggle" class="filter-toggle" type="button" title="Filter" aria-label="Filter" aria-expanded="false">
+            <span class="funnel-icon" aria-hidden="true"></span>
+            <span id="filter-count" class="filter-count" hidden></span>
+          </button>
+          <label>
+            <span>Zeitraum</span>
+            <select id="period-mode">
+              <option value="day">Tag</option>
+              <option value="week">Woche</option>
+              <option value="month">Monat</option>
+              <option value="four-weeks">4 Wochen</option>
+            </select>
+          </label>
+          <label>
+            <span>Profil</span>
+            <select id="view-profile"></select>
+          </label>
+          <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false">
+            Einstellungen
+          </button>
+        </div>
+      </header>
+
+      <section id="filter-panel" class="filter-panel" hidden>
+        <header class="filter-header">
+          <h2>Filter</h2>
+          <button id="reset-filters" type="button">Zuruecksetzen</button>
+        </header>
+        <label class="filter-field">
+          <span>Terminart</span>
+          <select id="filter-event-kind">
+            <option value="all">Alle Termine</option>
+            <option value="timed">Mit Uhrzeit</option>
+            <option value="all-day">Ganztags</option>
+          </select>
+        </label>
+        <section class="filter-person-comparison" aria-labelledby="filter-people-heading">
+          <header>
+            <h3 id="filter-people-heading">Personen</h3>
+            <span>Vergleich</span>
+          </header>
+          <p>Wähle dich und beliebig viele weitere Personen. Jede Auswahl bleibt in ihrer eigenen Farbe sichtbar.</p>
+          <div id="filter-person-options" class="filter-person-options"></div>
+        </section>
+        <details class="filter-group" open>
+          <summary>Kalender</summary>
+          <div id="filter-calendar-options" class="filter-options"></div>
+        </details>
+        <details class="filter-group">
+          <summary>Kategorien</summary>
+          <div id="filter-type-options" class="filter-options"></div>
+        </details>
+      </section>
+
+      <section id="settings-panel" class="settings-panel" hidden>
+        <header class="settings-header">
+          <h2>Einstellungen</h2>
+        </header>
+
+        <section class="settings-section">
+          <div class="settings-subheading">
+            <h3>Ansichtsprofile</h3>
+            <button id="new-view-profile" type="button">Neues Profil</button>
+          </div>
+          <div id="settings-profile-list" class="settings-profile-list"></div>
+        </section>
+
+        <details id="advanced-settings" class="settings-more">
+          <summary>Weitere Einstellungen</summary>
+          <div class="settings-more-content">
+            <label class="check-setting">
+              <span>Darstellung</span>
+              <select id="theme-mode">
+                <option value="system">System</option>
+                <option value="standard">Standard</option>
+                <option value="high-contrast">Hoher Kontrast</option>
+              </select>
+            </label>
+            <label class="check-setting">
+              <span>Akzentfarbe</span>
+              <input id="accent-color" type="color" value="#006fd6">
+            </label>
+            <label class="check-setting">
+              <input id="drag-calendar-move" type="checkbox">
+              <span>Termin auf Kalender ziehen</span>
+            </label>
+            <button id="restore-removed-calendars" type="button" hidden>Entfernte Kalender wieder anzeigen</button>
+              <button id="manage-calendars-settings" type="button">Kalender verwalten und sichern</button>
+              <button id="connect-nextcloud-calendar" type="button">Nextcloud-Kalender verbinden oder anlegen</button>
+            <button id="export-pdf" type="button">Als PDF drucken</button>
+            <button id="diagnose" type="button">Diagnose</button>
+          </div>
+        </details>
+      </section>
+
+      <section class="status-row">
+        <p id="status">Termine werden geladen...</p>
+        <div id="calendar-legend" class="legend"></div>
+      </section>
+
+      <section id="message-bar" class="message-bar" hidden></section>
+
+      <div class="content-pane">
+        <aside class="calendar-sidebar" aria-label="Kalender">
+          <div class="calendar-sidebar-header">
+            <h2>Kalender</h2>
+            <div class="sidebar-header-actions">
+              <button id="manage-calendars" class="sidebar-action" type="button" title="Kalender verwalten" aria-label="Kalender verwalten">&#9881;</button>
+              <button id="add-calendar" class="sidebar-action" type="button" title="Kalender hinzufuegen" aria-label="Kalender hinzufuegen">+</button>
+              <button id="add-calendar-type" class="sidebar-action" type="button" title="Person oder Kategorie hinzufuegen" aria-label="Person oder Kategorie hinzufuegen">&#9671;</button>
+            </div>
+          </div>
+          <div id="leading-edge-days" class="sidebar-edge-days" hidden></div>
+          <div id="calendar-list" class="calendar-list">
+            <details id="calendar-people-panel" class="calendar-people-panel" aria-labelledby="calendar-people-heading">
+              <summary class="calendar-people-header">
+                <span id="calendar-people-heading">Personen des Kalenders</span>
+                <span>Personen</span>
+              </summary>
+              <p class="calendar-people-hint">Augen ein- oder ausschalten, ohne den Vergleichsfilter zu verändern.</p>
+              <input id="calendar-people-search" type="search" placeholder="Person suchen …" aria-label="Personen suchen">
+              <div id="calendar-people-list" class="calendar-people-list"></div>
+            </details>
+          </div>
+          <div id="trailing-edge-days" class="sidebar-edge-days" hidden></div>
+        </aside>
+
+        <main id="calendar-grid" class="calendar-grid" aria-live="polite"></main>
+      </div>
+    </div>
+
+    <div id="calendar-type-dialog-backdrop" class="dialog-backdrop" hidden>
+      <form id="calendar-type-dialog" class="calendar-dialog compact-dialog">
+        <header class="dialog-header">
+          <h2 id="calendar-type-dialog-title">Person oder Kategorie hinzufuegen</h2>
+          <button id="close-calendar-type-dialog" class="icon-button" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+        <input id="calendar-type-id" type="hidden">
+        <p class="dialog-hint">Personen dürfen mehrere gemeinsame Kalender haben. Nicht zugeordnete Kalender gehören automatisch dir. Kategorien wie Urlaub oder Feiertage sind davon unabhängig.</p>
+        <label class="settings-field">
+          <span>Art</span>
+          <select id="calendar-type-kind">
+            <option value="person">Person</option>
+            <option value="category">Kategorie</option>
+          </select>
+        </label>
+        <label id="calendar-type-relationship-field" class="settings-field">
+          <span>Beziehung</span>
+          <select id="calendar-type-relationship">
+            <option value="self">Ich</option>
+            <option value="partner">Partner/in</option>
+            <option value="friend">Freund/in</option>
+            <option value="colleague">Kollege/in</option>
+            <option value="other">Andere Person</option>
+          </select>
+        </label>
+        <label class="settings-field">
+          <span>Name</span>
+          <input id="calendar-type-name" type="text" autocomplete="off" required>
+        </label>
+        <label class="settings-field">
+          <span>Icon</span>
+          <input id="calendar-type-icon" type="text" maxlength="4" autocomplete="off" list="calendar-type-icons" required>
+          <datalist id="calendar-type-icons">
+            <option value="🕯"></option>
+            <option value="★"></option>
+            <option value="●"></option>
+            <option value="⚑"></option>
+            <option value="☀"></option>
+            <option value="✚"></option>
+            <option value="⌂"></option>
+          </datalist>
+        </label>
+        <label class="settings-field">
+          <span>Farbe</span>
+          <input id="calendar-type-color" type="color" value="#087f8c">
+        </label>
+        <label class="settings-field">
+          <span>Darstellung im Kalender</span>
+          <select id="calendar-type-display-mode">
+            <option value="normal">Normal, nur zum Einordnen</option>
+            <option value="birthday">Kompakter Hinweis am Tag</option>
+            <option value="vacation">Urlaubsmarkierung</option>
+          </select>
+        </label>
+        <div id="calendar-type-work-hours" class="dialog-row work-hours">
+          <label class="settings-field">
+            <span>Arbeitszeit von</span>
+            <input id="calendar-type-work-start" type="number" min="0" max="23" value="8">
+          </label>
+          <label class="settings-field">
+            <span>bis</span>
+            <input id="calendar-type-work-end" type="number" min="1" max="24" value="17">
+          </label>
+        </div>
+        <details id="calendar-type-weekday-hours" class="weekday-hours">
+          <summary>Arbeitszeit je Wochentag (erweitert)</summary>
+          <div id="calendar-type-weekday-options" class="weekday-hour-options"></div>
+        </details>
+        <div id="calendar-type-holidays" class="settings-field">
+          <span>Feiertagsregion</span>
+          <button id="calendar-type-holiday-region" type="button">Region wählen oder ändern …</button>
+          <small>Der Feiertagskalender gehört dieser Person und wird unter Urlaub eingeordnet.</small>
+        </div>
+        <div class="dialog-actions">
+          <button type="submit">Speichern</button>
+          <button id="delete-calendar-type" type="button">Entfernen</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="calendar-person-dialog-backdrop" class="dialog-backdrop" hidden>
+      <form id="calendar-person-dialog" class="calendar-dialog compact-dialog">
+        <header class="dialog-header">
+          <h2>Personen dieses Kalenders</h2>
+          <button id="close-calendar-person-dialog" class="icon-button" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+        <p id="calendar-person-dialog-calendar" class="dialog-hint"></p>
+        <div id="calendar-person-options" class="person-options"></div>
+        <div class="dialog-actions">
+          <button type="submit">Speichern</button>
+          <button id="cancel-calendar-person-dialog" type="button">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="day-zoom-backdrop" class="dialog-backdrop day-zoom-backdrop" hidden>
+      <section class="calendar-dialog day-zoom-dialog">
+        <header class="dialog-header">
+          <h2 id="day-zoom-title"></h2>
+          <button id="close-day-zoom" class="icon-button" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+        <div id="day-zoom-content" class="day-zoom-content"></div>
+      </section>
+    </div>
+
+    <div id="event-context-menu" class="event-context-menu" role="menu" hidden>
+      <button id="context-edit-event" type="button" role="menuitem">Bearbeiten</button>
+      <button id="context-duplicate-event" type="button" role="menuitem">Duplizieren</button>
+      <div class="context-menu-separator"></div>
+      <div id="context-calendar-targets" class="context-calendar-targets"></div>
+    </div>
+
+    <div id="action-toast" class="action-toast" aria-live="polite" hidden></div>
+
+    <div id="calendar-dialog-backdrop" class="dialog-backdrop" hidden>
+      <form id="calendar-dialog" class="calendar-dialog">
+        <header class="dialog-header">
+          <h2>Kalender hinzufuegen</h2>
+          <button id="close-calendar-dialog" class="icon-button" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+
+        <section class="dialog-section">
+          <label>
+            <span>Name</span>
+            <input id="calendar-name" type="text" autocomplete="off" placeholder="Mein Kalender">
+          </label>
+          <label>
+            <span>Farbe</span>
+            <input id="calendar-color" type="color" value="#006fd6">
+          </label>
+          <label>
+            <span>iCal/Webcal-Adresse</span>
+            <input id="calendar-url" type="url" autocomplete="off" placeholder="https://.../calendar.ics">
+          </label>
+          <div class="dialog-actions">
+            <button id="save-url-calendar" type="submit">Speichern</button>
+            <button id="import-file-calendar" type="button">ICS-Datei importieren</button>
+            <input id="calendar-file" type="file" accept=".ics,text/calendar" hidden>
+          </div>
+        </section>
+
+        <section class="dialog-section">
+          <div class="dialog-row">
+            <strong>Aus Thunderbird uebernehmen</strong>
+            <button id="detect-thunderbird-calendars" type="button">Suchen</button>
+          </div>
+          <div id="thunderbird-calendar-list" class="detected-calendar-list"></div>
+        </section>
+
+        <p id="calendar-dialog-status" class="dialog-status"></p>
+      </form>
+    </div>
+
+    <div id="diagnose-dialog-backdrop" class="dialog-backdrop" hidden>
+      <section class="calendar-dialog diagnose-dialog">
+        <header class="dialog-header">
+          <h2>Kalender-Diagnose</h2>
+          <button id="close-diagnose-dialog" class="icon-button" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+        <pre id="diagnose-output" class="diagnose-output"></pre>
+      </section>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="month.js"></script>
+  </body>
+</html>

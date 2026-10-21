@@ -1,0 +1,10 @@
+{
+  "format": "tb-connect-mobile-package/1",
+  "id": "de.tbconnect.modules.daily-planner",
+  "entry": "daily-planner",
+  "version": 2,
+  "renderer": "native",
+  "dataContract": "tb-connect-module-bridge/1",
+  "capabilities": ["planner.state.read", "planner.state.write"],
+  "note": "Deskriptives Paket: TB-Connect Mobil nutzt seine eingebaute Tagesplaner-Ansicht und führt keinen Repository-Code aus."
+}

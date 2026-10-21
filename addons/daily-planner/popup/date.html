@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mail für ein Datum einplanen</title>
+    <link rel="stylesheet" href="date.css">
+  </head>
+  <body>
+    <header>
+      <img src="../icons/planner.svg" alt="" width="42" height="42">
+      <div>
+        <p>MAIL EINPLANEN</p>
+        <h1>Datum auswählen</h1>
+      </div>
+    </header>
+    <form id="date-form">
+      <label for="due-date">Die ausgewählte Mail erscheint an diesem Tag im Tagesplaner:</label>
+      <input id="due-date" type="date" required autofocus>
+      <p id="status" role="status" aria-live="polite"></p>
+      <div class="actions">
+        <button id="cancel" type="button">Abbrechen</button>
+        <button class="primary" type="submit">Einplanen</button>
+      </div>
+    </form>
+    <script src="date.js"></script>
+  </body>
+</html>

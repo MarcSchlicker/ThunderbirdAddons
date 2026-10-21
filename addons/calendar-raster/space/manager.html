@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Kalenderverwaltung</title>
+    <link rel="stylesheet" href="manager.css">
+  </head>
+  <body>
+    <div class="manager-shell">
+      <header class="manager-header">
+        <div class="manager-title">
+          <img src="../icons/calendar-focus.svg" alt="">
+          <div>
+            <h1 data-i18n="managerTitle">Kalenderverwaltung</h1>
+            <p data-i18n="managerSubtitle">Kalender und Sicherungen</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="refresh-calendars" class="icon-command" type="button" title="Aktualisieren" aria-label="Aktualisieren">&#8635;</button>
+          <button id="add-managed-calendar" class="primary-command" type="button" data-i18n="addCalendar">Kalender hinzufuegen</button>
+        </div>
+      </header>
+
+      <nav class="manager-tabs" aria-label="Bereiche">
+        <button class="manager-tab active" type="button" data-panel="calendars" data-i18n="calendars">Kalender</button>
+        <button class="manager-tab" type="button" data-panel="backup" data-i18n="backup">Sicherung</button>
+      </nav>
+
+      <main>
+        <section id="calendars-panel" class="manager-panel active">
+          <div class="panel-toolbar">
+            <label class="manager-search">
+              <span class="visually-hidden" data-i18n="searchCalendars">Kalender suchen</span>
+              <input id="calendar-search" type="search" autocomplete="off" placeholder="Kalender suchen">
+            </label>
+            <span id="calendar-count" class="calendar-count"></span>
+          </div>
+          <div id="calendar-manager-status" class="inline-status" aria-live="polite"></div>
+          <div id="managed-calendar-list" class="managed-calendar-list"></div>
+        </section>
+
+        <section id="backup-panel" class="manager-panel">
+          <section class="backup-section">
+            <div class="section-heading">
+              <div>
+                <h2 data-i18n="localBackup">Lokale Sicherung</h2>
+                <p data-i18n="backupScope">Ansichtsprofile, Kalendertypen, Sichtbarkeit und Add-on-Einstellungen</p>
+              </div>
+              <div class="section-actions">
+                <button id="download-backup" type="button" data-i18n="downloadBackup">Sicherung herunterladen</button>
+                <button id="choose-backup" type="button" data-i18n="restoreBackup">Sicherung wiederherstellen</button>
+                <input id="backup-file" type="file" accept=".json,application/json" hidden>
+              </div>
+            </div>
+            <p class="security-note" data-i18n="securityNote">Passwoerter, OAuth-Tokens und gespeicherte Anmeldedaten werden nicht exportiert.</p>
+          </section>
+
+          <section class="backup-section">
+            <div class="section-heading">
+              <div>
+                <h2 data-i18n="emailBackup">E-Mail-Sicherung</h2>
+                <p data-i18n="emailBackupSubtitle">Sicherung als JSON-Anhang</p>
+              </div>
+              <div class="section-actions">
+                <button id="prepare-backup-email" type="button" data-i18n="prepareEmail">E-Mail vorbereiten</button>
+                <button id="send-backup-now" type="button" data-i18n="sendNow">Jetzt senden</button>
+              </div>
+            </div>
+
+            <form id="backup-settings-form" class="backup-form">
+              <label>
+                <span data-i18n="sender">Absender</span>
+                <select id="backup-identity"></select>
+              </label>
+              <label>
+                <span data-i18n="recipient">Zieladresse</span>
+                <input id="backup-recipient" type="email" autocomplete="email" placeholder="name@example.org">
+              </label>
+              <label>
+                <span data-i18n="interval">Intervall</span>
+                <select id="backup-interval">
+                  <option value="daily" data-i18n="daily">Taeglich</option>
+                  <option value="weekly" data-i18n="weekly">Woechentlich</option>
+                  <option value="monthly" data-i18n="monthly">Monatlich</option>
+                </select>
+              </label>
+              <label class="toggle-setting">
+                <input id="automatic-email-backup" type="checkbox">
+                <span data-i18n="automaticEmail">Automatisch per E-Mail senden</span>
+              </label>
+              <div class="form-actions">
+                <button class="primary-command" type="submit" data-i18n="saveSchedule">Zeitplan speichern</button>
+              </div>
+            </form>
+            <div id="backup-status" class="inline-status" aria-live="polite"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="remove-dialog-backdrop" class="dialog-backdrop" hidden>
+      <section class="manager-dialog" role="dialog" aria-modal="true" aria-labelledby="remove-dialog-title">
+        <header>
+          <h2 id="remove-dialog-title" data-i18n="removeCalendar">Kalender entfernen</h2>
+          <button id="close-remove-dialog" class="icon-command" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+        <p id="remove-calendar-name" class="dialog-calendar-name"></p>
+        <p id="remove-warning" data-i18n="removeWarning">Diese Aktion wirkt direkt auf Thunderbirds Kalenderverwaltung.</p>
+        <div class="dialog-actions">
+          <button id="unsubscribe-calendar" type="button" data-i18n="unsubscribe">Nur abmelden</button>
+          <button id="delete-calendar-data" class="danger-command" type="button" data-i18n="deleteData">Kalender und lokale Daten loeschen</button>
+          <button id="cancel-remove" type="button" data-i18n="cancel">Abbrechen</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="restore-dialog-backdrop" class="dialog-backdrop" hidden>
+      <section class="manager-dialog" role="dialog" aria-modal="true" aria-labelledby="restore-dialog-title">
+        <header>
+          <h2 id="restore-dialog-title" data-i18n="restoreBackup">Sicherung wiederherstellen</h2>
+          <button id="close-restore-dialog" class="icon-command" type="button" aria-label="Schliessen">&times;</button>
+        </header>
+        <div id="restore-summary" class="restore-summary"></div>
+        <div class="dialog-actions">
+          <button id="confirm-restore" class="primary-command" type="button" data-i18n="restore">Wiederherstellen</button>
+          <button id="cancel-restore" type="button" data-i18n="cancel">Abbrechen</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="manager.js"></script>
+  </body>
+</html>

@@ -1,0 +1,304 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --accent: #175f70;
+  --accent-strong: #0d4b59;
+  --surface: color-mix(in srgb, Canvas 94%, #dcecf0 6%);
+  --surface-raised: color-mix(in srgb, Canvas 98%, #ffffff 2%);
+  --line: color-mix(in srgb, CanvasText 18%, transparent);
+  --muted: color-mix(in srgb, CanvasText 62%, transparent);
+  --success: #26734d;
+  --danger: #b52f29;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 680px;
+  background:
+    radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 33rem),
+    Canvas;
+  color: CanvasText;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(920px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0 64px;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.hero-icon {
+  display: grid;
+  width: 78px;
+  height: 78px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--accent) 12%, Canvas);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.hero-icon img {
+  width: 48px;
+  height: 48px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 7px;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+h2 {
+  margin-bottom: 4px;
+  font-size: 1.14rem;
+}
+
+.intro,
+.action-explainer p,
+.mapping-meta,
+.hint {
+  color: var(--muted);
+}
+
+.intro {
+  max-width: 680px;
+  margin-bottom: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.action-explainer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.action-explainer article {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.action-explainer img {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+}
+
+.action-explainer p {
+  margin-bottom: 0;
+  line-height: 1.45;
+}
+
+.settings-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface-raised);
+  box-shadow: 0 22px 55px color-mix(in srgb, #000000 10%, transparent);
+}
+
+.section-heading,
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+}
+
+.section-heading {
+  border-bottom: 1px solid var(--line);
+}
+
+.section-heading h2 {
+  margin-bottom: 0;
+  font-size: 1.35rem;
+}
+
+.mapping-list {
+  display: grid;
+}
+
+.mapping-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(300px, 1.2fr);
+  gap: 24px;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.mapping-address {
+  margin-bottom: 3px;
+  font-weight: 720;
+  overflow-wrap: anywhere;
+}
+
+.mapping-meta {
+  margin-bottom: 0;
+  font-size: 0.86rem;
+}
+
+.folder-field {
+  display: grid;
+  gap: 6px;
+}
+
+.folder-field label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+select {
+  width: 100%;
+  min-height: 40px;
+  padding: 7px 38px 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: Canvas;
+  color: CanvasText;
+}
+
+select:focus-visible,
+button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+button {
+  min-height: 38px;
+  padding: 8px 15px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 680;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.primary-button {
+  background: var(--accent);
+  color: white;
+}
+
+.primary-button:not(:disabled):hover {
+  background: var(--accent-strong);
+}
+
+.secondary-button {
+  border-color: var(--line);
+  background: color-mix(in srgb, Canvas 88%, var(--accent) 12%);
+  color: CanvasText;
+}
+
+.settings-actions {
+  min-height: 82px;
+}
+
+#status {
+  margin: 0;
+  color: var(--muted);
+}
+
+#status.success {
+  color: var(--success);
+}
+
+#status.error {
+  color: var(--danger);
+}
+
+.empty-state {
+  padding: 36px 24px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  text-align: center;
+}
+
+.hint {
+  margin: 16px 2px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.hint strong {
+  color: CanvasText;
+}
+
+@media (max-width: 760px) {
+  body {
+    min-width: 0;
+  }
+
+  .page-shell {
+    width: min(100% - 24px, 920px);
+    padding-top: 24px;
+  }
+
+  .hero {
+    align-items: flex-start;
+  }
+
+  .hero-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+  }
+
+  .hero-icon img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .action-explainer {
+    grid-template-columns: 1fr;
+  }
+
+  .mapping-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

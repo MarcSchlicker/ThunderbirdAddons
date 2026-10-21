@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tagesplaner</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <img src="../icons/planner.svg" alt="" width="44" height="44">
+          <div>
+            <p class="eyebrow">THUNDERBIRD</p>
+            <h1>Tagesplaner</h1>
+            <p id="date-span" class="date-span"></p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <span id="sync-status" class="sync-status" aria-live="polite">Wird geladen …</span>
+          <span id="mobile-sync-status" class="mobile-sync-status" aria-live="polite">Hub: wird geprüft …</span>
+          <button id="refresh-button" class="icon-button" type="button" title="Aktualisieren" aria-label="Aktualisieren">
+            <span aria-hidden="true">↻</span>
+          </button>
+          <button id="settings-button" class="primary-button" type="button">Einstellungen</button>
+        </div>
+      </header>
+
+      <div id="calendar-warning" class="warning" hidden></div>
+
+      <main>
+        <section id="overdue-card" class="day-card overdue-card" hidden>
+          <header class="day-heading">
+            <div>
+              <p class="day-kicker">ÜBERFÄLLIG</p>
+              <h2>Überfällige Mails &amp; Aufgaben</h2>
+              <p class="card-description">Offene Einträge mit verstrichenem Datum stehen hier ganz oben.</p>
+            </div>
+            <span id="overdue-count" class="count-badge">0 offen</span>
+          </header>
+          <section class="content-section">
+            <div id="overdue-items" class="item-list"></div>
+          </section>
+        </section>
+
+        <div class="planner-columns">
+          <div class="planner-column day-column">
+          <article class="day-card is-today" data-day="today">
+            <header class="day-heading">
+              <div>
+                <p class="day-kicker">HEUTE</p>
+                <h2 id="today-title">Heute</h2>
+              </div>
+              <span id="today-count" class="count-badge">0 offen</span>
+            </header>
+
+            <section class="content-section events-section">
+              <div class="section-heading">
+                <h3>Termine</h3>
+                <span id="today-event-count" class="section-count"></span>
+              </div>
+              <div id="today-events" class="event-list"></div>
+            </section>
+
+            <section class="content-section">
+              <div class="section-heading">
+                <h3>Eingeplante Mails</h3>
+                <span id="today-email-count" class="section-count"></span>
+              </div>
+              <div id="today-emails" class="item-list"></div>
+            </section>
+
+            <section class="content-section tasks-section">
+              <div class="section-heading">
+                <h3>Aufgaben</h3>
+                <span id="today-task-count" class="section-count"></span>
+              </div>
+              <div id="today-tasks" class="item-list"></div>
+              <form class="task-form" data-target="today">
+                <input name="text" type="text" maxlength="500" placeholder="Aufgabe für heute …" required>
+                <input name="emailAddress" type="email" maxlength="320" placeholder="E-Mail-Bezug (optional)">
+                <input name="dueDate" type="date" aria-label="Datum der Aufgabe">
+                <button type="submit" aria-label="Aufgabe hinzufügen">+</button>
+              </form>
+            </section>
+          </article>
+
+          <article class="day-card is-tomorrow" data-day="tomorrow">
+            <header class="day-heading">
+              <div>
+                <p class="day-kicker">MORGEN</p>
+                <h2 id="tomorrow-title">Morgen</h2>
+              </div>
+              <span id="tomorrow-count" class="count-badge">0 offen</span>
+            </header>
+
+            <section class="content-section events-section">
+              <div class="section-heading">
+                <h3>Termine</h3>
+                <span id="tomorrow-event-count" class="section-count"></span>
+              </div>
+              <div id="tomorrow-events" class="event-list"></div>
+            </section>
+
+            <section class="content-section">
+              <div class="section-heading">
+                <h3>Eingeplante Mails</h3>
+                <span id="tomorrow-email-count" class="section-count"></span>
+              </div>
+              <div id="tomorrow-emails" class="item-list"></div>
+            </section>
+
+            <section class="content-section tasks-section">
+              <div class="section-heading">
+                <h3>Aufgaben</h3>
+                <span id="tomorrow-task-count" class="section-count"></span>
+              </div>
+              <div id="tomorrow-tasks" class="item-list"></div>
+              <form class="task-form" data-target="tomorrow">
+                <input name="text" type="text" maxlength="500" placeholder="Aufgabe für morgen …" required>
+                <input name="emailAddress" type="email" maxlength="320" placeholder="E-Mail-Bezug (optional)">
+                <input name="dueDate" type="date" aria-label="Datum der Aufgabe">
+                <button type="submit" aria-label="Aufgabe hinzufügen">+</button>
+              </form>
+            </section>
+          </article>
+          </div>
+
+          <div class="planner-column list-column">
+            <article class="day-card is-someday" data-day="someday">
+              <header class="day-heading">
+                <div>
+                  <p class="day-kicker">OHNE TERMIN</p>
+                  <h2>Ewige To-do-Liste</h2>
+                  <p class="card-description">Alles Wichtige, das noch keinen festen Tag braucht.</p>
+                </div>
+                <span id="someday-count" class="count-badge">0 offen</span>
+              </header>
+
+              <section class="content-section">
+                <div class="section-heading">
+                  <h3>Gemerkte Mails</h3>
+                  <span id="someday-email-count" class="section-count"></span>
+                </div>
+                <div id="someday-emails" class="item-list"></div>
+                <p class="mail-hint">Mails hierher legen: Rechtsklick auf eine Mail → <strong>Zum Tagesplaner</strong> → <strong>Auf die ewige Liste</strong>.</p>
+              </section>
+
+              <section class="content-section tasks-section">
+                <div class="section-heading">
+                  <h3>Aufgaben</h3>
+                  <span id="someday-task-count" class="section-count"></span>
+                </div>
+                <div id="someday-tasks" class="item-list"></div>
+                <form class="task-form" data-target="someday">
+                  <input name="text" type="text" maxlength="500" placeholder="Dauerhafte Aufgabe …" required>
+                  <input name="emailAddress" type="email" maxlength="320" placeholder="E-Mail-Bezug (optional)">
+                  <input name="dueDate" type="date" aria-label="Optionales Datum der Aufgabe">
+                  <button type="submit" aria-label="Aufgabe hinzufügen">+</button>
+                </form>
+              </section>
+            </article>
+
+            <section id="scheduled-card" class="day-card scheduled-card" hidden>
+              <header class="day-heading">
+                <div>
+                  <p class="day-kicker">SPÄTER</p>
+                  <h2>Zukünftige Mails &amp; Aufgaben</h2>
+                  <p class="card-description">Alle Einträge nach morgen, nach Datum sortiert.</p>
+                </div>
+                <span id="scheduled-count" class="count-badge">0 offen</span>
+              </header>
+              <section class="content-section">
+                <div id="scheduled-items" class="item-list"></div>
+              </section>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <dialog id="settings-dialog">
+      <form id="settings-form" method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">AUTOMATISCHER TAGESSTART</p>
+            <h2>Einstellungen</h2>
+          </div>
+          <button id="close-settings" class="icon-button" type="button" aria-label="Schließen">×</button>
+        </div>
+
+        <label class="toggle-row">
+          <span>
+            <strong>Beim Start von Thunderbird öffnen</strong>
+            <small>Wechselt nach jedem Programmstart im aktuell ausgewählten Thunderbird-Tab zum Tagesplaner.</small>
+          </span>
+          <input id="open-on-startup" type="checkbox">
+        </label>
+
+        <label class="field-row" for="reminder-times">
+          <span>
+            <strong>Tägliche Uhrzeiten</strong>
+            <small>Mehrere Zeiten mit Komma trennen, zum Beispiel 08:00, 13:00.</small>
+          </span>
+          <input id="reminder-times" type="text" inputmode="numeric" placeholder="08:00, 13:00">
+        </label>
+
+        <label class="toggle-row">
+          <span>
+            <strong>Erledigte Einträge anzeigen</strong>
+            <small>Abgehakte Aufgaben bleiben gespeichert und durchgestrichen.</small>
+          </span>
+          <input id="show-completed" type="checkbox">
+        </label>
+
+        <p class="permission-note">Termine werden nur aus den Kalendern gelesen, die in Thunderbird sichtbar sind. Aufgaben und Mail-Verweise bleiben lokal in diesem Thunderbird-Profil.</p>
+
+        <div class="dialog-actions">
+          <button id="cancel-settings" class="secondary-button" type="button">Abbrechen</button>
+          <button class="primary-button" type="submit">Speichern</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="mobile-sync-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">LOKALE VERBINDUNG</p>
+          <h2>Handy verbinden</h2>
+        </div>
+        <button id="close-mobile-sync" class="icon-button" type="button" aria-label="Schließen">×</button>
+      </div>
+      <div class="mobile-sync-content">
+        <p><strong>1.</strong> Öffne Zeitklar auf deinem Handy.</p>
+        <p><strong>2.</strong> Tippe dort auf <strong>„Mit Thunderbird verbinden“</strong>.</p>
+        <p class="mobile-address-hint">Zeitklar findet diesen Thunderbird automatisch über WLAN, WireGuard/VPN oder Bluetooth-Tethering. Die Suche bleibt fünf Minuten bereit.</p>
+        <p id="mobile-connection-detail" class="permission-note">Warte auf dein Handy …</p>
+        <details id="mobile-advanced-pairing" class="mobile-advanced-pairing">
+          <summary>QR-Code nur verwenden, falls die automatische Suche nicht klappt</summary>
+          <div class="mobile-advanced-content">
+            <label class="field-row" for="mobile-address">
+              <span>
+                <strong>Netzwerk</strong>
+                <small>Als Ausweichlösung wählst du die erreichbare WLAN-, VPN- oder Bluetooth-PAN-Adresse des PCs.</small>
+              </span>
+              <select id="mobile-address" aria-label="Netzwerkadresse für das Handy"></select>
+            </label>
+            <input id="mobile-manual-address" class="mobile-manual-address" type="text" inputmode="decimal" autocomplete="off" placeholder="Private IPv4-Adresse des PCs">
+            <div id="mobile-qr" class="mobile-qr" aria-label="Kopplungs-QR-Code"></div>
+            <label class="mobile-code-label" for="mobile-pairing-code">Oder Code kopieren</label>
+            <textarea id="mobile-pairing-code" class="mobile-pairing-code" readonly></textarea>
+          </div>
+        </details>
+      </div>
+      <div class="dialog-actions">
+        <button id="restart-mobile-pairing" class="secondary-button" type="button">Suche neu starten</button>
+        <button id="close-mobile-sync-bottom" class="primary-button" type="button">Fertig</button>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <script src="../vendor/qrcode.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+# Build-Ausgaben und lokale Entwicklungsdaten
+/dist/
+**/build/
+**/release/
+*.xpi
+*.zip
+*.log
+node_modules/
+.env
+.env.*
+**/*.sqlite
+**/*.sqlite-*
+**/prefs.js
+**/parent.lock
+.DS_Store
+Thumbs.db

@@ -1,0 +1,58 @@
+{
+  "manifest_version": 2,
+  "default_locale": "de",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version": "1.4.13",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "hour-grid-month-view@example.local",
+      "strict_min_version": "128.0"
+    }
+  },
+  "icons": {
+    "32": "icons/calendar-focus.svg"
+  },
+  "browser_action": {
+    "default_title": "__MSG_openCalendar__",
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/calendar-focus.svg"
+  },
+  "options_ui": {
+    "page": "popup/popup.html",
+    "open_in_tab": false,
+    "browser_style": true
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "accountsRead",
+    "compose",
+    "compose.send",
+    "unlimitedStorage",
+    "https://*/*",
+    "http://*/*"
+  ],
+  "experiment_apis": {
+    "hour_grid_bridge": {
+      "schema": "api/hourGridBridge/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "hourGridBridge"
+          ]
+        ],
+        "script": "api/hourGridBridge/implementation.js"
+      }
+    }
+  }
+}

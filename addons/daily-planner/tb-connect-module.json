@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "de.tbconnect.modules.daily-planner",
+  "name": "Tagesplaner",
+  "description": "Aufgaben, Termine und eingeplante Mails auf TB-Connect Desktop und Mobilgeräten.",
+  "icon": "icons/planner.svg",
+  "transport": "tb-connect-module-bridge-v1",
+  "desktop": {
+    "extensionId": "daily-planner@example.local"
+  },
+  "mobile": {
+    "entry": "daily-planner",
+    "minimumAppVersion": 2,
+    "package": {
+      "url": "tb-connect-mobile.json"
+    }
+  },
+  "permissions": [
+    "planner.state.read",
+    "planner.state.write"
+  ]
+}

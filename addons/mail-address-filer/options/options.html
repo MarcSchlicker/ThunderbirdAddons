@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mail-Ablage konfigurieren</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div class="hero-icon" aria-hidden="true">
+          <img src="../icons/extension.svg" alt="">
+        </div>
+        <div>
+          <p class="eyebrow">Thunderbird-Erweiterung</p>
+          <h1>Persönliche Mail-Ablage</h1>
+          <p class="intro">
+            Lege für jede eigene Mailadresse fest, in welchen Ordner der
+            <strong>Ablegen</strong>-Knopf Nachrichten verschiebt.
+          </p>
+        </div>
+      </header>
+
+      <section class="action-explainer" aria-label="Funktionen">
+        <article>
+          <img src="../icons/file-message.svg" alt="">
+          <div>
+            <h2>Ablegen</h2>
+            <p>Verschiebt die ausgewählte oder geöffnete Mail in den unten gewählten Ordner. Mehrere Mails werden vorher als gelesen markiert.</p>
+          </div>
+        </article>
+        <article>
+          <img src="../icons/mark-unread.svg" alt="">
+          <div>
+            <h2>Ungelesen</h2>
+            <p>Markiert die ausgewählte oder geöffnete Mail direkt in der Nachrichten-Knopfzeile wieder als ungelesen.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-card" aria-labelledby="mapping-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Zuordnung</p>
+            <h2 id="mapping-title">Zielordner je Mailadresse</h2>
+          </div>
+          <button id="reload" class="secondary-button" type="button">Neu laden</button>
+        </div>
+
+        <div id="loading" class="empty-state">Konten und Ordner werden geladen …</div>
+        <div id="mapping-list" class="mapping-list" hidden></div>
+        <div id="no-identities" class="empty-state" hidden>
+          Es wurden keine eigenen Mailadressen in Thunderbird gefunden.
+        </div>
+
+        <footer class="settings-actions">
+          <p id="status" role="status" aria-live="polite"></p>
+          <button id="save" class="primary-button" type="button" disabled>
+            Einstellungen speichern
+          </button>
+        </footer>
+      </section>
+
+      <aside class="hint">
+        <strong>Hinweis:</strong> Bei mehreren markierten Mails prüft die Erweiterung
+        zuerst alle Zuordnungen. Fehlt ein Ziel, wird keine der Mails verschoben.
+      </aside>
+    </main>
+
+    <script src="../routing.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

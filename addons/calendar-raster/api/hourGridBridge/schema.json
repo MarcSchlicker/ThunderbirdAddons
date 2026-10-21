@@ -1,0 +1,167 @@
+[
+  {
+    "namespace": "hourGridBridge",
+    "schema_version": 1,
+    "description": "Reads Thunderbird calendar data for the 24h month view.",
+    "functions": [
+      {
+        "name": "getMonthData",
+        "type": "function",
+        "async": true,
+        "description": "Get events for the visible grid of a month.",
+        "parameters": [
+          {
+            "name": "year",
+            "type": "integer",
+            "minimum": 1970,
+            "maximum": 9999
+          },
+          {
+            "name": "month",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          {
+            "name": "weekStartsOn",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6,
+            "optional": true
+          }
+        ]
+      },
+      {
+        "name": "listCalendars",
+        "type": "function",
+        "async": true,
+        "description": "List visible calendars.",
+        "parameters": []
+      },
+      {
+        "name": "getBridgeStatus",
+        "type": "function",
+        "async": true,
+        "description": "Return a minimal self-test from the Thunderbird-side bridge.",
+        "parameters": []
+      },
+      {
+        "name": "diagnoseCalendars",
+        "type": "function",
+        "async": true,
+        "description": "Collect Thunderbird calendar diagnostics.",
+        "parameters": []
+      },
+      {
+        "name": "openEventEditor",
+        "type": "function",
+        "async": true,
+        "description": "Open Thunderbird's regular event editor for an event.",
+        "parameters": [
+          {
+            "name": "eventRefJson",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "createEvent",
+        "type": "function",
+        "async": true,
+        "description": "Open Thunderbird's regular editor for a new event.",
+        "parameters": [
+          {
+            "name": "eventRefJson",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "moveEvent",
+        "type": "function",
+        "async": true,
+        "description": "Move an event through Thunderbird's calendar controller.",
+        "parameters": [
+          {
+            "name": "eventRefJson",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "duplicateEvent",
+        "type": "function",
+        "async": true,
+        "description": "Open Thunderbird's regular event editor with a copied event.",
+        "parameters": [
+          {
+            "name": "eventRefJson",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "moveEventToCalendar",
+        "type": "function",
+        "async": true,
+        "description": "Move an event to another Thunderbird calendar.",
+        "parameters": [
+          {
+            "name": "eventRefJson",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "openCalendarWizard",
+        "type": "function",
+        "async": true,
+        "description": "Open Thunderbird's regular calendar creation assistant.",
+        "parameters": []
+      },
+      {
+        "name": "getCalendarManagementData",
+        "type": "function",
+        "async": true,
+        "description": "List calendars with management capabilities.",
+        "parameters": []
+      },
+      {
+        "name": "updateCalendar",
+        "type": "function",
+        "async": true,
+        "description": "Update calendar properties.",
+        "parameters": [
+          {
+            "name": "calendarJson",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "openCalendarProperties",
+        "type": "function",
+        "async": true,
+        "description": "Open Thunderbird's advanced calendar properties dialog.",
+        "parameters": [
+          {
+            "name": "calendarId",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "removeCalendar",
+        "type": "function",
+        "async": true,
+        "description": "Unsubscribe from a calendar or delete its provider data.",
+        "parameters": [
+          {
+            "name": "calendarJson",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "Kalender Raster"
+  },
+  "extensionDescription": {
+    "message": "Erweitert Thunderbird um eine Monatsansicht mit Stundenraster, Kalendergruppen und Ansichtsprofilen."
+  },
+  "openCalendar": {
+    "message": "Kalender oeffnen"
+  }
+}

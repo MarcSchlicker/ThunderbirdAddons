@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "Calendar Grid"
+  },
+  "extensionDescription": {
+    "message": "Adds a monthly calendar view with a time grid, calendar groups, and view profiles to Thunderbird."
+  },
+  "openCalendar": {
+    "message": "Open calendar"
+  }
+}
