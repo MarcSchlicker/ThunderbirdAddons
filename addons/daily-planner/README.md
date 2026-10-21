@@ -36,4 +36,4 @@ node ./tests/core.test.js
 ./build-xpi.ps1 -OutputPath ./build/Tagesplaner.xpi
 ```
 
-Die Oberfläche läuft als Thunderbird-Erweiterung und enthält keine fingierte Browser-Datenquelle. Kalenderzugriff und optionale lokale Geräteverbindungen verwenden eine interne Thunderbird-Experiment-Schnittstelle. Automatisierte Tests ersetzen keine Bedienprüfung in Thunderbird.
+Kalenderzugriff und optionale lokale Geräteverbindungen verwenden eine interne Thunderbird-Experiment-Schnittstelle. Automatisierte Tests ersetzen keine Bedienprüfung in Thunderbird.
