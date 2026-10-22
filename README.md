@@ -6,9 +6,9 @@ Drei eigenständige Erweiterungen für Thunderbird. Jede lässt sich einzeln ins
 
 | Erweiterung | Dafür ist sie da | Quellstand |
 | --- | --- | --- |
-| [Kalender Raster](addons/calendar-raster/README.md) | Kalender im Zeitraster, Ansichtsprofile, Personenvergleich und Arbeitszeiten | 1.4.13 |
-| [Tagesplaner](addons/daily-planner/README.md) | Termine, Aufgaben mit Notizen und eingeplante Nachrichten in einer Übersicht | 2.0.5 |
-| [Mail-Ablage nach Adresse](addons/mail-address-filer/README.md) | Nachrichten anhand der eigenen Mailadresse in zugeordnete Ordner verschieben | 1.4.1 |
+| [Kalender Raster](addons/calendar-raster/README.md) | Kalender im Zeitraster, Ansichtsprofile, Personenvergleich und Arbeitszeiten | 1.4.15 |
+| [Tagesplaner](addons/daily-planner/README.md) | Termine, Aufgaben mit Notizen und eingeplante Nachrichten in einer Übersicht | 2.0.6 |
+| [Mail-Ablage nach Adresse](addons/mail-address-filer/README.md) | Nachrichten anhand der eigenen Mailadresse in zugeordnete Ordner verschieben | 1.4.2 |
 
 ## Schnellstart
 
@@ -51,6 +51,10 @@ Optionale Funktionen haben eigene Datenwege:
 - **Feiertage:** Kalender Raster fragt Land, Region und Zeitraum bei [OpenHolidays](https://www.openholidaysapi.org/de/) ab. Die Feiertagsdaten stehen unter ODbL.
 - **Sicherungen:** Kalender Raster kann Sicherungen exportieren und nach Einrichtung per E-Mail versenden. Dabei können Kalenderdaten übertragen werden.
 - **Geräteabgleich:** Tagesplaner und Kalender können mit einem separat installierten **TB-Connect Modul-Hub** zusammenarbeiten. Hub, Nextcloud-Anmeldung und Android-App sind nicht Teil dieses Repositories. Die drei Desktop-Erweiterungen funktionieren ohne diese Zusatzkomponenten.
+
+## Diagnose in Testpaketen
+
+Release-Namen mit Präfix `test_` aktivieren einen Knopf für lokale technische Prüfungen und bereinigte JSON-Protokolle. Normale Pakete bleiben deaktiviert. [Buildschalter, Bedienung und Grenzen](docs/DIAGNOSTICS.md).
 
 ## Entwicklung und Tests
 

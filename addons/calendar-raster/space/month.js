@@ -110,7 +110,7 @@ const DEFAULT_SETTINGS = {
   hiddenCalendarIds: [],
   removedCalendarIds: [],
   collapsedCalendarTypeIds: [],
-  peoplePanelOpen: false,
+  peoplePanelOpen: true,
   peopleSearch: "",
   profileSettingsVersion: 0,
   calendarVisibilityOverrides: {},
@@ -204,6 +204,18 @@ const trailingEdgeDays = document.getElementById("trailing-edge-days");
 const calendarPeoplePanel = document.getElementById("calendar-people-panel");
 const calendarPeopleList = document.getElementById("calendar-people-list");
 const calendarPeopleSearch = document.getElementById("calendar-people-search");
+const settingsPeopleList = document.getElementById("settings-people-list");
+const settingsAddPerson = document.getElementById("settings-add-person");
+const settingsShowPeople = document.getElementById("settings-show-people");
+settingsAddPerson.addEventListener("click", () => openCalendarTypeDialog());
+settingsShowPeople.addEventListener("click", async () => {
+  state.settings.peoplePanelOpen = true;
+  state.settings.peopleSearch = "";
+  await saveSettings();
+  renderCalendarPeopleSidebar();
+  calendarPeoplePanel.scrollIntoView({ block: "nearest" });
+});
+
 calendarPeopleSearch.addEventListener("input", () => {
   state.settings.peopleSearch = calendarPeopleSearch.value.trim().slice(0, 100);
   renderCalendarPeopleSidebar();
@@ -2705,6 +2717,16 @@ function renderCalendarPeopleSidebar() {
     (left, right) => personRelationshipSort(left) - personRelationshipSort(right) || left.name.localeCompare(right.name, UI_LOCALE)
   );
   calendarPeoplePanel.hidden = people.length === 0;
+  document.getElementById("calendar-people-count").textContent = String(people.length);
+  settingsPeopleList.replaceChildren();
+  for (const person of people) {
+    const edit = document.createElement("button");
+    edit.type = "button";
+    edit.textContent = `${person.name} · ${personRelationshipLabel(person)}`;
+    edit.addEventListener("click", () => openCalendarTypeDialog(person));
+    settingsPeopleList.appendChild(edit);
+  }
+
   for (const person of people) {
     if (state.settings.peopleSearch && !person.name.toLocaleLowerCase(UI_LOCALE).includes(state.settings.peopleSearch.toLocaleLowerCase(UI_LOCALE))) continue;
     const row = document.createElement("div");
@@ -4813,6 +4835,7 @@ document.getElementById("today").addEventListener("click", async () => {
 settingsToggle.addEventListener("click", () => {
   const willOpen = settingsPanel.hidden;
   settingsPanel.hidden = !willOpen;
+  if (willOpen) renderCalendarPeopleSidebar();
   settingsToggle.setAttribute("aria-expanded", String(willOpen));
 });
 
@@ -5116,6 +5139,8 @@ tb.storage.onChanged.addListener(async changes => {
     changes.collapsedCalendarTypeIds ||
     changes.dragCalendarMove ||
     changes.themeMode ||
+    changes.peoplePanelOpen ||
+    changes.peopleSearch ||
     changes.calendarTypes ||
     changes.calendarTypeAssignments ||
     changes.calendarPersonAssignments ||

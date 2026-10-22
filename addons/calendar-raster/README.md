@@ -40,3 +40,7 @@ node ./test-person-calendar.cjs
 ```
 
 Zum temporären Laden in Thunderbird **Add-ons debuggen → Temporäres Add-on laden …** öffnen und `manifest.json` auswählen. Automatisierte Tests ersetzen keine Bedienprüfung in Thunderbird.
+
+## Testdiagnose
+
+Mit `-ReleaseName test_diagnostics` gebaute Pakete aktivieren den Diagnoseknopf. Normale Pakete bleiben deaktiviert. [Anleitung und Protokollformat](../../docs/DIAGNOSTICS.md).

@@ -39,3 +39,7 @@ node ./test-header-layout.js
 ```
 
 Automatisierte Tests ersetzen keine Bedienprüfung mit einem Thunderbird-Testprofil.
+
+## Testdiagnose
+
+Mit `-ReleaseName test_diagnostics` gebaute Pakete aktivieren den Diagnoseknopf. Normale Pakete bleiben deaktiviert. [Anleitung und Protokollformat](../../docs/DIAGNOSTICS.md).
