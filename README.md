@@ -6,9 +6,9 @@ Drei eigenständige Erweiterungen für Thunderbird. Jede lässt sich einzeln ins
 
 | Erweiterung | Dafür ist sie da | Quellstand |
 | --- | --- | --- |
-| [Kalender Raster](addons/calendar-raster/README.md) | Kalender im Zeitraster, Ansichtsprofile, Personenvergleich und Arbeitszeiten | 1.4.13 |
-| [Tagesplaner](addons/daily-planner/README.md) | Termine, Aufgaben mit Notizen und eingeplante Nachrichten in einer Übersicht | 2.0.5 |
-| [Mail-Ablage nach Adresse](addons/mail-address-filer/README.md) | Nachrichten anhand der eigenen Mailadresse in zugeordnete Ordner verschieben | 1.4.1 |
+| [Kalender Raster](addons/calendar-raster/README.md) | Kalender im Zeitraster, Ansichtsprofile, Personenvergleich und Arbeitszeiten | 1.4.15 |
+| [Tagesplaner](addons/daily-planner/README.md) | Termine, Aufgaben mit Notizen und eingeplante Nachrichten in einer Übersicht | 2.0.6 |
+| [Mail-Ablage nach Adresse](addons/mail-address-filer/README.md) | Nachrichten anhand der eigenen Mailadresse in zugeordnete Ordner verschieben | 1.4.2 |
 
 ## Schnellstart
 
@@ -52,6 +52,10 @@ Optionale Funktionen haben eigene Datenwege:
 - **Sicherungen:** Kalender Raster kann Sicherungen exportieren und nach Einrichtung per E-Mail versenden. Dabei können Kalenderdaten übertragen werden.
 - **Geräteabgleich:** Tagesplaner und Kalender können mit einem separat installierten **TB-Connect Modul-Hub** zusammenarbeiten. Hub, Nextcloud-Anmeldung und Android-App sind nicht Teil dieses Repositories. Die drei Desktop-Erweiterungen funktionieren ohne diese Zusatzkomponenten.
 
+## Diagnose in Testpaketen
+
+Release-Namen mit Präfix `test_` aktivieren einen Knopf für lokale technische Prüfungen und bereinigte JSON-Protokolle. Normale Pakete bleiben deaktiviert. [Buildschalter, Bedienung und Grenzen](docs/DIAGNOSTICS.md).
+
 ## Entwicklung und Tests
 
 Für die automatisierten Prüfungen ist **Node.js 22 oder neuer** vorgesehen; zusätzliche npm-Pakete sind nicht nötig.
@@ -69,3 +73,7 @@ Fehlerberichte sind über die [GitHub Issues](https://github.com/MarcSchlicker/T
 Für den eigenen Projektcode ist derzeit keine projektweite Lizenz angegeben. Vorhandene Drittanbieter-Lizenzhinweise bleiben unverändert; der Tagesplaner enthält einen MIT-lizenzierten [QR-Code-Generator](addons/daily-planner/THIRD_PARTY_NOTICES.md).
 
 Dieses Projekt ist unabhängig und nicht offiziell mit Mozilla oder Thunderbird verbunden. Thunderbird ist eine Marke der jeweiligen Rechteinhaber.
+
+## Installation per Kommando
+
+Mit dem vorhandenen Projektpilot-Installationshelfer können geprüfte XPIs ohne Dateidialog an Thunderbird übergeben werden. Der CLI-Client zeigt Wartestatus, Abbruch und bestätigten Installationserfolg. Siehe [Installationsschnittstelle](docs/THUNDERBIRD_INSTALLATION_API.md).

@@ -83,6 +83,16 @@
           <h2>Einstellungen</h2>
         </header>
 
+        <section class="settings-section" aria-labelledby="settings-people-heading">
+          <div class="settings-subheading">
+            <h3 id="settings-people-heading">Personen</h3>
+            <button id="settings-add-person" type="button">Person hinzufügen</button>
+          </div>
+          <p>Vorhandene Personen, Farben, Arbeitszeiten und Feiertagsregionen bearbeiten.</p>
+          <button id="settings-show-people" type="button">Personen im Kalender wieder anzeigen</button>
+          <div id="settings-people-list" class="settings-profile-list"></div>
+        </section>
+
         <section class="settings-section">
           <div class="settings-subheading">
             <h3>Ansichtsprofile</h3>
@@ -141,7 +151,7 @@
             <details id="calendar-people-panel" class="calendar-people-panel" aria-labelledby="calendar-people-heading">
               <summary class="calendar-people-header">
                 <span id="calendar-people-heading">Personen des Kalenders</span>
-                <span>Personen</span>
+                <span id="calendar-people-count"></span>
               </summary>
               <p class="calendar-people-hint">Augen ein- oder ausschalten, ohne den Vergleichsfilter zu verändern.</p>
               <input id="calendar-people-search" type="search" placeholder="Person suchen …" aria-label="Personen suchen">
@@ -320,5 +330,6 @@
 
     <script src="i18n.js"></script>
     <script src="month.js"></script>
-  </body>
+  <script src="../diagnostics/runtime.js"></script><script src="../diagnostics/launcher.js"></script>
+</body>
 </html>

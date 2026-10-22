@@ -38,6 +38,7 @@ for (const file of files) {
 }
 const tests = [
   ['calendar-raster', 'test-person-calendar.cjs'],
+  ['calendar-raster', 'test-people-panel.cjs'],
   ['daily-planner', 'tests/core.test.js'],
   ['mail-address-filer', 'test-routing.js'],
   ['mail-address-filer', 'test-background.js'],

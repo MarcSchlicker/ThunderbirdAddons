@@ -37,3 +37,7 @@ node ./tests/core.test.js
 ```
 
 Kalenderzugriff und optionale lokale Geräteverbindungen verwenden eine interne Thunderbird-Experiment-Schnittstelle. Automatisierte Tests ersetzen keine Bedienprüfung in Thunderbird.
+
+## Testdiagnose
+
+Mit `-ReleaseName test_diagnostics` gebaute Pakete aktivieren den Diagnoseknopf. Normale Pakete bleiben deaktiviert. [Anleitung und Protokollformat](../../docs/DIAGNOSTICS.md).
