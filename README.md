@@ -73,3 +73,7 @@ Fehlerberichte sind über die [GitHub Issues](https://github.com/MarcSchlicker/T
 Für den eigenen Projektcode ist derzeit keine projektweite Lizenz angegeben. Vorhandene Drittanbieter-Lizenzhinweise bleiben unverändert; der Tagesplaner enthält einen MIT-lizenzierten [QR-Code-Generator](addons/daily-planner/THIRD_PARTY_NOTICES.md).
 
 Dieses Projekt ist unabhängig und nicht offiziell mit Mozilla oder Thunderbird verbunden. Thunderbird ist eine Marke der jeweiligen Rechteinhaber.
+
+## Installation per Kommando
+
+Mit dem vorhandenen Projektpilot-Installationshelfer können geprüfte XPIs ohne Dateidialog an Thunderbird übergeben werden. Der CLI-Client zeigt Wartestatus, Abbruch und bestätigten Installationserfolg. Siehe [Installationsschnittstelle](docs/THUNDERBIRD_INSTALLATION_API.md).
