@@ -8,7 +8,7 @@
 - Projekt: http://www.d-project.com/
 - Lizenz: MIT, https://opensource.org/license/mit/
 
-Die ursprÃ¼nglichen Copyright-, Lizenz- und Markenhinweise im Quelltext bleiben erhalten. â€žQR Codeâ€œ ist eine eingetragene Marke von DENSO WAVE INCORPORATED.
+Die ursprünglichen Copyright-, Lizenz- und Markenhinweise im Quelltext bleiben erhalten. „QR Code“ ist eine eingetragene Marke von DENSO WAVE INCORPORATED.
 
 MIT License
 

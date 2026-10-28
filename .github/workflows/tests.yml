@@ -42,7 +42,7 @@ jobs:
             addons
             scripts
             docs
-      - name: XPI bauen und Inhalt prÃ¼fen
+      - name: XPI bauen und Inhalt prüfen
         shell: pwsh
         run: |
           ./scripts/prepare-release.ps1

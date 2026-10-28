@@ -54,7 +54,7 @@ try {
     if (-not $archive.GetEntry('manifest.json') -or -not $archive.GetEntry('diagnostics/build-info.json')) {
       throw 'Manifest oder Buildkennung fehlt.'
     }
-    if (@($archive.Entries | Where-Object { $_.FullName.Contains('\') }).Count) { throw 'UngÃ¼ltige Archivpfade.' }
+    if (@($archive.Entries | Where-Object { $_.FullName.Contains('\') }).Count) { throw 'Ungültige Archivpfade.' }
   } finally { $archive.Dispose() }
   Copy-Item -LiteralPath $archivePath -Destination $OutputPath -Force
   Write-Output $OutputPath
@@ -62,6 +62,6 @@ try {
   if (Test-Path -LiteralPath $archivePath) { Remove-Item -LiteralPath $archivePath -Force }
   $resolved = [IO.Path]::GetFullPath($staging)
   if (-not $resolved.StartsWith($stagingParent, [StringComparison]::OrdinalIgnoreCase) -or
-      (Split-Path -Leaf $resolved) -notmatch '^tb-addon-build-[a-f0-9]{32}$') { throw 'UngÃ¼ltiger temporÃ¤rer Buildpfad.' }
+      (Split-Path -Leaf $resolved) -notmatch '^tb-addon-build-[a-f0-9]{32}$') { throw 'Ungültiger temporärer Buildpfad.' }
   if (Test-Path -LiteralPath $resolved) { Remove-Item -LiteralPath $resolved -Recurse -Force }
 }
