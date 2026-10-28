@@ -28,3 +28,5 @@ Der zweite Befehl startet eine vorhandene Thunderbird-Installation mit einem neu
 Mit `-KeepRunning` bleibt der synthetische Server für den Android-Gerätetest aktiv. Die zusätzliche lokale `.fixture.json` enthält Prozess und Profilpfad und ist kein öffentlicher Diagnoseanhang. Den Prozess anschließend nur nach Abgleich von PID und Profilargument beenden.
 
 Der Android-Test `NativeHubTransportDeviceTest` verwendet ein frisches Emulatorprofil, die bekannten künstlichen Fixture-Werte und die Parameter hubPort/hubFingerprint. Er sendet eine künstliche Aufgabe, empfängt die vorbereitete Desktop-Aufgabe und prüft die Ablehnung eines falschen Zertifikats. Er liest keine echten Mails oder Kalender. Dieser Nachweis ersetzt keine reale Google-/Nextcloud-/POCO-Abnahme.
+
+Der native TLS-Nachweis wurde mit Thunderbird153.5.1 unter Windows ausgeführt. Das prüft den Transport auf dieser Version; daraus folgt keine vollständige manuelle Prüfung aller vier Erweiterungen oder aller Versionen ab128.

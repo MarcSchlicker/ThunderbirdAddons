@@ -32,11 +32,15 @@ Die vollständige Android-Analyse ist weiterhin nicht insgesamt grün: letzter R
 
 ## Vor stabiler Veröffentlichung offen
 
-- Eigene Google-Produktionsregistrierung und passende Anbieterfreigaben einrichten; das Formular für den Produktionsclient ist vorbereitet, die ausdrückliche Freigabe steht aus. Keine bestehenden Test-Clients oder Kontorechte geändert.
-- Mit den eigenen Clients neu bauen und Google-Mail/Kalender tatsächlich freigeben und prüfen; andere nicht konfigurierte OAuth-Anbieter ausdrücklich begrenzen.
+- Eigener Google-Android-Produktionsclient mit Zustimmung erstellt; bestehender Testclient erhalten. Google-App weiterhin Testmodus, öffentliche Anbieterfreigabe und Gmail-Bereich noch offen.
+- Eigener Client ist in der neu gebauten APK enthalten; persönliche Google-Mail/Kalender-Freigabe tatsächlich prüfen; andere nicht konfigurierte OAuth-Anbieter ausdrücklich begrenzen.
 - Neuen Desktop-/App-Satz mit sichtbarer TLS-Gerätefreigabe und echten eigenen Konten abnehmen. Bestehende Konten und Test-App nicht löschen, um eine Installation zu erzwingen.
 - Kalenderfarben über Neustart/Anbieterabgleich, echte kalenderbezogene Warnungen und reale Mailverweise prüfen.
 - Nextcloud bleibt bisher ausschließlich trocken geprüft; reale QR-/POCO-Abnahme bleibt ausgesetzt.
 - Thunderbird-Katalogeinreichung durchführen und manuelle Review abwarten; noch keine Katalogfreigabe behaupten.
 
 Keine Issues werden durch Paketbau oder Emulatorprüfungen automatisch geschlossen. [Android-Build](ANDROID_RELEASE.md), [Hub-TLS](HUB_TLS.md), [Veröffentlichung](DISTRIBUTION.md), [Datenschutz](PRIVACY.md).
+
+## Aktualisierung Google-Produktionsclient
+
+Der freigegebene eigene Android-Client ist registriert und über scripts/google-oauth-production.json reproduzierbar konfiguriert. production_google_tls_20261028 bestand neun OAuth- und vier TLS-Tests sowie den optimierten signierten Paketbau. Finale APK-SHA256: 2ace60a6a3483f03518f0cc82d1af42f8c765971067100a27b2587d9130756db. Im eigenen leeren Emulator aktualisiert, gestartet und TC-Begrüßung visuell geprüft; Crashbuffer leer. Das bestätigt keine persönliche Google-Anmeldung. Gmail-Bereich noch nicht deklariert; Google weiterhin Testmodus.

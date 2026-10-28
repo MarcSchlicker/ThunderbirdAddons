@@ -9,6 +9,14 @@ $ErrorActionPreference = 'Stop'
 if ($BuildId -notmatch '^[A-Za-z0-9._-]{1,64}$') { throw 'Ungültige Buildkennung.' }
 $root = Split-Path -Parent $PSScriptRoot
 $app = Join-Path $root 'apps/thunderbird-mobile'
+# Public Android client IDs; no client secret belongs in an installed application.
+$registrationPath = Join-Path $PSScriptRoot 'google-oauth-production.json'
+if (Test-Path -LiteralPath $registrationPath) {
+  $registration = Get-Content -Raw -LiteralPath $registrationPath | ConvertFrom-Json
+  if ($registration.applicationId -ne 'eu.mschlicker.tbconnect') { throw 'OAuth-Registrierung passt nicht zur App.' }
+  if (!$GoogleCalendarClientId) { $GoogleCalendarClientId = $registration.googleCalendarClientId }
+  if (!$GoogleMailClientId) { $GoogleMailClientId = $registration.googleMailClientId }
+}
 if (!(Test-Path -LiteralPath (Join-Path $app '.signing/tb.release.signing.properties'))) {
   throw 'Eigener Release-Schlüssel fehlt. Siehe docs/ANDROID_RELEASE.md. Keine automatische Schlüsselrotation.'
 }

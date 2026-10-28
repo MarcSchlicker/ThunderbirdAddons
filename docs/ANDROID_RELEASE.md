@@ -30,7 +30,7 @@ Mail: tb.mailGoogleClientId, tb.mailMicrosoftClientId, tb.mailYahooClientId, tb.
 
 Kalender und Google-Mail benötigen unterschiedliche Freigabebereiche, auch wenn ein eigener Android-Client beide verwenden darf. Die öffentliche Nutzung kann eine Anbieterprüfung verlangen. Ein registrierter Client allein ist kein Nachweis für veröffentlichte oder dauerhaft freigegebene Google-Zugänge. Bereits eingerichtete Android-Kalenderanbieter bleiben ein gesonderter Kontenweg.
 
-Die Cloud-Registrierung der neuen Produktionsidentität ist noch offen. Der bisherige Debug-Kalenderclient wird dafür nicht zweckentfremdet. Unterstützte Mailanbieter ohne eigene OAuth-Registrierung ausdrücklich benennen; keine funktionierende Anmeldung behaupten.
+Der eigene Android-Produktionsclient wurde mit Zustimmung des Projektinhabers angelegt. Die öffentlichen IDs und die gebundene Paket-/Signaturkennung stehen in scripts/google-oauth-production.json. Das Buildskript liest diese Registrierung standardmäßig; Parameter/Umgebungsvariablen erlauben eigene Builds. Der bestehende Debug-Kalenderclient bleibt getrennt. Die Google-App ist weiterhin im Testmodus und nicht öffentlich verifiziert. Unterstützte Mailanbieter ohne eigene OAuth-Registrierung ausdrücklich benennen; keine funktionierende Anmeldung behaupten.
 
 ## Bauen
 
@@ -40,7 +40,7 @@ Mit eingerichtetem eigenem Schlüssel, JDK/SDK und eigenen Google-Clients:
 ./scripts/build-android-release.ps1 -BuildId eigene_gepruefte_revision
 ```
 
-Das Skript liest die beiden Google-Client-IDs aus den genannten Umgebungsvariablen oder Parametern, führt die OAuth-/TLS-Policytests aus und baut assembleFossRelease mit eigener Signatur, normalem Release-Namen und R8. Fehlende Schlüssel oder Google-Konfiguration brechen vor der Paketübernahme ab. Für einen ausdrücklich unvollständigen lokalen Kandidaten gibt es -AllowIncompleteOAuth; daraus folgt keine öffentliche Freigabe.
+Das Skript liest die beiden Google-Client-IDs zuerst aus Parametern/Umgebungsvariablen und sonst aus der öffentlichen Registrierungsdatei, führt die OAuth-/TLS-Policytests aus und baut assembleFossRelease mit eigener Signatur, normalem Release-Namen und R8. Fehlende Schlüssel oder Google-Konfiguration brechen vor der Paketübernahme ab. Für einen ausdrücklich unvollständigen lokalen Kandidaten gibt es -AllowIncompleteOAuth; daraus folgt keine öffentliche Freigabe.
 
 Die APK und ihr Status landen gesammelt unter Testpakete/Release-Kandidaten. Gleichnamige Pakete mit anderem Hash werden nicht überschrieben. Kein automatischer Export nach Release/, keine Installation und kein Veröffentlichen. Der normale Release-Name deaktiviert die Testdiagnose. DEBUG ist false; Klartext-HTTP ist für den Produktionsbuild gesperrt. Bewusst vom Nutzer installierte CAs für eigene Mail-/Cloudserver bleiben berücksichtigt; der Hub verwendet zusätzlich seine exakte Zertifikatbindung.
 
@@ -49,3 +49,9 @@ Die APK und ihr Status landen gesammelt unter Testpakete/Release-Kandidaten. Gle
 R8 benötigt eine eng begrenzte Diagnoseausnahme für java.time.zone.ZoneRulesProvider, weil der Typ aus desugar_jdk_libs_nio stammt und nicht aus android.jar. In der optimierten APK ist die Definition j$.time.zone.ZoneRulesProvider vorhanden; die iCal4j-Unterklasse verweist darauf. Eine nicht aufgelöste java.time.zone.ZoneRulesProvider-Referenz darf nicht in der DEX verbleiben. Es wird nicht pauschal java.time.* unterdrückt. org.joda.convert.ToString ist eine optionale reine Konvertierungsannotation.
 
 Zusätzlich: Signatur mit apksigner prüfen, Manifestkennung und deaktivierte Debug-/Klartextflags kontrollieren, APK auf einem sauberen Emulator starten und Konto-/Sync-/Updatewege am vorgesehenen Gerät abnehmen. Der Emulator ersetzt keine persönliche Anbieterfreigabe. [Release-Status](RELEASE.md), [Hub-TLS](HUB_TLS.md), [Datenschutz](PRIVACY.md).
+
+## Sitzungsdauer und Anbieterfreigabe
+
+Die bestehende Anmeldung speichert AuthState/Refresh-Token lokal geschützt; ein App-Neustart ist keine Abmeldung. Google stellt bei externen OAuth-Apps im Testmodus mit Kalender-/Mailrechten jedoch Refresh-Tokens mit sieben Tagen Laufzeit aus. Das kann erneute persönliche Anmeldung nötig machen und lässt sich nicht durch lokales Speichern aufheben. Vor einem dauerhaft nutzbaren öffentlichen Release müssen Veröffentlichungsstatus und erforderliche Google-Prüfung abgeschlossen sein. [Offizielle Google-Dokumentation zur Tokenlaufzeit](https://developers.google.com/identity/protocols/oauth2#expiration).
+
+Deklariert sind bisher calendar, openid und userinfo.email. Die Mailanbindung benötigt für Gmail-IMAP/SMTP zusätzlich https://mail.google.com/; dieser eingeschränkte Bereich verlangt eine gesonderte Zustimmung und Anbieterprüfung. Eine konfigurierte Client-ID ist keine bestätigte Mailfreigabe.

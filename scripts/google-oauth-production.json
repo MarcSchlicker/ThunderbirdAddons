@@ -1,0 +1,9 @@
+{
+  "applicationId": "eu.mschlicker.tbconnect",
+  "certificateSha1": "E6:D6:4A:88:43:06:65:AC:00:7D:79:C4:0F:8D:8C:0C:74:52:FF:A6",
+  "googleCalendarClientId": "965975247401-hgp2en6com0d8cmi97ss1e34soc36omi.apps.googleusercontent.com",
+  "googleMailClientId": "965975247401-hgp2en6com0d8cmi97ss1e34soc36omi.apps.googleusercontent.com",
+  "customUriScheme": true,
+  "access": "registered-test-users",
+  "publicProviderApproval": false
+}
