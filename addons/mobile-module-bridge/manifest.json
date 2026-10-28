@@ -1,0 +1,57 @@
+{
+  "manifest_version": 2,
+  "name": "TB-Connect Modul-Hub",
+  "description": "Lokaler Modul-Hub für TB-Connect auf Desktop und Mobilgeräten.",
+  "version": "2.0.29",
+  "author": "Marc",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tb-connect-module-hub@tbconnect.local",
+      "strict_min_version": "128.0"
+    }
+  },
+  "icons": {
+    "48": "icons/mobile-connect.svg",
+    "96": "icons/mobile-connect.svg"
+  },
+  "browser_action": {
+    "default_title": "Modul-Hub öffnen",
+    "default_icon": "icons/mobile-connect.svg"
+  },
+  "options_ui": {
+    "page": "dashboard/index.html",
+    "open_in_tab": true,
+    "browser_style": false
+  },
+  "background": {
+    "scripts": [
+      "module-catalog.js",
+      "nextcloud-caldav.js",
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "management",
+    "downloads",
+    "storage",
+    "tabs",
+    "unlimitedStorage",
+    "https://*/*"
+  ],
+  "experiment_apis": {
+    "module_bridge": {
+      "schema": "api/moduleBridge/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "moduleBridge"
+          ]
+        ],
+        "script": "api/moduleBridge/implementation.js"
+      }
+    }
+  }
+}

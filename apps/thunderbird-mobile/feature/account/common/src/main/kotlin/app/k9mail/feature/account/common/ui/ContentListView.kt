@@ -1,0 +1,42 @@
+package app.k9mail.feature.account.common.ui
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import net.thunderbird.components.ui.bolt.template.ResponsiveWidthContainer
+import net.thunderbird.components.ui.bolt.theme.BoltTheme
+
+@Composable
+fun ContentListView(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(BoltTheme.spacings.default),
+    items: LazyListScope.() -> Unit,
+) {
+    ResponsiveWidthContainer(
+        modifier = Modifier
+            .padding(contentPadding)
+            .fillMaxWidth()
+            .then(modifier),
+    ) { contentPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .imePadding(),
+            contentPadding = contentPadding,
+            horizontalAlignment = horizontalAlignment,
+            verticalArrangement = verticalArrangement,
+        ) {
+            items()
+        }
+    }
+}

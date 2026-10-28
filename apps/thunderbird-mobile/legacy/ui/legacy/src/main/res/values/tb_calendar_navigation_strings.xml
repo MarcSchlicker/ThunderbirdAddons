@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tb_calendar_open_navigation">Kalendermenü öffnen</string>
+    <string name="tb_calendar_connection_warning">Kalenderzugang oder Verbindung prüfen</string>
+    <string name="tb_calendar_sources_and_warnings">Kalender und Warnungen</string>
+    <string name="tb_calendar_show_warnings">Warnungen für diesen Kalender anzeigen</string>
+    <string name="tb_calendar_warning_auth">Anmeldung für diesen Kalender erneuern</string>
+    <string name="tb_calendar_warning_conflict">Eine Änderung dieses Kalenders steht im Konflikt. Bitte prüfen.</string>
+    <string name="tb_calendar_warning_read_only">Dieser Kalender erlaubt das Senden lokaler Änderungen nicht.</string>
+    <string name="tb_calendar_warning_connection">Dieser Kalender konnte nicht synchronisiert werden.</string>
+    <string name="tb_calendar_diagnostics">Diagnose und Testprotokoll</string>
+    <string name="tb_calendar_create_event">Termin erstellen</string>
+    <string name="tb_calendar_sync_now">Jetzt synchronisieren</string>
+    <string name="tb_calendar_accounts">Kalenderzugänge</string>
+    <string name="tb_calendar_plan_timeline">Zeitplan</string>
+    <string name="tb_calendar_plan_agenda">Alle Termine</string>
+    <string name="tb_calendar_plan_close">Schließen</string>
+    <string name="tb_calendar_plan_count">Alle Termine: %1$d</string>
+</resources>

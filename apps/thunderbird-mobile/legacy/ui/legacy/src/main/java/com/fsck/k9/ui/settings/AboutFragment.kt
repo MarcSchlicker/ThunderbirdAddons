@@ -1,0 +1,358 @@
+package com.fsck.k9.ui.settings
+
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
+import net.thunderbird.components.ui.bolt.atom.Surface
+import net.thunderbird.components.ui.bolt.atom.text.TextBodyMedium
+import net.thunderbird.components.ui.bolt.atom.text.TextTitleMedium
+import net.thunderbird.components.ui.bolt.atom.text.TextTitleSmall
+import app.k9mail.feature.launcher.FeatureLauncherActivity
+import app.k9mail.feature.launcher.FeatureLauncherTarget
+import com.fsck.k9.ui.R
+import com.fsck.k9.ui.settings.AboutContract.Effect
+import com.fsck.k9.ui.settings.AboutContract.Event
+import kotlinx.collections.immutable.ImmutableList
+import net.thunderbird.core.common.provider.AppNameProvider
+import net.thunderbird.components.ui.bolt.theme.BoltTheme
+import net.thunderbird.core.ui.contract.mvi.observe
+import net.thunderbird.core.ui.theme.api.FeatureThemeProvider
+import net.thunderbird.feature.navigation.changelog.api.ChangeLogMode
+import org.koin.android.ext.android.inject
+import app.k9mail.core.ui.legacy.designsystem.R as DesignSystemR
+import app.k9mail.core.ui.legacy.theme2.common.R as Theme2CommonR
+
+class AboutFragment : Fragment() {
+    private val themeProvider: FeatureThemeProvider by inject()
+    private val appNameProvider: AppNameProvider by inject()
+    private val viewModel: AboutViewModel by inject()
+
+    @Suppress("LongMethod")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed,
+            )
+            val appLogoResId = resolveAppLogoResId(requireContext())
+            val aboutTitle = context.getString(R.string.about_title, appNameProvider.appName)
+            val projectTitle = context.getString(R.string.about_project_title)
+            val librariesTitle = context.getString(R.string.about_libraries)
+
+            setContent {
+                val (state, dispatch) = viewModel.observe { effect ->
+                    when (effect) {
+                        is Effect.OpenChangeLog -> {
+                            FeatureLauncherActivity.launch(
+                                context = requireContext(),
+                                target = FeatureLauncherTarget.Changelog(changeLogMode = ChangeLogMode.CHANGE_LOG),
+                            )
+                        }
+
+                        is Effect.OpenUrl ->
+                            context.openUrl(effect.url)
+                    }
+                }
+                themeProvider.WithTheme {
+                    AboutScreen(
+                        versionNumber = state.value.version,
+                        appLogoResId = appLogoResId,
+                        libraries = state.value.libraries,
+                        aboutTitle = aboutTitle,
+                        projectTitle = projectTitle,
+                        librariesTitle = librariesTitle,
+                        displayChangeLog = {
+                            dispatch(Event.OnChangeLogClick)
+                        },
+                        displayAuthors = {
+                            dispatch(
+                                Event.OnSectionContentClick(
+                                    getString(R.string.app_authors_url),
+                                ),
+                            )
+                        },
+                        displayLicense = {
+                            dispatch(
+                                Event.OnSectionContentClick(
+                                    getString(R.string.app_license_url),
+                                ),
+                            )
+                        },
+                        displayWebSite = {
+                            dispatch(
+                                Event.OnSectionContentClick(
+                                    getString(R.string.app_webpage_url),
+                                ),
+                            )
+                        },
+                        displayForum = {
+                            dispatch(
+                                Event.OnSectionContentClick(
+                                    getString(R.string.user_forum_url),
+                                ),
+                            )
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun Context.openUrl(url: String) {
+    try {
+        val viewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(viewIntent)
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(this, R.string.error_activity_not_found, Toast.LENGTH_SHORT).show()
+    }
+}
+
+@Composable
+private fun LibraryList(
+    libraries: ImmutableList<Library>,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        libraries.forEach { library ->
+            LibraryItem(library = library)
+        }
+    }
+}
+
+@Composable
+fun LibraryItem(
+    library: Library,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    Column(
+        modifier = modifier
+            .clickable(
+                onClick = { context.openUrl(library.url) },
+            )
+            .padding(
+                horizontal = BoltTheme.spacings.double,
+                vertical = BoltTheme.spacings.oneHalf,
+            )
+            .fillMaxWidth()
+            .wrapContentHeight(),
+    ) {
+        TextTitleMedium(
+            text = library.name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+        )
+        TextBodyMedium(
+            text = library.license,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+        )
+    }
+}
+
+@Composable
+fun AboutScreen(
+    versionNumber: String,
+    aboutTitle: String,
+    projectTitle: String,
+    librariesTitle: String,
+    appLogoResId: Int,
+    libraries: ImmutableList<Library>,
+    modifier: Modifier = Modifier,
+    displayChangeLog: () -> Unit = {},
+    displayAuthors: () -> Unit = {},
+    displayLicense: () -> Unit = {},
+    displayWebSite: () -> Unit = {},
+    displayForum: () -> Unit = {},
+) {
+    val scrollState = rememberScrollState()
+    Surface(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+        ) {
+            AppLogo(logoResId = appLogoResId)
+            SectionTitle(title = aboutTitle)
+            SectionContent(
+                sectionLabel = stringResource(R.string.version),
+                sectionText = versionNumber,
+                sectionImageId = DesignSystemR.drawable.ic_info,
+                onClick = displayChangeLog,
+            )
+            SectionContent(
+                sectionLabel = stringResource(R.string.authors),
+                sectionText = stringResource(R.string.about_app_authors_k9),
+                secondarySectionText = stringResource(R.string.about_app_authors_thunderbird),
+                sectionImageId = DesignSystemR.drawable.ic_group,
+                onClick = displayAuthors,
+            )
+
+            SectionContent(
+                sectionLabel = stringResource(R.string.license),
+                sectionText = stringResource(R.string.app_license),
+                sectionImageId = DesignSystemR.drawable.ic_code,
+                onClick = displayLicense,
+            )
+
+            SectionTitle(title = projectTitle)
+
+            SectionContent(
+                sectionLabel = stringResource(R.string.about_website_title),
+                sectionText = stringResource(R.string.app_webpage_url),
+                sectionImageId = DesignSystemR.drawable.ic_link,
+                onClick = displayWebSite,
+            )
+
+            SectionContent(
+                sectionLabel = stringResource(R.string.user_forum_title),
+                sectionText = stringResource(R.string.user_forum_url),
+                sectionImageId = DesignSystemR.drawable.ic_forum,
+                onClick = displayForum,
+            )
+
+            SectionTitle(title = librariesTitle)
+            LibraryList(libraries = libraries)
+        }
+    }
+}
+
+@Composable
+fun AppLogo(
+    logoResId: Int,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(all = BoltTheme.spacings.double),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Image(
+            painter = painterResource(id = logoResId),
+            modifier = Modifier.size(size = 100.dp),
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
+fun SectionTitle(title: String, modifier: Modifier = Modifier) {
+    TextTitleSmall(
+        text = title,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                start = BoltTheme.spacings.double,
+                end = BoltTheme.spacings.double,
+                top = BoltTheme.spacings.double,
+                bottom = BoltTheme.spacings.default,
+            ),
+    )
+}
+
+@Composable
+fun SectionContent(
+    sectionLabel: String,
+    sectionText: String,
+    sectionImageId: Int,
+    modifier: Modifier = Modifier,
+    secondarySectionText: String? = null,
+    onClick: () -> Unit = {},
+) {
+    Row(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = BoltTheme.spacings.double, vertical = BoltTheme.spacings.default)
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painterResource(id = sectionImageId),
+            modifier = Modifier
+                .size(BoltTheme.sizes.icon),
+            contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(BoltTheme.spacings.triple))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .wrapContentHeight(),
+        ) {
+            TextTitleMedium(
+                text = sectionLabel,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+            )
+
+            TextBodyMedium(
+                text = sectionText,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+            )
+
+            secondarySectionText?.let {
+                TextBodyMedium(
+                    text = it,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                )
+            }
+        }
+    }
+}
+
+fun resolveAppLogoResId(context: Context): Int {
+    val typedValue = TypedValue()
+    val resolved = context.theme.resolveAttribute(
+        Theme2CommonR.attr.appLogo,
+        typedValue,
+        true,
+    )
+
+    return if (resolved && typedValue.resourceId != 0) {
+        typedValue.resourceId
+    } else {
+        0
+    }
+}

@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zeitklar_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/zeitklar_surface">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.App.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/zeitklar_surface" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/zeitklar_background"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="12dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="28dp">
+
+                <!-- Zeitklar day heading -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/zeitklar_accent_soft"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/zeitklar_line"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/TextAppearance.Material3.LabelLarge"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:letterSpacing="0.14"
+                                android:text="@string/zeitklar_daily_planner_two_eyebrow"
+                                android:textColor="@color/zeitklar_accent"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/zeitklar_planner_two_open_count"
+                                style="@style/TextAppearance.Material3.LabelLarge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/zeitklar_task_count_badge"
+                                android:paddingHorizontal="11dp"
+                                android:paddingVertical="6dp"
+                                android:textColor="@color/zeitklar_accent_strong"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/zeitklar_planner_date"
+                            android:visibility="gone"
+                            style="@style/TextAppearance.Material3.HeadlineSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/zeitklar_text"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/zeitklar_planner_two_date_button"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="14dp"
+                            android:backgroundTint="@color/zeitklar_surface"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="@string/zeitklar_planner_two_pick_date"
+                            android:textColor="@color/zeitklar_accent_strong"
+                            app:cornerRadius="10dp"
+                            app:strokeColor="@color/zeitklar_line" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/zeitklar_planner_two_tomorrow"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:textColor="@color/zeitklar_accent_strong" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:id="@+id/tb_planner_sections"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/zeitklar_surface"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/zeitklar_line"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/tb_calendar_create_event"
+                                android:textColor="@color/zeitklar_text"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/zeitklar_planner_two_event_count"
+                            android:visibility="gone"
+                                style="@style/TextAppearance.Material3.LabelMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/zeitklar_muted" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/zeitklar_planner_two_events"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="11dp"
+                            android:orientation="vertical" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/zeitklar_appointment_title_hint"
+                            app:boxBackgroundColor="@color/zeitklar_surface"
+                            app:boxStrokeColor="@color/zeitklar_accent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/zeitklar_planner_two_event_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapSentences"
+                                android:maxLines="2"
+                                android:textColor="@color/zeitklar_text"
+                                android:textColorHint="@color/zeitklar_muted" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/zeitklar_planner_two_event_date"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:textColor="@color/zeitklar_accent_strong"
+                                app:strokeColor="@color/zeitklar_line" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/zeitklar_planner_two_event_time"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="88dp"
+                                android:layout_height="44dp"
+                                android:layout_marginStart="7dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:textColor="@color/zeitklar_accent_strong"
+                                app:strokeColor="@color/zeitklar_line" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/zeitklar_planner_two_event_add"
+                                android:layout_width="48dp"
+                                android:layout_height="44dp"
+                                android:layout_marginStart="7dp"
+                                android:backgroundTint="@color/zeitklar_teal"
+                                android:contentDescription="@string/zeitklar_appointment_add"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minWidth="0dp"
+                                android:text="@string/zeitklar_add_short"
+                                android:textColor="@color/zeitklar_on_teal"
+                                android:textSize="22sp"
+                                app:cornerRadius="11dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/zeitklar_surface"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/zeitklar_line"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/zeitklar_planner_two_mails"
+                                android:textColor="@color/zeitklar_text"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/zeitklar_planner_two_mail_count"
+                            android:visibility="gone"
+                                style="@style/TextAppearance.Material3.LabelMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/zeitklar_muted" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/zeitklar_planner_two_mails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="11dp"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/zeitklar_surface"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/zeitklar_line"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/tb_planner_new_task"
+                                android:textColor="@color/zeitklar_text"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/zeitklar_planner_two_task_count"
+                            android:visibility="gone"
+                                style="@style/TextAppearance.Material3.LabelMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/zeitklar_muted" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/zeitklar_planner_two_tasks"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/zeitklar_planner_two_task_date"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="10dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:textColor="@color/zeitklar_accent_strong"
+                            app:strokeColor="@color/zeitklar_line" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="@string/zeitklar_planner_two_task_hint"
+                                app:boxBackgroundColor="@color/zeitklar_surface"
+                                app:boxCornerRadiusBottomEnd="11dp"
+                                app:boxCornerRadiusBottomStart="11dp"
+                                app:boxCornerRadiusTopEnd="11dp"
+                                app:boxCornerRadiusTopStart="11dp"
+                                app:boxStrokeColor="@color/zeitklar_accent">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/zeitklar_planner_two_task_input"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textCapSentences"
+                                    android:maxLines="2"
+                                    android:textColor="@color/zeitklar_text"
+                                    android:textColorHint="@color/zeitklar_muted" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/zeitklar_planner_two_task_add"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginStart="8dp"
+                                android:backgroundTint="@color/zeitklar_teal"
+                                android:contentDescription="@string/zeitklar_add"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minWidth="0dp"
+                                android:text="@string/zeitklar_add_short"
+                                android:textColor="@color/zeitklar_on_teal"
+                                android:textSize="24sp"
+                                app:cornerRadius="12dp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:hint="@string/zeitklar_planner_two_email_hint"
+                            app:boxBackgroundColor="@color/zeitklar_surface"
+                            app:boxCornerRadiusBottomEnd="11dp"
+                            app:boxCornerRadiusBottomStart="11dp"
+                            app:boxCornerRadiusTopEnd="11dp"
+                            app:boxCornerRadiusTopStart="11dp"
+                            app:boxStrokeColor="@color/zeitklar_accent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/zeitklar_planner_two_email_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textEmailAddress"
+                                android:textColor="@color/zeitklar_text"
+                                android:textColorHint="@color/zeitklar_muted" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </ScrollView>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/zeitklar_module_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurfaceContainer"
+            app:menu="@menu/zeitklar_module_navigation" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

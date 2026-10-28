@@ -155,6 +155,32 @@ async function openCalendarManager() {
   return tb.tabs.create({ url: MANAGER_URL });
 }
 
+async function synchronizeCalendarProviders(message = {}) {
+  const api = calendarApi();
+  if (!api?.refreshCalendars) throw new Error("Bitte die aktuelle Kalender-Testversion installieren.");
+  const calendars = await api.listCalendars();
+  const settings = await tb.storage.local.get({ hiddenCalendarIds: [], calendarVisibilityOverrides: {} });
+  const requested = Array.isArray(message.calendarIds) ? new Set(message.calendarIds) : null;
+  const ids = calendars.filter(calendar => calendar.visible !== false && !calendar.disabled &&
+    !settings.hiddenCalendarIds.includes(calendar.id) && settings.calendarVisibilityOverrides[calendar.id] !== false &&
+    (!requested || requested.has(calendar.id))).map(calendar => calendar.id);
+  const result = await api.refreshCalendars(JSON.stringify(ids));
+  await tb.storage.local.set({ calendarDataRevision: Date.now() });
+  return result;
+}
+
+async function synchronizeCalendarFromPage(message) {
+  const providers = await synchronizeCalendarProviders(message);
+  let transport;
+  try {
+    transport = await tb.runtime.sendMessage("tb-connect-module-hub@tbconnect.local",
+      { type: "syncDesktopNow", skipCalendarRefresh: true });
+  } catch (_) {
+    transport = { ok: false, message: "Modul-Hub nicht erreichbar; Handy-Austausch nicht bestätigt." };
+  }
+  return { ok: providers.ok && transport?.complete === true, providers, transport };
+}
+
 async function getMonthDataForPage(message) {
   const year = Number(message.year);
   const month = Number(message.month);
@@ -608,6 +634,8 @@ tb.runtime.onMessage.addListener(message => {
     return safeEnsureHourGridSpace();
   }
 
+  if (message?.type === "syncNow") return synchronizeCalendarFromPage(message);
+
   if (message?.type === "getMonthData") {
     return getMonthDataForPage(message);
   }
@@ -681,6 +709,30 @@ tb.runtime.onMessage.addListener(message => {
   }
 
   return false;
+});
+
+
+
+let calendarChangeTimer = null;
+let calendarChangeRevision = 0;
+function scheduleCalendarRevision() {
+  clearTimeout(calendarChangeTimer);
+  calendarChangeTimer = setTimeout(async () => {
+    calendarChangeTimer = null;
+    calendarChangeRevision = Math.max(Date.now(), calendarChangeRevision + 1);
+    try {
+      await tb.storage.local.set({ calendarDataRevision: calendarChangeRevision });
+    } catch (error) {
+      console.warn("Kalender: Ansichtsaktualisierung fehlgeschlagen.");
+    }
+  }, 200);
+}
+calendarApi()?.onCalendarChanged?.addListener(scheduleCalendarRevision);
+
+// Only the installed Hub may request this narrow, non-pairing operation.
+if (tb.runtime.onMessageExternal) tb.runtime.onMessageExternal.addListener((message, sender) => {
+  if (sender.id !== "tb-connect-module-hub@tbconnect.local" || message?.type !== "syncCalendarProviders") return undefined;
+  return synchronizeCalendarProviders();
 });
 
 safeEnsureHourGridSpace();

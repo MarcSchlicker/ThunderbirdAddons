@@ -41,6 +41,8 @@
             <span>Profil</span>
             <select id="view-profile"></select>
           </label>
+          <button id="sync-now" type="button" title="Kalender senden und empfangen">Synchronisieren</button>
+          <span id="sync-now-status" role="status" aria-live="polite"></span>
           <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false">
             Einstellungen
           </button>
@@ -83,37 +85,41 @@
           <h2>Einstellungen</h2>
         </header>
 
-        <section class="settings-section">
-          <div class="settings-subheading">
-            <h3>Ansichtsprofile</h3>
-            <button id="new-view-profile" type="button">Neues Profil</button>
-          </div>
-          <div id="settings-profile-list" class="settings-profile-list"></div>
-        </section>
-
-        <details id="advanced-settings" class="settings-more">
-          <summary>Weitere Einstellungen</summary>
+        <details id="settings-people" class="settings-more">
+          <summary>Personen</summary>
           <div class="settings-more-content">
-            <label class="check-setting">
-              <span>Darstellung</span>
-              <select id="theme-mode">
-                <option value="system">System</option>
-                <option value="standard">Standard</option>
-                <option value="high-contrast">Hoher Kontrast</option>
-              </select>
-            </label>
-            <label class="check-setting">
-              <span>Akzentfarbe</span>
-              <input id="accent-color" type="color" value="#006fd6">
-            </label>
-            <label class="check-setting">
-              <input id="drag-calendar-move" type="checkbox">
-              <span>Termin auf Kalender ziehen</span>
-            </label>
-            <button id="restore-removed-calendars" type="button" hidden>Entfernte Kalender wieder anzeigen</button>
-              <button id="manage-calendars-settings" type="button">Kalender verwalten und sichern</button>
-              <button id="connect-nextcloud-calendar" type="button">Nextcloud-Kalender verbinden oder anlegen</button>
+            <h3 id="settings-people-heading">Personen verwalten</h3>
+            <button id="settings-add-person" type="button">Person hinzufügen</button>
+            <p>Personen, Farben, Arbeitszeiten und Feiertagsregionen bearbeiten. Die Augen im Kalender schalten ihre Anzeige um.</p>
+            <button id="settings-show-people" type="button">Personen im Kalender wieder anzeigen</button>
+            <div id="settings-people-list" class="settings-profile-list"></div>
+          </div>
+        </details>
+        <details id="settings-profiles" class="settings-more">
+          <summary>Ansichtsprofile</summary>
+          <div class="settings-more-content">
+            <button id="new-view-profile" type="button">Neues Profil</button>
+            <div id="settings-profile-list" class="settings-profile-list"></div>
+          </div>
+        </details>
+        <details id="advanced-settings" class="settings-more">
+          <summary>Darstellung</summary>
+          <div class="settings-more-content">
+            <label class="check-setting"><span>Darstellung</span><select id="theme-mode">
+              <option value="system">System</option><option value="standard">Standard</option><option value="high-contrast">Hoher Kontrast</option>
+            </select></label>
+            <label class="check-setting"><span>Akzentfarbe</span><input id="accent-color" type="color" value="#006fd6"></label>
             <button id="export-pdf" type="button">Als PDF drucken</button>
+          </div>
+        </details>
+        <details id="settings-calendar-management" class="settings-more">
+          <summary>Kalenderverwaltung</summary>
+          <div class="settings-more-content">
+            <button id="manage-calendars-settings" type="button">Kalender, Farben und Sicherungen verwalten</button>
+            <button id="add-calendar-type" type="button">Person oder Kategorie hinzufügen</button>
+            <button id="connect-nextcloud-calendar" type="button">Nextcloud-Kalender verbinden oder anlegen</button>
+            <label class="check-setting"><input id="drag-calendar-move" type="checkbox"><span>Termin auf Kalender ziehen</span></label>
+            <button id="restore-removed-calendars" type="button" hidden>Entfernte Kalender wieder anzeigen</button>
             <button id="diagnose" type="button">Diagnose</button>
           </div>
         </details>
@@ -133,7 +139,6 @@
             <div class="sidebar-header-actions">
               <button id="manage-calendars" class="sidebar-action" type="button" title="Kalender verwalten" aria-label="Kalender verwalten">&#9881;</button>
               <button id="add-calendar" class="sidebar-action" type="button" title="Kalender hinzufuegen" aria-label="Kalender hinzufuegen">+</button>
-              <button id="add-calendar-type" class="sidebar-action" type="button" title="Person oder Kategorie hinzufuegen" aria-label="Person oder Kategorie hinzufuegen">&#9671;</button>
             </div>
           </div>
           <div id="leading-edge-days" class="sidebar-edge-days" hidden></div>
@@ -141,7 +146,7 @@
             <details id="calendar-people-panel" class="calendar-people-panel" aria-labelledby="calendar-people-heading">
               <summary class="calendar-people-header">
                 <span id="calendar-people-heading">Personen des Kalenders</span>
-                <span>Personen</span>
+                <span id="calendar-people-count"></span>
               </summary>
               <p class="calendar-people-hint">Augen ein- oder ausschalten, ohne den Vergleichsfilter zu verändern.</p>
               <input id="calendar-people-search" type="search" placeholder="Person suchen …" aria-label="Personen suchen">
@@ -320,5 +325,6 @@
 
     <script src="i18n.js"></script>
     <script src="month.js"></script>
-  </body>
+  <script src="../diagnostics/runtime.js"></script><script src="../diagnostics/launcher.js"></script>
+</body>
 </html>

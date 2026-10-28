@@ -1,0 +1,40 @@
+package app.k9mail.feature.account.server.validation.ui
+
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import app.k9mail.feature.account.server.validation.ui.fake.FakeAccountOAuthViewModel
+import app.k9mail.feature.account.server.validation.ui.fake.FakeBrandNameProvider
+import app.k9mail.feature.account.server.validation.ui.fake.FakeIncomingServerValidationViewModel
+import app.k9mail.feature.account.server.validation.ui.fake.FakeOutgoingServerValidationViewModel
+import net.thunderbird.components.ui.bolt.PreviewWithTheme
+import net.thunderbird.components.ui.bolt.common.annotation.PreviewDevices
+
+@Composable
+@PreviewDevices
+internal fun IncomingServerValidationMainScreenPreview() {
+    PreviewWithTheme {
+        ServerValidationMainScreen(
+            viewModel = viewModel {
+                FakeIncomingServerValidationViewModel(
+                    oAuthViewModel = FakeAccountOAuthViewModel(),
+                )
+            },
+            brandNameProvider = FakeBrandNameProvider,
+        )
+    }
+}
+
+@Composable
+@PreviewDevices
+internal fun OutgoingServerValidationMainScreenPreview() {
+    PreviewWithTheme {
+        ServerValidationMainScreen(
+            viewModel = viewModel {
+                FakeOutgoingServerValidationViewModel(
+                    oAuthViewModel = FakeAccountOAuthViewModel(),
+                )
+            },
+            brandNameProvider = FakeBrandNameProvider,
+        )
+    }
+}

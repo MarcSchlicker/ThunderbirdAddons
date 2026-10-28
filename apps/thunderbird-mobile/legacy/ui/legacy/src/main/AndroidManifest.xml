@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Already requested by the host app; declare here for this module's
+         notification worker and network-state checks as well. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:supportsRtl="true"
+        >
+
+        <activity
+            android:name=".zeitklar.PairingQrCodeScannerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
+            android:name=".zeitklar.CalendarModuleActivity"
+            android:exported="false" />
+
+        <activity android:name=".zeitklar.GoogleCalendarSetupActivity" android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity android:name=".zeitklar.TbDiagnosticsActivity" android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+    </application>
+
+    <queries>
+        <package android:name="at.bitfire.davdroid" />
+        <intent>
+            <!-- Used to check whether to display the "Add from Contacts" menu item in the compose screen -->
+            <action android:name="android.intent.action.PICK" />
+            <data
+                android:mimeType="*/*"
+                android:scheme="content"
+                android:host="com.android.contacts"
+                />
+        </intent>
+
+        <intent>
+            <!-- Used by ViewIntentFinder to find the best Intent to view an attachment -->
+            <action android:name="android.intent.action.VIEW" />
+            <data
+                android:mimeType="*/*"
+                android:scheme="content"
+                />
+        </intent>
+
+        <intent>
+            <!-- Used by the OpenPGP API -->
+            <action android:name="org.openintents.openpgp.IOpenPgpService2" />
+        </intent>
+
+        <intent>
+            <!-- Used by OpenPgpAppSelectDialog -->
+            <action android:name="android.intent.action.VIEW" />
+            <data
+                android:mimeType="*/*"
+                android:scheme="market"
+                android:host="details"
+                />
+        </intent>
+
+        <intent>
+            <!-- Used by OpenPgpAppSelectDialog -->
+            <action android:name="org.openintents.openpgp.IOpenPgpService" />
+        </intent>
+    </queries>
+
+</manifest>

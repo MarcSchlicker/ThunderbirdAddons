@@ -1,0 +1,36 @@
+[book]
+title = "Thunderbird for Android - Developer Documentation"
+authors = ["Thunderbird Mobile Team"]
+description = "Developer Documentation for the Thunderbird for Android project."
+language = "en"
+src = "."
+
+[rust]
+edition = "2018"
+
+[build]
+build-dir = "../book/docs/latest"
+create-missing = false
+use-default-preprocessors = true
+
+[output.html]
+git-repository-url = "https://github.com/thunderbird/thunderbird-android/"
+edit-url-template = "https://github.com/thunderbird/thunderbird-android/edit/main/docs/{path}"
+theme = "assets/tb-theme"
+additional-js = ["assets/additional/js/mermaid.min.js", "assets/additional/js/mermaid-init.js", "assets/additional/js/navigation.js"]
+additional-css = ["assets/additional/css/last-changed.css", "assets/additional/css/navigation.css"]
+sidebar-header-nav = false
+admonitions = true
+definition-lists = true
+hash-files = true
+
+[output.html.fold]
+enable = true
+level = 1
+
+[preprocessor.last-changed]
+command = "mdbook-last-changed"
+renderer = ["html"]
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"

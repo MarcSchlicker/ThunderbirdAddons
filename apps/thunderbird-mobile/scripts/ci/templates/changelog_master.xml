@@ -1,0 +1,8 @@
+    <release version="{{ version }}" versioncode="{{ versioncode }}" date="{{ date }}">
+{%- for tag, tag_notes in notes.items() %}
+{%- for note in tag_notes %}
+        <change>{{ tag }}: {{ note.text }}</change>
+{%- endfor %}
+{%- endfor %}
+    </release>
+

@@ -190,7 +190,7 @@ async function postModuleBridgeState(payload) {
   return result;
 }
 
-async function syncStateWithModuleBridge() {
+async function syncStateWithModuleBridge({ strict = false } = {}) {
   const [state, calendar] = await Promise.all([loadState(), readCalendarData()]);
   const bridgeState = { ...state, calendar };
   let remote;
@@ -203,11 +203,18 @@ async function syncStateWithModuleBridge() {
       state: bridgeState
     });
   } catch (error) {
+    if (strict) throw error;
     console.warn("Tagesplaner: Modul-Hub-Abgleich fehlgeschlagen.", error);
     return;
   }
-  if (remote?.state && mergeModuleBridgeTasks(state, remote.state)) {
-    await saveState(state);
+  if (strict && (!remote?.state || typeof remote.state !== "object" || remote.ok === false)) {
+    throw new Error("Keine gültigen Tagesplanerdaten vom Modul-Hub empfangen.");
+  }
+  if (remote?.state) {
+    // The user can edit tasks or remember/remove mail while the Hub request is in flight.
+    // Merge into the latest desktop state instead of writing back the outgoing snapshot.
+    const current = await loadState();
+    if (mergeModuleBridgeTasks(current, remote.state)) await saveState(current);
   }
   // Any module can use this compact peer list to show whether a phone is
   // actually connected. It contains no task or mail data and is refreshed by
@@ -226,6 +233,8 @@ async function syncStateWithModuleBridge() {
       }
     });
   }
+  if (strict && !remote) throw new Error("Keine Antwort vom Modul-Hub.");
+  return { ok: Boolean(remote), sent: Boolean(remote), received: Boolean(remote) };
 }
 
 function queueModuleBridgeSnapshot() {
@@ -557,21 +566,17 @@ async function openPlannerSpace() {
     // Reuse the already open Planner instead of turning another mail tab into a
     // second Planner tab or window.
     const existingTabs = await tb.tabs.query({ url: SPACE_URL });
-    const existingTab = existingTabs.find(tab => tab?.id != null);
+    const existingTab = existingTabs.find(tab => tab?.id != null && tab.url === SPACE_URL);
     if (existingTab) {
       const updated = await tb.tabs.update(existingTab.id, { active: true });
       return { ok: true, method: "existing-tab", tabId: updated?.id ?? existingTab.id };
     }
-    const tabs = await tb.tabs.query({ active: true, lastFocusedWindow: true });
-    const activeTab = tabs.find(tab => tab?.id != null);
-    if (!activeTab) {
-      throw new Error("Thunderbird hat noch keinen aktiven Tab bereitgestellt.");
+    // Never navigate an unrelated active tab: it may be the Calendar space.
+    const created = await tb.tabs.create({ url: SPACE_URL, active: true });
+    if (created?.id == null) {
+      throw new Error("Thunderbird hat keinen Tagesplaner-Tab bereitgestellt.");
     }
-    const updated = await tb.tabs.update(activeTab.id, {
-      url: SPACE_URL,
-      active: true
-    });
-    return { ok: true, method: "current-tab", tabId: updated?.id ?? activeTab.id };
+    return { ok: true, method: "new-tab", tabId: created.id };
   } catch (error) {
     errors.push(errorText(error));
     return { ok: false, error: errors.filter(Boolean).join(" · ") };
@@ -1209,6 +1214,13 @@ tb.runtime.onStartup.addListener(async () => {
 
 tb.runtime.onMessage.addListener((message, sender) => {
   switch (message?.type) {
+    case "syncNow":
+      return (async () => {
+        await syncStateWithModuleBridge({ strict: true });
+        const hub = await tb.runtime.sendMessage("tb-connect-module-hub@tbconnect.local",
+          { type: "syncDesktopNow", skipPlanner: true });
+        return { ...await plannerSnapshot(), manualSync: hub };
+      })().catch(error => ({ok:false,error:error.message || "Senden oder Empfangen fehlgeschlagen."}));
     case "getPlannerData":
       return plannerSnapshot();
     case "addTask":
@@ -1265,3 +1277,8 @@ createMenus();
 ensureMobileSync().catch(error => console.warn("Tagesplaner: Handy-Dienst konnte nicht gestartet werden.", error));
 setInterval(() => pullMobileChanges().catch(() => {}), 4000);
 setInterval(() => syncStateWithModuleBridge().catch(() => {}), 4000);
+
+if (tb.runtime.onMessageExternal) tb.runtime.onMessageExternal.addListener((message, sender) => {
+  if (sender.id !== "tb-connect-module-hub@tbconnect.local" || message?.type !== "forceModuleSync") return undefined;
+  return syncStateWithModuleBridge({ strict: true });
+});

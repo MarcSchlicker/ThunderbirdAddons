@@ -30,7 +30,7 @@ Die optionale Feiertagsauswahl verwendet die [OpenHolidays API](https://www.open
 
 Optionale E-Mail-Sicherungen können Kalenderdaten enthalten. Empfänger und Zeitplan werden selbst eingerichtet; der automatische Versand ist standardmäßig ausgeschaltet.
 
-Die Nextcloud-Aktion benötigt den separat installierten **TB-Connect Modul-Hub**. Der Hub und die Android-App sind nicht Teil dieses Repositories. Das Kalender-Raster funktioniert ohne sie; die Nextcloud-Anmeldung übernimmt der Hub.
+Die Nextcloud-Aktion benötigt den separat installierten **TB-Connect Modul-Hub**. Hub und Android-App sind ebenfalls in diesem Repository enthalten. Das Kalender-Raster funktioniert ohne sie; die Nextcloud-Anmeldung übernimmt der Hub.
 
 ## Entwicklung
 
@@ -40,3 +40,11 @@ node ./test-person-calendar.cjs
 ```
 
 Zum temporären Laden in Thunderbird **Add-ons debuggen → Temporäres Add-on laden …** öffnen und `manifest.json` auswählen. Automatisierte Tests ersetzen keine Bedienprüfung in Thunderbird.
+
+## Testdiagnose
+
+Mit `-ReleaseName test_diagnostics` gebaute Pakete aktivieren den Diagnoseknopf. Normale Pakete bleiben deaktiviert. [Anleitung und Protokollformat](../../docs/DIAGNOSTICS.md).
+
+## Lizenz und Datenschutz
+
+Eigener Code: [MPL 2.0](LICENSE). [Lizenzübersicht](../../LICENSING.md), [Datenschutz](../../docs/PRIVACY.md) und [Release-Status](../../docs/RELEASE.md).

@@ -161,6 +161,26 @@
             "type": "string"
           }
         ]
+      },
+      {
+        "name": "refreshCalendars",
+        "type": "function",
+        "async": true,
+        "description": "Request explicit provider synchronization for selected calendars and report completion or pending state.",
+        "parameters": [
+          {
+            "name": "calendarIdsJson",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "name": "onCalendarChanged",
+        "type": "function",
+        "description": "Local calendar data changed; no event contents or account data are included.",
+        "parameters": []
       }
     ]
   }

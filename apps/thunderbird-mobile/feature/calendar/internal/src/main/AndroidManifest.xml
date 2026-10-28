@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity android:name="net.thunderbird.feature.calendar.internal.NativeCalendarActivity" android:exported="false" />
+    </application>
+</manifest>

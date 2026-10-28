@@ -1,0 +1,29 @@
+plugins {
+    id(ThunderbirdPlugins.Library.android)
+}
+
+dependencies {
+    implementation(projects.legacy.core)
+    implementation(projects.legacy.logging)
+
+    api(projects.core.ui.theme.manager)
+    api(projects.core.ui.animation.manager)
+
+    api(libs.androidx.appcompat)
+    api(libs.androidx.activity)
+    api(libs.android.material)
+    api(libs.androidx.navigation.fragment)
+    api(libs.androidx.navigation.ui)
+    api(libs.androidx.lifecycle.livedata.ktx)
+
+    implementation(libs.androidx.biometric)
+}
+
+android {
+    namespace = "com.fsck.k9.ui.base"
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
+}

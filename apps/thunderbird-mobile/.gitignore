@@ -1,0 +1,57 @@
+# Gradle
+.gradle/
+local.properties
+
+# Kotlin
+.kotlin/
+
+# mdBook
+book/
+
+# Generated folders
+bin/
+build/
+gen/
+out/
+
+# Generated files
+*.aab
+*.apk
+*.ap_
+*.class
+*.dex
+
+# Keystore files
+*.jks
+*.keystore
+
+# Signing files
+.signing/
+*.signing.properties
+
+# IDEA/Android Studio ignores
+*iml
+.idea/*
+
+# IDEA/Android Studio includes
+!.idea/icon.png
+!.idea/codeStyles/
+!.idea/fileTemplates/
+
+# Android Studio captures folder
+captures/
+
+# Mac thumbnail db
+.DS_Store
+
+# Screenshots
+adb-screenshots/
+# Extracted eml files
+eml-files/
+
+# Merged PRs report
+merged-prs-*.md
+merged-prs-*.csv
+
+# Weblate cache
+cli/weblate-cli/weblate-components-cache.json

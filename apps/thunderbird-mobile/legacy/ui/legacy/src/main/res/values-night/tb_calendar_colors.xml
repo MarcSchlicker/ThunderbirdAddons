@@ -1,0 +1,12 @@
+<resources>
+    <color name="tb_calendar_background">#10131D</color>
+    <color name="tb_calendar_surface">#181D2B</color>
+    <color name="tb_calendar_surface_soft">#1D2434</color>
+    <color name="tb_calendar_text">#EAF0FF</color>
+    <color name="tb_calendar_muted">#A7B3CB</color>
+    <color name="tb_calendar_line">#2D3548</color>
+    <color name="tb_calendar_accent">#AFBCFF</color>
+    <color name="tb_calendar_accent_strong">#C4CDFF</color>
+    <color name="tb_calendar_accent_soft">#2C365C</color>
+    <color name="tb_calendar_on_accent">#18224E</color>
+</resources>

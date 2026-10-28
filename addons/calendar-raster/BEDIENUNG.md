@@ -47,3 +47,8 @@ Sicherungen können als geprüfte JSON-Datei exportiert und wiederhergestellt we
 E-Mail-Sicherungen sind optional und enthalten Kalenderdaten: Empfänger bewusst auswählen.
 
 Build: `./build-xpi.ps1`. Technische Details und weitere Optionen: [README](README.md).
+
+
+## Personen verwalten und wieder anzeigen
+
+Unter **Einstellungen → Personen** vorhandene Personen bearbeiten oder neue hinzufügen. **Personen im Kalender wieder anzeigen** öffnet die Personenliste und leert deren Suchfilter. Vorhandene Namen, Farben, Arbeitszeiten und Kalenderzuordnungen bleiben erhalten. Tatsächlich gelöschte Personen benötigen eine vorhandene Sicherung; dieser Knopf stellt nur die Ansicht wieder her.

@@ -350,6 +350,7 @@ async function saveCalendar(calendar, row, { makeDefault = false } = {}) {
   const color = row.querySelector(".calendar-color-input").value;
   const visible = row.querySelector(".calendar-visible").checked;
   try {
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) throw new Error("Ungültige Kalenderfarbe");
     await saveAddonVisibility(calendarKey(calendar), visible);
     if (calendar.source === "addon") {
       const stored = await tb.storage.local.get({ externalCalendars: [] });
@@ -359,14 +360,21 @@ async function saveCalendar(calendar, row, { makeDefault = false } = {}) {
       await tb.storage.local.set({ externalCalendars });
     } else {
       const enabled = row.querySelector(".calendar-enabled").checked;
-      await tb.runtime.sendMessage({
+      const updated = await tb.runtime.sendMessage({
         type: "updateCalendar",
         calendar: { calendarId: calendar.id, name, color, enabled, visible, makeDefault }
       });
+      if (updated?.color?.toLowerCase() !== color.toLowerCase()) {
+        throw new Error("Thunderbird hat die Kalenderfarbe nicht bestätigt.");
+      }
     }
     await tb.storage.local.set({ calendarDataRevision: Date.now() });
-    setStatus(calendarStatus, t("saved", { calendar: name }));
     await loadCalendars();
+    const reloaded = state.calendars.find(entry => calendarKey(entry) === calendarKey(calendar));
+    if (reloaded?.color?.toLowerCase() !== color.toLowerCase()) {
+      throw new Error("Die Kalenderfarbe wurde beim erneuten Lesen überschrieben.");
+    }
+    setStatus(calendarStatus, t("saved", { calendar: name }));
   } catch (error) {
     setStatus(calendarStatus, t("saveFailed", { message: error?.message || error }), true);
   }

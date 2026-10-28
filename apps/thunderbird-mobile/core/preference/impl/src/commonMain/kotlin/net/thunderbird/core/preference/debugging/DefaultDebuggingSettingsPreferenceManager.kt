@@ -1,0 +1,94 @@
+package net.thunderbird.core.preference.debugging
+
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import net.thunderbird.core.common.appConfig.PlatformConfigProvider
+import net.thunderbird.core.logging.LogLevel
+import net.thunderbird.core.logging.LogLevelManager
+import net.thunderbird.core.logging.Logger
+import net.thunderbird.core.preference.PreferenceChangeBroker
+import net.thunderbird.core.preference.PreferenceChangeSubscriber
+import net.thunderbird.core.preference.PreferenceScope
+import net.thunderbird.core.preference.storage.Storage
+import net.thunderbird.core.preference.storage.StorageEditor
+import net.thunderbird.core.preference.storage.StoragePersister
+
+private const val TAG = "DefaultDebuggingSettingsPreferenceManager"
+
+class DefaultDebuggingSettingsPreferenceManager(
+    private val logger: Logger,
+    private val storagePersister: StoragePersister,
+    private val storageEditor: StorageEditor,
+    private val logLevelManager: LogLevelManager,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private var scope: CoroutineScope = CoroutineScope(SupervisorJob()),
+    private val platformConfigProvider: PlatformConfigProvider,
+    preferenceChangeBroker: PreferenceChangeBroker,
+) : DebuggingSettingsPreferenceManager, PreferenceChangeSubscriber {
+
+    init {
+        preferenceChangeBroker.subscribe(this)
+    }
+    private val configState: MutableStateFlow<DebuggingSettings> = MutableStateFlow(value = loadConfig())
+    private val mutex = Mutex()
+
+    override fun getConfig(): DebuggingSettings = configState.value
+    override fun getConfigFlow(): Flow<DebuggingSettings> = configState
+
+    override fun save(config: DebuggingSettings) {
+        logger.debug(TAG) { "save() called with: config = $config" }
+        writeConfig(config)
+        configState.update { config.also(::updateDebugLogLevel) }
+    }
+
+    private fun loadConfig(storage: Storage = storagePersister.loadValues()): DebuggingSettings = DebuggingSettings(
+        isDebugLoggingEnabled = storage.getBoolean(
+            DebugSettingKey.EnableDebugLogging.value,
+            platformConfigProvider.isDebug,
+        ),
+        isSyncLoggingEnabled = storage.getBoolean(
+            DebugSettingKey.EnableSyncDebugLogging.value,
+            DEBUGGING_SETTINGS_DEFAULT_IS_SYNC_LOGGING_ENABLED,
+        ),
+        isSensitiveLoggingEnabled = storage.getBoolean(
+            key = DebugSettingKey.EnableSensitiveLogging.value,
+            defValue = DEBUGGING_SETTINGS_DEFAULT_SENSITIVE_LOGGING_ENABLED,
+        ),
+    ).also(::updateDebugLogLevel)
+
+    private fun writeConfig(config: DebuggingSettings) {
+        logger.debug(TAG) { "writeConfig() called with: config = $config" }
+        scope.launch(ioDispatcher) {
+            mutex.withLock {
+                storageEditor.putBoolean(DebugSettingKey.EnableDebugLogging.value, config.isDebugLoggingEnabled)
+                storageEditor.putBoolean(DebugSettingKey.EnableSyncDebugLogging.value, config.isSyncLoggingEnabled)
+                storageEditor.putBoolean(DebugSettingKey.EnableSensitiveLogging.value, config.isSensitiveLoggingEnabled)
+                storageEditor.commit().also { commited ->
+                    logger.verbose(TAG) { "writeConfig: storageEditor.commit() resulted in: $commited" }
+                }
+            }
+        }
+    }
+
+    private fun updateDebugLogLevel(config: DebuggingSettings) {
+        if (config.isDebugLoggingEnabled) {
+            logLevelManager.override(LogLevel.VERBOSE)
+        } else {
+            logLevelManager.restoreDefault()
+        }
+    }
+
+    override fun receive(scope: PreferenceScope) {
+        if (scope == PreferenceScope.ALL || scope == PreferenceScope.DEBUGGING) {
+            configState.update { loadConfig() }
+        }
+    }
+}

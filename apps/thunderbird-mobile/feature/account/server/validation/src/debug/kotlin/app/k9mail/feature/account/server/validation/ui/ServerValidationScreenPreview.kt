@@ -1,0 +1,53 @@
+package app.k9mail.feature.account.server.validation.ui
+
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import app.k9mail.feature.account.common.ui.fake.FakeAccountStateRepository
+import app.k9mail.feature.account.server.certificate.data.InMemoryServerCertificateErrorRepository
+import app.k9mail.feature.account.server.validation.ui.fake.FakeAccountOAuthViewModel
+import app.k9mail.feature.account.server.validation.ui.fake.FakeBrandNameProvider
+import com.fsck.k9.mail.server.ServerSettingsValidationResult
+import net.thunderbird.components.ui.bolt.PreviewWithTheme
+import net.thunderbird.components.ui.bolt.common.annotation.PreviewDevices
+
+@Composable
+@PreviewDevices
+internal fun IncomingServerValidationScreenPreview() {
+    PreviewWithTheme {
+        ServerValidationScreen(
+            onNext = { },
+            onBack = { },
+            viewModel = viewModel {
+                IncomingServerValidationViewModel(
+                    accountStateRepository = FakeAccountStateRepository(),
+                    validateServerSettings = { ServerSettingsValidationResult.Success },
+                    authorizationStateRepository = { true },
+                    certificateErrorRepository = InMemoryServerCertificateErrorRepository(),
+                    oAuthViewModel = FakeAccountOAuthViewModel(),
+                )
+            },
+            brandNameProvider = FakeBrandNameProvider,
+        )
+    }
+}
+
+@Composable
+@PreviewDevices
+internal fun OutgoingServerValidationScreenPreview() {
+    PreviewWithTheme {
+        ServerValidationScreen(
+            onNext = { },
+            onBack = { },
+            viewModel = viewModel {
+                OutgoingServerValidationViewModel(
+                    accountStateRepository = FakeAccountStateRepository(),
+                    validateServerSettings = { ServerSettingsValidationResult.Success },
+                    authorizationStateRepository = { true },
+                    certificateErrorRepository = InMemoryServerCertificateErrorRepository(),
+                    oAuthViewModel = FakeAccountOAuthViewModel(),
+                )
+            },
+            brandNameProvider = FakeBrandNameProvider,
+        )
+    }
+}

@@ -1,0 +1,20 @@
+<resources>
+    <string name="tb_sync_button">Synchronisieren</string>
+    <string name="tb_sync_started">Senden und Empfangen wird gestartet …</string>
+    <string name="tb_sync_finished">Senden und Empfangen abgeschlossen</string>
+    <string name="tb_sync_incomplete">Synchronisierung unvollständig</string>
+    <string name="tb_sync_no_connection">Kein Zugang für den Abgleich eingerichtet</string>
+    <string name="tb_sync_problems">Syncprobleme nach Kalender</string>
+    <string name="tb_sync_show_problems">Probleme anzeigen</string>
+    <string name="tb_sync_no_problems">Keine gespeicherten Syncprobleme.</string>
+    <string name="tb_sync_no_native">Kein eingebetteter Google-Kalender ausgewählt.</string>
+    <string name="tb_sync_native_failed">Google-Kalender: Senden oder Empfangen fehlgeschlagen.</string>
+    <string name="tb_sync_no_desktop">Kein Desktop gekoppelt.</string>
+    <string name="tb_sync_desktop_failed">Desktop-Abgleich konnte nicht abgeschlossen werden.</string>
+    <string name="tb_sync_module_failed">Kalenderdaten konnten nicht vom Desktop empfangen werden.</string>
+    <string name="tb_sync_peer_ok">%1$s: Nachricht gesendet und Antwort empfangen.</string>
+    <string name="tb_sync_peer_failed">%1$s: Senden oder Empfangen fehlgeschlagen.</string>
+    <string name="tb_sync_unknown_calendar">Kalender-ID %1$d – Name derzeit nicht verfügbar</string>
+    <string name="tb_sync_setup_pending">Ein Kalenderzugang benötigt noch eine Einrichtung oder Freigabe. Noch keine eindeutige Kalenderzuordnung verfügbar.</string>
+    <string name="tb_sync_unknown_failure">Google-Zugang: Fehler ohne verfügbare Kalenderzuordnung.</string>
+</resources>

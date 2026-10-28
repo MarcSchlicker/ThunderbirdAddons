@@ -110,7 +110,7 @@ const DEFAULT_SETTINGS = {
   hiddenCalendarIds: [],
   removedCalendarIds: [],
   collapsedCalendarTypeIds: [],
-  peoplePanelOpen: false,
+  peoplePanelOpen: true,
   peopleSearch: "",
   profileSettingsVersion: 0,
   calendarVisibilityOverrides: {},
@@ -155,6 +155,7 @@ const state = {
   data: null,
   externalCalendars: [],
   isLoading: false,
+  reloadPending: false,
   draggedEvent: null,
   refreshAfterEditor: false,
   dragPreviewKey: "",
@@ -202,8 +203,21 @@ const calendarSidebar = document.querySelector(".calendar-sidebar");
 const leadingEdgeDays = document.getElementById("leading-edge-days");
 const trailingEdgeDays = document.getElementById("trailing-edge-days");
 const calendarPeoplePanel = document.getElementById("calendar-people-panel");
+const calendarPeopleCount = document.getElementById("calendar-people-count");
 const calendarPeopleList = document.getElementById("calendar-people-list");
 const calendarPeopleSearch = document.getElementById("calendar-people-search");
+const settingsPeopleList = document.getElementById("settings-people-list");
+const settingsAddPerson = document.getElementById("settings-add-person");
+const settingsShowPeople = document.getElementById("settings-show-people");
+settingsAddPerson.addEventListener("click", () => openCalendarTypeDialog());
+settingsShowPeople.addEventListener("click", async () => {
+  state.settings.peoplePanelOpen = true;
+  state.settings.peopleSearch = "";
+  await saveSettings();
+  renderCalendarPeopleSidebar();
+  calendarPeoplePanel.scrollIntoView({ block: "nearest" });
+});
+
 calendarPeopleSearch.addEventListener("input", () => {
   state.settings.peopleSearch = calendarPeopleSearch.value.trim().slice(0, 100);
   renderCalendarPeopleSidebar();
@@ -2705,6 +2719,16 @@ function renderCalendarPeopleSidebar() {
     (left, right) => personRelationshipSort(left) - personRelationshipSort(right) || left.name.localeCompare(right.name, UI_LOCALE)
   );
   calendarPeoplePanel.hidden = people.length === 0;
+  calendarPeopleCount.textContent = String(people.length);
+  settingsPeopleList.replaceChildren();
+  for (const person of people) {
+    const edit = document.createElement("button");
+    edit.type = "button";
+    edit.textContent = `${person.name} · ${personRelationshipLabel(person)}`;
+    edit.addEventListener("click", () => openCalendarTypeDialog(person));
+    settingsPeopleList.appendChild(edit);
+  }
+
   for (const person of people) {
     if (state.settings.peopleSearch && !person.name.toLocaleLowerCase(UI_LOCALE).includes(state.settings.peopleSearch.toLocaleLowerCase(UI_LOCALE))) continue;
     const row = document.createElement("div");
@@ -2750,6 +2774,7 @@ function renderCalendarPeopleSidebar() {
 
     const workCalendar = document.createElement("div");
     workCalendar.className = "calendar-person-work-calendar";
+    workCalendar.hidden = activeViewProfile().effect !== "work";
     const workMarker = document.createElement("span");
     workMarker.className = "calendar-swatch";
     workMarker.style.setProperty("--calendar-color", person.color);
@@ -4080,6 +4105,7 @@ function personVacationOnDate(person, date) {
 }
 
 function appendPersonWorkOverlays(tracks, date) {
+  if (activeViewProfile().effect !== "work") return;
   // The virtual Arbeitszeit calendar is independent from the person's normal
   // calendar eye. This makes availability available even when appointments of
   // that person are temporarily hidden.
@@ -4731,6 +4757,10 @@ async function loadInternalMonthPart(year, month) {
 }
 
 async function loadMonth() {
+  if (state.isLoading) {
+    state.reloadPending = true;
+    return;
+  }
   state.isLoading = true;
   try {
     statusText.textContent = "Termine werden geladen...";
@@ -4756,6 +4786,10 @@ async function loadMonth() {
   } finally {
     state.isLoading = false;
     renderMonth();
+    if (state.reloadPending) {
+      state.reloadPending = false;
+      await loadMonth();
+    }
   }
 }
 
@@ -4813,6 +4847,7 @@ document.getElementById("today").addEventListener("click", async () => {
 settingsToggle.addEventListener("click", () => {
   const willOpen = settingsPanel.hidden;
   settingsPanel.hidden = !willOpen;
+  if (willOpen) renderCalendarPeopleSidebar();
   settingsToggle.setAttribute("aria-expanded", String(willOpen));
 });
 
@@ -5116,6 +5151,8 @@ tb.storage.onChanged.addListener(async changes => {
     changes.collapsedCalendarTypeIds ||
     changes.dragCalendarMove ||
     changes.themeMode ||
+    changes.peoplePanelOpen ||
+    changes.peopleSearch ||
     changes.calendarTypes ||
     changes.calendarTypeAssignments ||
     changes.calendarPersonAssignments ||
@@ -5130,6 +5167,24 @@ tb.storage.onChanged.addListener(async changes => {
       renderMonth();
     }
   }
+});
+
+const syncNowButton = document.getElementById("sync-now");
+if (syncNowButton) syncNowButton.addEventListener("click", async () => {
+  if (syncNowButton.disabled) return;
+  const status = document.getElementById("sync-now-status");
+  syncNowButton.disabled = true;
+  status.textContent = "Senden und Empfangen läuft …";
+  try {
+    const ids = (state.data?.calendars || []).filter(isCalendarVisible).map(calendar => calendar.id);
+    const result = await tb.runtime.sendMessage({ type: "syncNow", calendarIds: ids });
+    await loadMonth();
+    const providerText = (result?.providers?.calendars || []).map(item => `${item.name}: ${
+      {received:"Antwort empfangen",local:"lokaler Kalender",pending:"Anbieter läuft noch",failed:"Fehler",missing:"nicht verfügbar"}[item.status]
+    }`).join(" · ");
+    status.textContent = `${providerText || "Keine aktiven Kalender"}. ${result?.transport?.message || "Hub-Austausch nicht bestätigt."}`;
+  } catch (_) { status.textContent = "Synchronisierung fehlgeschlagen. Bitte Zugang und Verbindung prüfen."; }
+  finally { syncNowButton.disabled = false; }
 });
 
 init();

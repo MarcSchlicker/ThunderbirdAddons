@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Palette shared with the Zeitklar desktop planner. -->
+    <color name="zeitklar_background">#F4F4F8</color>
+    <color name="zeitklar_surface">#FFFFFF</color>
+    <color name="zeitklar_surface_soft">#F8F8FB</color>
+    <color name="zeitklar_text">#20202A</color>
+    <color name="zeitklar_muted">#6D6D7D</color>
+    <color name="zeitklar_line">#E4E3EB</color>
+    <color name="zeitklar_accent">#6558E8</color>
+    <color name="zeitklar_accent_strong">#5146CC</color>
+    <color name="zeitklar_accent_soft">#EEECFF</color>
+    <color name="zeitklar_teal">#087F7A</color>
+    <color name="zeitklar_teal_soft">#E2F5F3</color>
+    <color name="zeitklar_danger">#B73B49</color>
+    <color name="zeitklar_on_accent">#FFFFFF</color>
+    <color name="zeitklar_on_teal">#FFFFFF</color>
+</resources>

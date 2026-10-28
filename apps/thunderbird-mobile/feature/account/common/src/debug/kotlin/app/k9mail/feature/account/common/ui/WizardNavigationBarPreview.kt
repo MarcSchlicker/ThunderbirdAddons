@@ -1,0 +1,59 @@
+package app.k9mail.feature.account.common.ui
+
+import androidx.compose.runtime.Composable
+import net.thunderbird.components.ui.bolt.PreviewWithThemes
+import net.thunderbird.components.ui.bolt.common.annotation.PreviewDevices
+
+@Composable
+@PreviewDevices
+internal fun WizardNavigationBarPreview() {
+    PreviewWithThemes {
+        WizardNavigationBar(
+            onNextClick = {},
+            onBackClick = {},
+        )
+    }
+}
+
+@Composable
+@PreviewDevices
+internal fun WizardNavigationBarDisabledPreview() {
+    PreviewWithThemes {
+        WizardNavigationBar(
+            onNextClick = {},
+            onBackClick = {},
+            state = WizardNavigationBarState(
+                isNextEnabled = false,
+                isBackEnabled = false,
+            ),
+        )
+    }
+}
+
+@Composable
+@PreviewDevices
+internal fun WizardNavigationBarHideNextPreview() {
+    PreviewWithThemes {
+        WizardNavigationBar(
+            onNextClick = {},
+            onBackClick = {},
+            state = WizardNavigationBarState(
+                showNext = false,
+            ),
+        )
+    }
+}
+
+@Composable
+@PreviewDevices
+internal fun WizardNavigationBarHideBackPreview() {
+    PreviewWithThemes {
+        WizardNavigationBar(
+            onNextClick = {},
+            onBackClick = {},
+            state = WizardNavigationBarState(
+                showBack = false,
+            ),
+        )
+    }
+}

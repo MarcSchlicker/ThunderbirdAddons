@@ -1,0 +1,77 @@
+package app.k9mail.feature.account.setup.ui.createaccount
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import app.k9mail.feature.account.common.ui.AppTitleTopHeader
+import app.k9mail.feature.account.common.ui.WizardNavigationBar
+import app.k9mail.feature.account.common.ui.WizardNavigationBarState
+import app.k9mail.feature.account.setup.domain.entity.AccountUuid
+import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract.Effect
+import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract.Event
+import app.k9mail.feature.account.setup.ui.createaccount.CreateAccountContract.ViewModel
+import net.thunderbird.components.ui.bolt.template.Scaffold
+import net.thunderbird.core.common.provider.BrandNameProvider
+import net.thunderbird.core.ui.contract.mvi.observe
+
+@Composable
+internal fun CreateAccountScreen(
+    onNext: (AccountUuid) -> Unit,
+    onBack: () -> Unit,
+    viewModel: ViewModel,
+    brandNameProvider: BrandNameProvider,
+    modifier: Modifier = Modifier,
+) {
+    val (state, dispatch) = viewModel.observe { effect ->
+        when (effect) {
+            Effect.NavigateBack -> onBack()
+            is Effect.NavigateNext -> onNext(effect.accountUuid)
+        }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        dispatch(Event.CreateAccount)
+    }
+
+    BackHandler {
+        dispatch(Event.OnBackClicked)
+    }
+
+    Scaffold(
+        topBar = {
+            AppTitleTopHeader(
+                title = brandNameProvider.brandName,
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.statusBars.union(WindowInsets.displayCutout),
+                ),
+            )
+        },
+        bottomBar = {
+            WizardNavigationBar(
+                onNextClick = {},
+                onBackClick = {
+                    dispatch(Event.OnBackClicked)
+                },
+                state = WizardNavigationBarState(
+                    showNext = false,
+                    isBackEnabled = state.value.error != null,
+                ),
+                modifier = Modifier.imePadding(),
+            )
+        },
+        modifier = modifier.windowInsetsPadding(WindowInsets.navigationBars),
+    ) { innerPadding ->
+        CreateAccountContent(
+            state = state.value,
+            contentPadding = innerPadding,
+        )
+    }
+}

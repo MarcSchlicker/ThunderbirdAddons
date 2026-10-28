@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modul-Hub</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <p class="eyebrow">TB-CONNECT DESKTOP</p>
+        <h1>TB-Connect Modul-Hub</h1>
+        <p class="intro">Die lokale Brücke für Module auf diesem Desktop. Sie arbeitet nur im privaten Netzwerk und zeigt den letzten Abgleich für jedes verbundene Gerät.</p>
+        <p id="action-feedback" class="action-feedback" aria-live="polite"></p>
+      </header>
+
+      <section class="card connection-card">
+        <div>
+          <p class="eyebrow">VERBINDUNGEN</p>
+          <h2 id="connection-title">Lokale Schnittstelle wird geprüft …</h2>
+          <p id="connection-detail" class="muted"></p>
+        </div>
+        <div class="pairing-host-field">
+          <label for="pairing-host">WLAN-IP-Adresse dieses PCs</label>
+          <input id="pairing-host" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="Private IPv4-Adresse dieses PCs" aria-describedby="pairing-host-help">
+          <p id="pairing-host-help" class="muted">Nur nötig, wenn die automatische Erkennung keine Adresse anzeigt. Die Adresse wird lokal in diesem Add-on gespeichert und kommt in den QR-Code.</p>
+        </div>
+        <div class="actions">
+          <button id="pair-button" class="primary" type="button">Gerät koppeln</button>
+          <button id="sync-desktop-now" class="primary" type="button">Senden &amp; Empfangen</button>
+          <button id="connection-refresh-button" class="secondary" type="button">Status aktualisieren</button>
+          <button id="rotate-button" class="secondary" type="button">Zugänge erneuern</button>
+        </div>
+      </section>
+
+      <section class="card nextcloud-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">OPTIONALE CLOUD-SYNCHRONISATION</p>
+            <h2>Nextcloud</h2>
+            <p id="nextcloud-status" class="muted">Noch nicht eingerichtet. Die lokale WLAN-Verbindung bleibt davon unabhängig.</p>
+          </div>
+          <button id="nextcloud-sync-button" class="secondary" type="button" disabled>Jetzt abgleichen</button>
+        </div>
+        <p class="muted">Melde dich direkt auf der Nextcloud-Seite an. TB-Connect erhält dabei ein widerrufbares, eigenes App-Passwort – dein normales Passwort wird weder abgefragt noch gespeichert.</p>
+        <form id="nextcloud-form" class="nextcloud-form" novalidate>
+          <label>Nextcloud-Basisadresse
+            <input id="nextcloud-server" type="text" inputmode="url" autocomplete="url" value="https://" placeholder="cloud.beispiel.de/nextcloud">
+          </label>
+          <label>App-Ordner
+            <input id="nextcloud-app-folder" type="text" value="Thunderbird" maxlength="64">
+          </label>
+          <div class="actions">
+            <button id="nextcloud-save-button" class="primary" type="submit">In Nextcloud anmelden</button>
+            <button id="nextcloud-login-cancel-button" class="secondary" type="button" hidden>Anmeldung abbrechen</button>
+            <button id="nextcloud-remove-button" class="secondary" type="button" hidden>Verbindung entfernen</button>
+          </div>
+        </form>
+        <details>
+          <summary>Erweitert: Mit App-Passwort verbinden</summary>
+          <p class="muted">Ein App-Passwort in Nextcloud unter Sicherheit erstellen. Es muss Zugriff auf Dateien erlauben. Die Basisadresse und der Ordner oben gelten auch hier.</p>
+          <form id="nextcloud-password-form" class="nextcloud-form">
+            <label>Anmeldename<input id="nextcloud-username" type="text" autocomplete="username" required></label>
+            <label>Nextcloud-App-Passwort<input id="nextcloud-password" type="password" autocomplete="off" required></label>
+            <button id="nextcloud-password-save" class="primary" type="submit">Zugang speichern und prüfen</button>
+          </form>
+        </details>
+      </section>
+
+      <section id="nextcloud-calendars" class="card">
+        <div class="section-heading">
+          <div><p class="eyebrow">ECHTE CALDAV-KALENDER</p><h2>Nextcloud-Kalender in Thunderbird</h2></div>
+          <button id="caldav-refresh" class="secondary" type="button" disabled>Kalender abrufen</button>
+        </div>
+        <p class="muted">Verwendet die Nextcloud-Anmeldung oben. Termine bleiben echte CalDAV-Termine und werden von Thunderbird synchronisiert. Der JSON-Modulabgleich ist davon getrennt. Die App erhält diese Kalender über den Hub.</p>
+        <div id="caldav-status" role="status">Bitte zuerst Nextcloud anmelden, dann Kalender abrufen.</div>
+        <div id="caldav-list" class="list"></div>
+        <form id="caldav-create-form" class="nextcloud-form">
+          <label>Neuer Kalendername<input id="caldav-name" type="text" maxlength="160" required placeholder="Mein TB-Connect-Kalender"></label>
+          <label>Farbe<input id="caldav-color" type="color" value="#6558e8"></label>
+          <button id="caldav-create" class="primary" type="submit" disabled>In Nextcloud anlegen und hinzufügen</button>
+        </form>
+        <p class="muted">Ein Klick legt einen echten Kalender in deinem Nextcloud-Konto an. Bereits vorhandene Kalender werden nicht gelöscht oder ersetzt. Für direkten CalDAV-Abgleich auf Android bleibt ein Android-Kalenderanbieter nötig; TB-Connect greift derzeit über den Desktop-Hub darauf zu.</p>
+      </section>
+
+      <section id="pairing-card" class="card" hidden>
+        <p class="eyebrow">FÜNF MINUTEN GÜLTIG</p>
+        <h2>QR-Code mit TB-Connect Mobil scannen</h2>
+        <p class="muted">Der QR-Code koppelt ein Gerät mit diesem Desktop. Danach wird der Zugang nur lokal auf dem Gerät gespeichert.</p>
+        <div id="pairing-qr" class="pairing-qr" aria-label="Kopplungs-QR-Code"></div>
+        <details>
+          <summary>Stattdessen Kopplungscode eingeben</summary>
+          <p class="muted">Nur verwenden, wenn der QR-Code nicht gescannt werden kann.</p>
+          <textarea id="pairing-code" readonly aria-label="Kopplungscode"></textarea>
+        </details>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">VERBUNDENE GERÄTE</p>
+            <h2>Synchronisierungsstände</h2>
+          </div>
+          <button id="refresh-button" class="secondary" type="button">Aktualisieren</button>
+        </div>
+        <div id="peers" class="list"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">UNTERSTÜTZTE MODULE</p>
+            <h2>Module auf diesem Desktop</h2>
+          </div>
+          <button id="module-refresh-button" class="secondary" type="button">Modulstatus abrufen</button>
+        </div>
+        <div id="module-status" class="module-status" aria-live="polite">Modulstatus wird geprüft …</div>
+        <div id="modules" class="module-grid"></div>
+      </section>
+
+      <section class="card">
+        <p class="eyebrow">MODULQUELLE</p>
+        <h2>Modul aus GitHub oder einer anderen Quelle hinzufügen</h2>
+        <p class="muted">Gib die HTTPS-Adresse einer <code>tb-connect-module.json</code> oder direkt ein GitHub-Repository ein. Der Hub prüft die Beschreibung, lädt XPIs nur nach deinem Klick herunter und überträgt ausgewählte Mobil-Pakete erst beim nächsten Abgleich.</p>
+        <form id="source-form">
+          <input id="source-url" type="url" placeholder="https://…/tb-connect-module.json" required>
+          <button class="primary" type="submit">Quelle prüfen</button>
+        </form>
+        <p id="message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card developer-card">
+        <p class="eyebrow">EIGENE MODULE</p>
+        <h2>Alles, was ein eigenes Modul braucht</h2>
+        <p class="muted">Ein Repository enthält eine <code>tb-connect-module.json</code> mit quadratischem Logo, optionaler Desktop-XPI und optionalem Mobil-Paket. Der Hub überträgt ausschließlich JSON-Zustände pro Modul-ID. Mobil-Pakete sind beschreibende Datenpakete; TB-Connect Mobil führt keinen Code aus einem Repository aus.</p>
+        <details>
+          <summary>So läuft die Datenübertragung</summary>
+          <ol class="protocol-list">
+            <li>Du wählst im Hub ein Modul für Mobil aus.</li>
+            <li>Beim nächsten token-geschützten Abgleich erhält das Handy den Katalog und zeigt „Download verfügbar“. Erst der Klick in der App installiert das geprüfte JSON-Paket in den privaten Speicher.</li>
+            <li>Jedes Modul synchronisiert nur seinen eigenen JSON-Namensraum. Desktop-XPIs werden mit Speichern-Dialog geladen und anschließend in Thunderbird sichtbar manuell bestätigt.</li>
+          </ol>
+        </details>
+        <p class="muted">Die vollständige, versionierte Schnittstelle steht im Repository in <code>docs/MODULE_BRIDGE_PROTOCOL.md</code>.</p>
+      </section>
+    </main>
+    <script src="qrcode.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/zeitklar_navigation_mail"
+        android:icon="@drawable/tb_calendar_nav_mail"
+        android:title="@string/zeitklar_navigation_mail" />
+    <item
+        android:id="@+id/zeitklar_navigation_modules"
+        android:icon="@drawable/tb_calendar_nav_modules"
+        android:title="@string/zeitklar_navigation_modules" />
+    <item
+        android:id="@+id/zeitklar_navigation_daily_planner"
+        android:icon="@drawable/tb_calendar_nav_planner"
+        android:title="@string/zeitklar_navigation_daily_planner" />
+    <item
+        android:id="@+id/zeitklar_navigation_calendar"
+        android:icon="@drawable/tb_calendar_nav_calendar"
+        android:title="@string/zeitklar_navigation_calendar" />
+</menu>

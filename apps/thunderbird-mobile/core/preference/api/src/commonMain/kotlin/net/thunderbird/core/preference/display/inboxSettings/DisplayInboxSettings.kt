@@ -1,0 +1,20 @@
+package net.thunderbird.core.preference.display.inboxSettings
+
+// TB-Connect keeps the upstream unified inbox available by default. Existing
+// users can still turn it off in Settings → Kontoübersicht at any time.
+const val DISPLAY_SETTINGS_DEFAULT_IS_SHOW_UNIFIED_INBOX = true
+const val DISPLAY_SETTINGS_DEFAULT_IS_SHOW_STAR_COUNT = false
+const val DISPLAY_SETTINGS_DEFAULT_IS_SHOW_MESSAGE_LIST_STAR = true
+const val DISPLAY_SETTINGS_DEFAULT_IS_MESSAGE_LIST_SENDER_ABOVE_SUBJECT = false
+const val DISPLAY_SETTINGS_DEFAULT_IS_SHOW_COMPOSE_BUTTON_ON_MESSAGE_LIST = true
+const val DISPLAY_SETTINGS_DEFAULT_IS_THREAD_VIEW_ENABLED = true
+
+data class DisplayInboxSettings(
+    val isShowUnifiedInbox: Boolean = DISPLAY_SETTINGS_DEFAULT_IS_SHOW_UNIFIED_INBOX,
+    val isShowStarredCount: Boolean = DISPLAY_SETTINGS_DEFAULT_IS_SHOW_STAR_COUNT,
+    val isShowMessageListStars: Boolean = DISPLAY_SETTINGS_DEFAULT_IS_SHOW_MESSAGE_LIST_STAR,
+    val isMessageListSenderAboveSubject: Boolean = DISPLAY_SETTINGS_DEFAULT_IS_MESSAGE_LIST_SENDER_ABOVE_SUBJECT,
+    val isShowComposeButtonOnMessageList: Boolean = DISPLAY_SETTINGS_DEFAULT_IS_SHOW_COMPOSE_BUTTON_ON_MESSAGE_LIST,
+    val isThreadedViewEnabled: Boolean = DISPLAY_SETTINGS_DEFAULT_IS_THREAD_VIEW_ENABLED,
+
+)

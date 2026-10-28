@@ -1,4 +1,4 @@
-var { ExtensionCommon: { ExtensionAPI } } = ChromeUtils.importESModule(
+var { ExtensionCommon: { ExtensionAPI, EventManager } } = ChromeUtils.importESModule(
   "resource://gre/modules/ExtensionCommon.sys.mjs"
 );
 
@@ -12,7 +12,7 @@ const REGISTRY_BRANCH = "calendar.registry.";
 const PREF_STRING = 32;
 const PREF_INT = 64;
 const PREF_BOOL = 128;
-const IMPLEMENTATION_VERSION = "1.4.9";
+const IMPLEMENTATION_VERSION = "1.4.19";
 
 let cachedCal = null;
 
@@ -776,6 +776,9 @@ async function updateCalendarInThunderbird(details) {
       throw new Error("Die Kalenderfarbe ist ungueltig.");
     }
     calendar.setProperty("color", details.color);
+    if (calendarColor(calendar).toLowerCase() !== details.color.toLowerCase()) {
+      throw new Error("Thunderbird hat die Kalenderfarbe nicht übernommen.");
+    }
   }
   if (typeof details.enabled === "boolean") {
     calendar.setProperty("disabled", !details.enabled);
@@ -1295,10 +1298,78 @@ function diagnoseCalendarsNow() {
   return diagnostics;
 }
 
+async function refreshCalendarsNow(calendarIdsJson) {
+  const ids = JSON.parse(calendarIdsJson);
+  if (!Array.isArray(ids) || ids.some(id => typeof id !== "string") || ids.length > 500) {
+    throw new Error("Ungültige Kalenderauswahl.");
+  }
+  const { setTimeout: delay, clearTimeout: cancelDelay } = ChromeUtils.importESModule("resource://gre/modules/Timer.sys.mjs");
+  const results = await Promise.all([...new Set(ids)].map(id => {
+    const calendar = calendarById(id);
+    if (!calendar) return { id, name: id, status: "missing" };
+    const name = calendar.name || id;
+    if (calendar.canRefresh === false || calendar.type === "storage" || typeof calendar.refresh !== "function") {
+      return { id, name, status: "local" };
+    }
+    return new Promise(resolve => {
+      let settled = false;
+      let timer;
+      const finish = status => {
+        if (settled) return;
+        settled = true;
+        if (timer) cancelDelay(timer);
+        try { calendar.removeObserver(observer); } catch (_) {}
+        resolve({ id, name, status });
+      };
+      const observer = {
+        QueryInterface: ChromeUtils.generateQI(["calIObserver"]),
+        onStartBatch() {}, onEndBatch() {}, onAddItem() {}, onModifyItem() {}, onDeleteItem() {},
+        onPropertyChanged() {}, onPropertyDeleting() {},
+        onLoad() { finish("received"); },
+        onError() { finish("failed"); }
+      };
+      try {
+        calendar.addObserver(observer);
+        timer = delay(() => finish("pending"), 15000);
+        calendar.refresh();
+      } catch (_) { finish("failed"); }
+    });
+  }));
+  return { ok: results.every(item => ["received", "local"].includes(item.status)), calendars: results };
+}
+
+// Signal invalidation only; event contents and account data never leave this observer.
+function observeCalendarChanges(notify) {
+  const manager = calendarManager();
+  const changed = () => notify();
+  const observer = {
+    QueryInterface: ChromeUtils.generateQI(["calIObserver"]),
+    onStartBatch() {},
+    onEndBatch: changed,
+    onLoad: changed,
+    onAddItem: changed,
+    onModifyItem: changed,
+    onDeleteItem: changed,
+    onError() {},
+    onPropertyChanged: changed,
+    onPropertyDeleting: changed
+  };
+  manager.addCalendarObserver(observer);
+  return () => manager.removeCalendarObserver(observer);
+}
+
 this.hour_grid_bridge = class extends ExtensionAPI {
   getAPI(context) {
     return {
       hourGridBridge: {
+        async refreshCalendars(calendarIdsJson) { return jsonSafe(await refreshCalendarsNow(calendarIdsJson)); },
+        onCalendarChanged: new EventManager({
+          context,
+          name: "hourGridBridge.onCalendarChanged",
+          register: fire => observeCalendarChanges(() => {
+            fire.async().catch(() => {});
+          })
+        }).api(),
         async listCalendars() {
           try {
             return jsonSafe(mergeCalendarSummaries(

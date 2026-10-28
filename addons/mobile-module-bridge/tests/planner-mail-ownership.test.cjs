@@ -1,0 +1,25 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const context = vm.createContext({URL, Date, ExtensionAPI:class{}, Services:{}, ChromeUtils:{generateQI:()=>()=>{}}});
+const source = fs.readFileSync(path.join(__dirname,'../api/moduleBridge/implementation.js'),'utf8');
+vm.runInContext(source.slice(source.indexOf('const MAX_REQUEST_BYTES')),context);
+vm.runInContext(`
+var server = new ModuleBridgeServer(47832,'fixture','fixture-token');
+var moduleId = 'de.tbconnect.modules.daily-planner';
+var desktop = {id:'desktop',kind:'desktop',lastSyncAt:'2026-10-27T12:00:00Z'};
+var phone = {id:'phone',kind:'mobile',lastSyncAt:'2026-10-27T12:05:00Z'};
+var mail = {id:'mail-1',subject:'Synthetic',dueDate:null,done:false};
+server.mergeModuleState(moduleId,{updatedAt:'2026-10-27T12:00:00Z',state:{updatedAt:'2026-10-27T12:00:00Z',emails:[mail],settings:{showCompleted:true},tasks:[]}},desktop);
+server.mergeModuleState(moduleId,{updatedAt:'2026-10-27T12:05:00Z',state:{updatedAt:'2026-10-27T12:05:00Z',emails:[],settings:{},tasks:[{id:'task-1',text:'Phone task',updatedAt:'2026-10-27T12:05:00Z'}]}},phone);
+`,context);
+assert.equal(vm.runInContext('server.states[moduleId].state.emails.length',context),1);
+assert.equal(vm.runInContext('server.states[moduleId].state.tasks.length',context),1);
+assert.equal(vm.runInContext('server.states[moduleId].state.settings.showCompleted',context),true);
+vm.runInContext(`server.mergeModuleState(moduleId,{updatedAt:'2026-10-27T12:01:00Z',state:{updatedAt:'2026-10-27T12:01:00Z',emails:[],tasks:[]}},desktop);`,context);
+assert.equal(vm.runInContext('server.states[moduleId].state.emails.length',context),0,'Desktop removal survives a newer phone clock');
+vm.runInContext(`server.mergeModuleState(moduleId,{updatedAt:'2026-10-27T12:06:00Z',state:{updatedAt:'2026-10-27T12:06:00Z',emails:[mail],tasks:[]}},phone);`,context);
+assert.equal(vm.runInContext('server.states[moduleId].state.emails.length',context),0,'Stale phone cannot resurrect a removed reference');
+assert.equal(vm.runInContext('server.states[moduleId].state.tasks.length',context),1,'Task merge remains lossless');
+console.log('PASS: Desktop mail ownership survives phone tasks, clock skew and stale snapshots');

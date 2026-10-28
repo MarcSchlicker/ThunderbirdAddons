@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="tb_calendar_nav_tiny">4dp</dimen>
+    <dimen name="tb_calendar_nav_small">8dp</dimen>
+    <dimen name="tb_calendar_nav_inset">12dp</dimen>
+    <dimen name="tb_calendar_nav_medium">16dp</dimen>
+    <dimen name="tb_calendar_nav_large">20dp</dimen>
+    <dimen name="tb_calendar_nav_row">52dp</dimen>
+    <dimen name="tb_calendar_plan_hour">64dp</dimen>
+    <dimen name="tb_calendar_plan_hours_width">48dp</dimen>
+    <dimen name="tb_calendar_plan_line">1dp</dimen>
+</resources>

@@ -1,0 +1,119 @@
+[
+  {
+    "namespace": "moduleBridge",
+    "schema_version": 1,
+    "functions": [
+      {
+        "name": "start",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          { "name": "port", "type": "integer", "minimum": 1024, "maximum": 65535 },
+          { "name": "workspaceId", "type": "string" },
+          { "name": "accessToken", "type": "string" }
+        ]
+      },
+      {
+        "name": "setStates",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          { "name": "statesJson", "type": "string" }
+        ]
+      },
+      {
+        "name": "getStates",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "setCatalog",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          { "name": "catalogJson", "type": "string" }
+        ]
+      },
+      {
+        "name": "setPairing",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          { "name": "sessionJson", "type": "string" }
+        ]
+      },
+      {
+        "name": "setPeers",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          { "name": "peersJson", "type": "string" }
+        ]
+      },
+      {
+        "name": "getStatus",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "syncDailyPlannerFromStorage",
+        "type": "function",
+        "async": true,
+        "description": "Read the active daily planner state directly from Thunderbird storage and publish it to the module bridge.",
+        "parameters": []
+      },
+      {
+        "name": "syncCalendarFromStorage",
+        "type": "function",
+        "async": true,
+        "description": "Read the active Thunderbird calendar data and publish the mobile calendar projection.",
+        "parameters": []
+      },
+      {
+        "name": "saveNextcloudCredential",
+        "type": "function",
+        "async": true,
+        "description": "Save a dedicated Nextcloud app password in Thunderbird's password manager.",
+        "parameters": [
+          { "name": "serverUrl", "type": "string" },
+          { "name": "username", "type": "string" },
+          { "name": "appPassword", "type": "string" }
+        ]
+      },
+      {
+        "name": "loadNextcloudCredential",
+        "type": "function",
+        "async": true,
+        "description": "Load the dedicated Nextcloud app password from Thunderbird's password manager.",
+        "parameters": [
+          { "name": "serverUrl", "type": "string" },
+          { "name": "username", "type": "string" }
+        ],
+        "returns": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "registerNextcloudCalendar",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          { "name": "configJson", "type": "string" },
+          { "name": "calendarJson", "type": "string" }
+        ]
+      },
+      {
+        "name": "removeNextcloudCredential",
+        "type": "function",
+        "async": true,
+        "description": "Remove a stored Nextcloud app password from Thunderbird's password manager.",
+        "parameters": [
+          { "name": "serverUrl", "type": "string" },
+          { "name": "username", "type": "string" }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,69 @@
+package net.thunderbird.feature.navigation.drawer.dropdown.ui.setting
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import net.thunderbird.components.ui.bolt.atom.icon.Icons
+import net.thunderbird.components.ui.bolt.common.window.WindowHeightSizeClass
+import net.thunderbird.components.ui.bolt.common.window.calculateWindowSizeInfo
+import net.thunderbird.components.ui.bolt.theme.BoltTheme
+import net.thunderbird.feature.navigation.drawer.dropdown.R
+
+@Composable
+internal fun FolderSettingList(
+    onSyncAccountClick: () -> Unit,
+    onManageFoldersClick: () -> Unit,
+    onSyncAllAccountsClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    isUnifiedAccount: Boolean,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val windowSizeInfo = calculateWindowSizeInfo()
+    val isLandscape = windowSizeInfo.size.width > windowSizeInfo.size.height
+    val isCompactHeight = windowSizeInfo.sizeClass.heightSizeClass == WindowHeightSizeClass.Compact
+    val hideText = isLandscape && isCompactHeight
+
+    SettingList(
+        modifier = modifier
+            .padding(vertical = BoltTheme.spacings.default)
+            .fillMaxWidth(),
+    ) {
+        if (isUnifiedAccount.not()) {
+            item(span = { if (hideText) GridItemSpan(1) else GridItemSpan(maxLineSpan) }) {
+                SettingListItem(
+                    label = stringResource(id = R.string.navigation_drawer_dropdown_action_sync_account),
+                    onClick = onSyncAccountClick,
+                    icon = Icons.Outlined.Sync,
+                    isLoading = isLoading,
+                )
+            }
+            item(span = { if (hideText) GridItemSpan(1) else GridItemSpan(maxLineSpan) }) {
+                SettingListItem(
+                    label = stringResource(R.string.navigation_drawer_dropdown_action_manage_folders),
+                    onClick = onManageFoldersClick,
+                    icon = Icons.Outlined.FolderManaged,
+                )
+            }
+        } else {
+            item(span = { if (hideText) GridItemSpan(1) else GridItemSpan(maxLineSpan) }) {
+                SettingListItem(
+                    label = stringResource(id = R.string.navigation_drawer_dropdown_action_sync_all_accounts),
+                    onClick = onSyncAllAccountsClick,
+                    icon = Icons.Outlined.Sync,
+                    isLoading = isLoading,
+                )
+            }
+        }
+        item(span = { if (hideText) GridItemSpan(1) else GridItemSpan(maxLineSpan) }) {
+            SettingListItem(
+                label = stringResource(id = R.string.navigation_drawer_dropdown_action_settings),
+                onClick = onSettingsClick,
+                icon = Icons.Outlined.Settings,
+            )
+        }
+    }
+}

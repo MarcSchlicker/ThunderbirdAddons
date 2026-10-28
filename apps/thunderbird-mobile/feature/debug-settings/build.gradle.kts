@@ -1,0 +1,26 @@
+plugins {
+    id(ThunderbirdPlugins.Library.androidCompose)
+}
+
+android {
+    namespace = "net.thunderbird.feature.debug.settings"
+    buildFeatures {
+        buildConfig = true
+    }
+}
+
+dependencies {
+    implementation(projects.core.common)
+    implementation(projects.core.ui.compose.common)
+    implementation(projects.core.ui.navigation)
+    implementation(projects.core.outcome)
+    implementation(projects.core.featureflag)
+    implementation(projects.feature.mail.account.api)
+    implementation(projects.feature.notification.api)
+    implementation(projects.core.android.common)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
+}

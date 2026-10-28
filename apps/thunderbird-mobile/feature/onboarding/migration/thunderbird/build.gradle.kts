@@ -1,0 +1,30 @@
+plugins {
+    id(ThunderbirdPlugins.Library.androidCompose)
+}
+
+android {
+    namespace = "app.k9mail.feature.onboarding.migration.thunderbird"
+    resourcePrefix = "onboarding_migration_thunderbird_"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+}
+
+dependencies {
+    api(projects.feature.onboarding.migration.api)
+    implementation(projects.core.common)
+    implementation(projects.feature.account.common)
+    implementation(projects.feature.thundermail.api)
+    implementation(projects.legacy.logging)
+
+    testImplementation(projects.core.ui.compose.testing)
+    testImplementation(projects.core.featureflag)
+}
+
+codeCoverage {
+    branchCoverage = 0
+    lineCoverage = 0
+}

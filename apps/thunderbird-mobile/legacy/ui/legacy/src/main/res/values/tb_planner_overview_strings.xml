@@ -1,0 +1,12 @@
+<resources>
+    <string name="tb_planner_overdue">Überfällige Mails &amp; Aufgaben</string>
+    <string name="tb_planner_permanent">Ewige To-do-Liste</string>
+    <string name="tb_planner_today">HEUTE</string>
+    <string name="tb_planner_tomorrow">MORGEN</string>
+    <string name="tb_planner_selected_day">AUSGEWÄHLTER TAG</string>
+    <string name="tb_planner_next_day">NÄCHSTER TAG</string>
+    <string name="tb_planner_undated">OHNE TERMIN</string>
+    <string name="tb_planner_overdue_kicker">ÜBERFÄLLIG</string>
+    <string name="tb_planner_empty">Keine Einträge</string>
+    <string name="tb_planner_new_task">Neue Aufgabe</string>
+</resources>

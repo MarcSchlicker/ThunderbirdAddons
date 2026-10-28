@@ -892,6 +892,23 @@ function closeSettings() {
 }
 
 function bindEvents() {
+  $("#sync-now-button").addEventListener("click", async event => {
+    const button = event.currentTarget;
+    if (button.disabled) return;
+    button.disabled = true;
+    $("#sync-status").textContent = "Senden und Empfangen läuft …";
+    try {
+      const result = await send({type:"syncNow"});
+      if (!result?.ok) throw new Error(result?.error || "Keine Antwort vom Hub.");
+      snapshot = result;
+      render();
+      $("#sync-status").textContent = result.manualSync?.message || "Austausch nicht bestätigt.";
+      showToast(result.manualSync?.message || "Austausch nicht bestätigt.", !result.manualSync?.complete);
+    } catch (error) {
+      $("#sync-status").textContent = "Senden oder Empfangen fehlgeschlagen";
+      showToast(error.message || "Verbindung prüfen.", true);
+    } finally { button.disabled = false; }
+  });
   $("#refresh-button").addEventListener("click", refresh);
   $("#settings-button").addEventListener("click", openSettings);
   $("#close-mobile-sync").addEventListener("click", closeMobileSync);

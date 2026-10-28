@@ -20,6 +20,7 @@
         <div class="top-actions">
           <span id="sync-status" class="sync-status" aria-live="polite">Wird geladen …</span>
           <span id="mobile-sync-status" class="mobile-sync-status" aria-live="polite">Hub: wird geprüft …</span>
+          <button id="sync-now-button" class="primary-button" type="button">Synchronisieren</button>
           <button id="refresh-button" class="icon-button" type="button" title="Aktualisieren" aria-label="Aktualisieren">
             <span aria-hidden="true">↻</span>
           </button>
@@ -262,5 +263,6 @@
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
     <script src="../vendor/qrcode.min.js"></script>
     <script src="app.js"></script>
-  </body>
+  <script src="../diagnostics/runtime.js"></script><script src="../diagnostics/launcher.js"></script>
+</body>
 </html>

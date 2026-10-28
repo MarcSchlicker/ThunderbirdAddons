@@ -1,0 +1,54 @@
+name: Automatische Tests
+on:
+  push:
+    branches: [main, dev, release, 'codex/**']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+jobs:
+  tests:
+    name: Erweiterungen und Browser testen
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PW_BROWSER_CHANNEL: chromium
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - run: node scripts/check.cjs
+      - run: node scripts/audit-release.cjs
+  packages:
+    name: Vier Thunderbird-Paketkandidaten
+    needs: tests
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            addons
+            scripts
+            docs
+      - name: XPI bauen und Inhalt prÃ¼fen
+        shell: pwsh
+        run: |
+          ./scripts/prepare-release.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Thunderbird-XPI-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
