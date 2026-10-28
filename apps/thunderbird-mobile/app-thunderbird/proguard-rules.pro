@@ -72,3 +72,9 @@
 # Moshi uses reflection to read field types. R8 can rewrite List/Map to ArrayList/HashMap,
 # which breaks Moshi's collection interface requirement.
 -keep class com.fsck.k9.controller.MessagingControllerCommands$* { *; }
+
+# ZoneRulesProvider is supplied and rewritten by desugar_jdk_libs_nio, not android.jar.
+# Verify its j$.time.zone implementation in the optimized APK; never suppress the whole java.time package.
+-dontwarn java.time.zone.ZoneRulesProvider
+# Optional Joda conversion annotation used by ThreeTen Extra; no runtime conversion dependency.
+-dontwarn org.joda.convert.ToString

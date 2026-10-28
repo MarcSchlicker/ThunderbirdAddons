@@ -31,3 +31,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+## node-forge 1.4.2
+
+Unverändertes Release-Bundle unter vendor/forge.min.js, Lizenz in vendor/forge.LICENSE. Projekt: https://github.com/digitalbazaar/forge . Herkunft und Integrität in vendor/forge-source.json. Ausschließlich Zertifikat-/PKCS12-Kodierung, TLS durch Thunderbird NSS; keine fremde JavaScript-TLS-Implementierung im Transport.

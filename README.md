@@ -7,8 +7,8 @@ Kalender übersichtlich darstellen, Aufgaben und vorgemerkte Mails planen, Nachr
 | [Kalender Raster](addons/calendar-raster/README.md) | 1.4.19 | Thunderbird Desktop |
 | [Tagesplaner](addons/daily-planner/README.md) | 2.0.9 | Thunderbird Desktop |
 | [Mail-Ablage nach Adresse](addons/mail-address-filer/README.md) | 1.4.2 | Thunderbird Desktop |
-| [TB-Connect Modul-Hub](addons/mobile-module-bridge/README.md) | 2.0.29 | Thunderbird Desktop, optionaler Geräteabgleich |
-| [TB-Connect Android](apps/thunderbird-mobile/TB_CONNECT.md) | 2.0.60, Teststand | Android |
+| [TB-Connect Modul-Hub](addons/mobile-module-bridge/README.md) | 2.0.30 | Thunderbird Desktop, optionaler Geräteabgleich |
+| [TB-Connect Android](apps/thunderbird-mobile/TB_CONNECT.md) | 2.0.61, Produktionskandidat | Android |
 
 Die Android-App und ihr vollständiger Quellcode gehören zu diesem Projekt. **Der Release wird vorbereitet; noch keine öffentliche stabile Binärfreigabe.** [Status, geprüfte Funktionen und offene Freigabeschritte](docs/RELEASE.md). Pakete werden gemeinsam unter [GitHub Releases](https://github.com/MarcSchlicker/ThunderbirdAddons/releases) angeboten, sobald sie freigegeben sind. Ein Store-Eintrag ist damit noch nicht verbunden.
 
@@ -22,7 +22,9 @@ Für Desktop ist Thunderbird 128 die Mindestversion der Manifeste; das ist keine
 - [Android: Einrichtung und Build](apps/thunderbird-mobile/TB_CONNECT.md)
 - [Datenwege und Datenschutz](docs/PRIVACY.md)
 
-Der Kalender bietet Tag, Woche, Monat, Stundenraster und konfigurierbare Personen. Der Tagesplaner bündelt Aufgaben, Notizen, Termine und Mailverweise. Die Ablage verschiebt Nachrichten erst nach einer bewussten Aktion. Der optionale Hub verbindet Desktopmodule und App; der aktuelle lokale Transport ist nicht TLS-verschlüsselt und darf nicht ins Internet freigegeben werden. Google- und Android-Kalender benötigen eigene Berechtigungen; Desktop-Anmeldungen werden nicht auf das Handy kopiert.
+Der Kalender bietet Tag, Woche, Monat, Stundenraster und konfigurierbare Personen. Der Tagesplaner bündelt Aufgaben, Notizen, Termine und Mailverweise. Die Ablage verschiebt Nachrichten erst nach einer bewussten Aktion. Der optionale Hub verbindet Desktopmodule und App; die mobile Verbindung verwendet natives TLS mit exakter Zertifikatbindung, lokale Desktopadapter sind auf Loopback begrenzt. [Transport und Gerätefreigabe](docs/HUB_TLS.md). Google- und Android-Kalender benötigen eigene Berechtigungen; Desktop-Anmeldungen werden nicht auf das Handy kopiert.
+
+![TB-Connect auf Android](docs/images/android-welcome.png)
 
 ## Entwickeln
 
@@ -39,7 +41,7 @@ node scripts/check.cjs
 
 Die Paketvorbereitung baut vier normale XPIs nach `dist/`, prüft Lizenz und Diagnosekennung und erzeugt SHA-256-Prüfsummen. Sie veröffentlicht und installiert nichts. Nur Namen mit Präfix `test_` aktivieren die Diagnose in den drei dafür ausgestatteten Add-ons; normale Pakete bleiben deaktiviert. [Diagnose](docs/DIAGNOSTICS.md).
 
-Android hat einen eigenen Gradle-Build. Signierschlüssel, Konten, lokale SDK-Pfade und persönliche Prüfprotokolle sind nicht enthalten. Der öffentliche Quellcode ist ein bereinigter Snapshot; private Entwicklungshistorie wird nicht übernommen. [Veröffentlichung in Thunderbird und Android](docs/DISTRIBUTION.md).
+Android hat einen eigenen [signierten Produktionsbuild](docs/ANDROID_RELEASE.md) mit der Paketkennung eu.mschlicker.tbconnect. Eigene OAuth-Freigaben und reale Geräteabnahme sind noch offen. Signierschlüssel, Konten, lokale SDK-Pfade und persönliche Prüfprotokolle sind nicht enthalten. Der öffentliche Quellcode ist ein bereinigter Snapshot; private Entwicklungshistorie wird nicht übernommen. [Veröffentlichung in Thunderbird und Android](docs/DISTRIBUTION.md).
 
 ## Lizenz und Kontakt
 

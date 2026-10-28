@@ -7,3 +7,5 @@ Die Android-App unter `apps/thunderbird-mobile/` basiert auf Thunderbird für An
 Der QR-Code-Generator von Kazuhiko Arase im Tagesplaner und im Hub steht unter MIT; die vollständigen Hinweise liegen jeweils in THIRD_PARTY_NOTICES.md. OpenHolidays-Daten unterliegen ODbL; die API wird nur nach Einrichtung genutzt. Android-Abhängigkeiten behalten ihre eigenen Lizenzen und die vorhandene Lizenzanzeige der App.
 
 Thunderbird ist eine fremde Marke. TB-Connect ist ein unabhängiges Projekt ohne Zugehörigkeit zu Mozilla oder Thunderbird. Die Softwarelizenzen erteilen keine Markenrechte.
+
+node-forge 1.4.2 im Modul-Hub wird unter der angebotenen BSD-Lizenz verwendet. Der vollständige unveränderte Lizenztext liegt in addons/mobile-module-bridge/vendor/forge.LICENSE, lesbare Originalquellen in third_party/node-forge-1.4.2. Die Bibliothek kodiert Zertifikate/PKCS12; TLS übernimmt Thunderbird NSS.

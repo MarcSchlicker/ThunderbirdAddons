@@ -341,7 +341,7 @@ async function refresh({ announce = false } = {}) {
     ? ` · Ersatzport ${status.port} aktiv, weil Port ${status.portFallback.requestedPort} belegt ist. Bitte für vorhandene Handys einen neuen QR-Code scannen.`
     : "";
   elements.connectionDetail.textContent = status.running
-    ? `Port ${status.port} · erreichbare Adressen: ${addresses}${desktopTransferText}${fallbackText}`
+    ? `Desktop lokal: ${status.port} · ${status.tlsPort ? `Mobil: HTTPS ${status.tlsPort}` : "Mobil gesperrt: TLS nicht bereit"} · erreichbare Adressen: ${addresses}${desktopTransferText}${fallbackText}${status.tlsError ? ` · ${status.tlsError}` : ""}`
     : "TB-Connect konnte den lokalen Dienst nicht starten.";
   elements.peers.replaceChildren();
   const peers = Array.isArray(status.peers) ? status.peers : [];
@@ -430,15 +430,19 @@ moduleRefreshButton.addEventListener("click", () => withButtonFeedback(moduleRef
 pairButton.addEventListener("click", () => withButtonFeedback(pairButton, "Erstelle …", async () => {
     const result = await sendHubMessage("startPairing");
     const address = await preferredPairingHost(result.status);
-    const port = result.status?.port || 47832;
+    const port = result.status?.tlsPort;
+    const fingerprint = result.status?.tlsFingerprint;
+    if (!port || !/^[a-f0-9]{64}$/i.test(fingerprint || "")) {
+      throw new Error("Der verschlüsselte Hub ist nicht bereit. " + (result.status?.tlsError || "Bitte Hub erneut starten."));
+    }
     // A desktop may have more than one usable private adapter (WLAN,
     // Ethernet, hotspot or WireGuard).  The primary is still shown in the
     // Hub, while the QR code carries the alternatives for the app to retry.
-    const endpoint = `http://${address}:${port}`;
+    const endpoint = `https://${address}:${port}`;
     // Keep the camera code compact: longer multi-address codes were decoded
     // but regularly failed on mobile cameras. The app can still safely recover
     // changed addresses through the workspace-verified WLAN discovery later.
-    const pairingCode = `tb-connect://pair?host=${encodeURIComponent(endpoint)}&session=${encodeURIComponent(result.sessionId)}&secret=${encodeURIComponent(result.secret)}&v=3`;
+    const pairingCode = `tb-connect://pair?host=${encodeURIComponent(endpoint)}&session=${encodeURIComponent(result.sessionId)}&secret=${encodeURIComponent(result.secret)}&cert=${encodeURIComponent(fingerprint)}&v=4`;
     elements.pairingCode.value = pairingCode;
     renderPairingQr(pairingCode);
     elements.pairingCard.hidden = false;

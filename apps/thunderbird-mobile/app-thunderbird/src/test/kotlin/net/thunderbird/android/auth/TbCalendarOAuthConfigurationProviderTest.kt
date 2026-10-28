@@ -35,7 +35,7 @@ class TbCalendarOAuthConfigurationProviderTest {
 
     @Test
     fun calendarConfigurationDoesNotModifyMailConfiguration() {
-        val factory = TbOAuthConfigurationFactory()
+        val factory = TbOAuthConfigurationFactory(production = false)
         val before = factory.createConfigurations()
         val testSubject = TbCalendarOAuthConfigurationProvider(CLIENT_ID, APPLICATION_ID)
         testSubject.getConfiguration("imap.gmail.com")

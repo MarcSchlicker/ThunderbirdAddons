@@ -20,11 +20,11 @@ Kurzbeschreibung: Ausgewählte Nachrichten anhand der eigenen Mailadresse in kon
 
 Testprofil: Testkonto und zwei Testordner verwenden, eigene Adresse zuordnen, künstliche Nachricht auswählen und Ablegen auslösen. Ziel und Gelesenstatus prüfen; anschließend Ungelesen prüfen. Fehlender/gelöschter Zielordner muss einen Hinweis auslösen. Die Aktion verschiebt echte Nachrichten; niemals Reviewer-Produktivmails verwenden. Konten-/Nachrichten-/Ordnerzugriff und Experiment dienen Adresszuordnung, Verschieben und Headeraktionen.
 
-## Modul-Hub · 2.0.29
+## Modul-Hub · 2.0.30
 
 Kurzbeschreibung: Optionale lokale Verbindung zwischen TB-Connect-Desktopmodulen und Android mit nachvollziehbarem Sende-/Empfangsstatus.
 
-Noch nicht für die Katalogeinreichung freigegeben: HTTP-Transport sensibler Daten, ausstehender echter Rundweg und ausgesetzte QR-Abnahme. Künstliche Modulstände dienen den automatischen Tests; kein persönlicher Nextcloud-Zugang ist erforderlich. `management`, `downloads`, `storage`, `tabs`, HTTPS-Hosts und Experiment unterstützen Modulkatalog, sichtbare Downloads, lokale Daten, Browseranmeldung und lokalen Server. Keine Ferninstallation ohne Nutzeraktion. Die mitgelieferte QR-Bibliothek ist unverändert MIT-lizenziert.
+Noch nicht abschließend abgenommen: echter Konten-/Geräterundweg und ausgesetzte QR-Abnahme. Der neue LAN-Transport verwendet NSS-TLS1.2/1.3; die App bindet das genaue Serverzertifikat. HTTP-Adapter sind auf Loopback begrenzt. [Zertifikatserzeugung, Speicherung, Bibliotheksherkunft und synthetische native Prüfungen](HUB_TLS.md). Künstliche Modulstände dienen den automatischen Tests; kein persönlicher Nextcloud-Zugang ist erforderlich. `management`, `downloads`, `storage`, `tabs`, HTTPS-Hosts und Experiment unterstützen Modulkatalog, sichtbare Downloads, lokale Daten, Browseranmeldung und lokalen Server. Keine Ferninstallation ohne Nutzeraktion. Die mitgelieferte QR-Bibliothek ist unverändert MIT-lizenziert; node-forge1.4.2 wird unverändert unter BSD für X.509/PKCS12 verwendet, nicht als TLS-Stack. Originalquellen liegen unter third_party/.
 
 ## Gemeinsame Angaben
 

@@ -1,0 +1,8 @@
+{
+  "name": "node-forge",
+  "version": "1.4.2",
+  "tarball": "https://registry.npmjs.org/node-forge/-/node-forge-1.4.2.tgz",
+  "integrity": "sha512-rRtAR5XLJ8gCKd9du4qrKAsgCG1ObGP4gLeNJMa4vYSeq4bmBMOJk5IHkrviBV0q7uoAJlVd8HEQYQSVUb4FGQ==",
+  "bundleSha256": "52b553e747df79daa5056ff5e4dff37094c7d8a71194efe2b153d7c3f12763ff",
+  "purpose": "PKCS12 and X509 certificate serialization; TLS uses Thunderbird NSS."
+}

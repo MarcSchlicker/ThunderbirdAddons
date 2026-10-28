@@ -721,7 +721,12 @@ ModuleBridgeConnection.prototype = {
   }
 };
 
-function ModuleBridgeServer(port, workspaceId, accessToken) {
+function ModuleBridgeServer(port, workspaceId, accessToken, extension = null) {
+  this.extension = extension;
+  this.startGeneration = 0;
+  this.tlsSocket = null;
+  this.tlsIdentity = null;
+  this.tlsError = null;
   this.port = Number(port) || 47832;
   this.preferredPort = this.port;
   this.portFallback = null;
@@ -748,11 +753,19 @@ ModuleBridgeServer.prototype = {
   QueryInterface: ChromeUtils.generateQI(["nsIServerSocketListener", "nsIObserver"]),
 
   async start() {
+    if (this.startPromise) return this.startPromise;
+    this.startPromise = this.startOnce();
+    try { return await this.startPromise; }
+    finally { this.startPromise = null; }
+  },
+
+  async startOnce() {
+    const generation = this.startGeneration;
     try {
       if (!this.socket) {
         const openSocket = port => {
           const socket = Cc["@mozilla.org/network/server-socket;1"].createInstance(Ci.nsIServerSocket);
-          socket.init(port, false, -1);
+          socket.init(port, true, -1);
           socket.asyncListen(this);
           return socket;
         };
@@ -777,6 +790,30 @@ ModuleBridgeServer.prototype = {
         this.port = this.socket.port;
       }
       this.addresses = await this.listAddresses();
+      if (generation !== this.startGeneration) return this.status();
+      if (this.extension && !this.tlsSocket) {
+        let tlsSocket = null;
+        try {
+          const environment = { Cc, Ci, Services, IOUtils, PathUtils };
+          if (typeof crypto === "undefined") Cu.importGlobalProperties(["crypto"]);
+          environment.crypto = crypto;
+          const scope = { ChromeUtils };
+          Services.scriptloader.loadSubScript(this.extension.getURL("api/moduleBridge/tls.js"), scope);
+          this.tlsIdentity = await scope.TBHubTLS.ensure(this.extension, environment);
+          if (generation !== this.startGeneration) return this.status();
+          tlsSocket = Cc["@mozilla.org/network/tls-server-socket;1"].createInstance(Ci.nsITLSServerSocket);
+          tlsSocket.init(this.preferredPort < 65535 ? this.preferredPort + 1 : 0, false, -1);
+          tlsSocket.serverCert = this.tlsIdentity.certificate;
+          tlsSocket.setVersionRange(0x0303, 0x0304);
+          tlsSocket.setRequestClientCertificate(Ci.nsITLSServerSocket.REQUEST_NEVER);
+          tlsSocket.asyncListen(this);
+          this.tlsSocket = tlsSocket;
+          this.tlsError = null;
+        } catch (error) {
+          try { tlsSocket?.close(); } catch (ignored) {}
+          this.tlsError = privilegedErrorText(error, "Der verschlüsselte Hub konnte nicht gestartet werden.");
+        }
+      }
       if (!this.observerRegistered) {
         Services.obs.addObserver(this, DESKTOP_SYNC_REQUEST_TOPIC);
         this.observerRegistered = true;
@@ -843,6 +880,11 @@ ModuleBridgeServer.prototype = {
   },
 
   stop() {
+    this.startGeneration += 1;
+    if (this.tlsSocket) {
+      try { this.tlsSocket.close(); } catch (error) {}
+      this.tlsSocket = null;
+    }
     for (const connection of this.connections) {
       connection.close();
     }
@@ -950,6 +992,10 @@ ModuleBridgeServer.prototype = {
       protocol: "tb-connect-module-bridge/1",
       workspaceId: this.workspaceId,
       port: this.port,
+      tlsPort: this.tlsSocket?.port || null,
+      tlsFingerprint: this.tlsSocket ? this.tlsIdentity?.fingerprint : null,
+      tlsError: this.tlsError,
+      transportSecurity: this.tlsSocket ? "tls-pinned" : "loopback-only",
       portFallback: this.portFallback ? {
         requestedPort: this.portFallback.requestedPort,
         reason: this.portFallback.reason
@@ -970,8 +1016,9 @@ ModuleBridgeServer.prototype = {
     this.connections.add(connection);
   },
 
-  onStopListening() {
-    this.socket = null;
+  onStopListening(socket) {
+    if (socket === this.tlsSocket) this.tlsSocket = null;
+    else if (socket === this.socket) this.socket = null;
   },
 
   syncStoredDailyPlannerState(state) {
@@ -1293,9 +1340,9 @@ ModuleBridgeServer.prototype = {
   }
 };
 
-async function startServer(port, workspaceId, accessToken) {
+async function startServer(port, workspaceId, accessToken, extension = null) {
   if (!moduleBridgeServer) {
-    moduleBridgeServer = new ModuleBridgeServer(port, workspaceId, accessToken);
+    moduleBridgeServer = new ModuleBridgeServer(port, workspaceId, accessToken, extension);
   } else {
     moduleBridgeServer.workspaceId = validId(workspaceId, moduleBridgeServer.workspaceId);
     moduleBridgeServer.accessToken = String(accessToken || moduleBridgeServer.accessToken);
@@ -1308,7 +1355,12 @@ this.module_bridge = class extends ExtensionAPI {
     return {
       moduleBridge: {
         async start(port, workspaceId, accessToken) {
-          return jsonSafe(await startServer(port, workspaceId, accessToken));
+          // Experiment scripts are privileged. Register only this packaged, immutable
+          // source tree as a local resource; never evaluate downloaded code.
+          const resources = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
+          resources.setSubstitution("tb-connect-hub-tls", context.extension.rootURI);
+          const packagedSource = { getURL: path => "resource://tb-connect-hub-tls/" + path };
+          return jsonSafe(await startServer(port, workspaceId, accessToken, packagedSource));
         },
         async setStates(statesJson) {
           if (!moduleBridgeServer) {

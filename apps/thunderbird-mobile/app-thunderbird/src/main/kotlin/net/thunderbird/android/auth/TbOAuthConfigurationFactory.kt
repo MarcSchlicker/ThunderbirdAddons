@@ -4,12 +4,20 @@ import net.thunderbird.android.BuildConfig
 import net.thunderbird.core.common.oauth.OAuthConfiguration
 import net.thunderbird.core.common.oauth.OAuthConfigurationFactory
 
-/**
- * Preserves the upstream mail-provider OAuth support for each Android build type.
- * TB-Connect changes the visible product identity, not the mail capabilities.
- */
+/** Keeps existing debug logins intact; production only uses explicitly configured TB-Connect clients. */
 @Suppress("ktlint:standard:max-line-length")
-class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
+class TbOAuthConfigurationFactory(
+    private val production: Boolean = BuildConfig.BUILD_TYPE != "debug",
+    private val applicationId: String = BuildConfig.APPLICATION_ID,
+    private val clients: Map<String, String> = mapOf(
+        "imap.gmail.com" to BuildConfig.TB_MAIL_GOOGLE_CLIENT_ID,
+        "outlook.office365.com" to BuildConfig.TB_MAIL_MICROSOFT_CLIENT_ID,
+        "imap.mail.yahoo.com" to BuildConfig.TB_MAIL_YAHOO_CLIENT_ID,
+        "imap.aol.com" to BuildConfig.TB_MAIL_AOL_CLIENT_ID,
+        "imap.fastmail.com" to BuildConfig.TB_MAIL_FASTMAIL_CLIENT_ID,
+        "mail.thundermail.com" to BuildConfig.TB_MAIL_THUNDERMAIL_CLIENT_ID,
+    ),
+) : OAuthConfigurationFactory {
     override fun createConfigurations(): Map<List<String>, OAuthConfiguration> = mapOf(
         createAolConfiguration(),
         createFastmailConfiguration(),
@@ -18,15 +26,36 @@ class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
         createYahooConfiguration(),
         createThundermailConfiguration(),
         createThundermailStageConfiguration(),
-    )
+    ).let { configurations ->
+        if (!production) {
+            configurations
+        } else {
+            configurations.mapNotNull { (hosts, configuration) ->
+                val client = clients[hosts.first()].orEmpty().trim()
+                if (client.isEmpty()) {
+                    null
+                } else {
+                    require(client != configuration.clientId) { "Production must use its own mail OAuth client" }
+                    require(client.matches(Regex("[A-Za-z0-9._~+/=-]{1,1024}"))) { "Invalid mail OAuth client" }
+                    val separator = if (hosts.first() == "imap.gmail.com") ":/" else "://"
+                    hosts to
+                        configuration.copy(clientId = client, redirectUri = "$applicationId${separator}oauth2redirect")
+                }
+            }.toMap()
+        }
+    }
 
     private fun createAolConfiguration(): Pair<List<String>, OAuthConfiguration> =
         listOf("imap.aol.com", "smtp.aol.com") to OAuthConfiguration(
             clientId = buildVariantValue(
-                debug = "dj0yJmk9MVJGcHpSejNUcTU3JmQ9WVdrOWMwMHhjSFZqTkhRbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWNk",
-                release = "dj0yJmk9QTVYM0I0RGQ0VDFBJmQ9WVdrOVNYcFphVWRVYVhnbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTA1",
-                beta = "dj0yJmk9UjJhdndGbFpCUnlxJmQ9WVdrOU9GbHVUVkpoT1d3bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWU3",
-                daily = "dj0yJmk9Rk11R2pTTlF0TlZGJmQ9WVdrOVYxcElTMHBwWVZBbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWVm",
+                debug = "dj0yJmk9MVJGcHpSejNUcTU3JmQ9WVdrOWMwMHhjSFZqTkhR" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWNk",
+                release = "dj0yJmk9QTVYM0I0RGQ0VDFBJmQ9WVdrOVNYcFphVWRVYVhn" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTA1",
+                beta = "dj0yJmk9UjJhdndGbFpCUnlxJmQ9WVdrOU9GbHVUVkpoT1d3" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWU3",
+                daily = "dj0yJmk9Rk11R2pTTlF0TlZGJmQ9WVdrOVYxcElTMHBwWVZB" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWVm",
             ),
             scopes = listOf("mail-w"),
             authorizationEndpoint = "https://api.login.aol.com/oauth2/request_auth",
@@ -81,10 +110,14 @@ class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
     private fun createYahooConfiguration(): Pair<List<String>, OAuthConfiguration> =
         listOf("imap.mail.yahoo.com", "smtp.mail.yahoo.com") to OAuthConfiguration(
             clientId = buildVariantValue(
-                debug = "dj0yJmk9bXRhTkZod2xmY3JrJmQ9WVdrOVUyUTRXRGQ0Tlc4bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTkx",
-                release = "dj0yJmk9SW1VbkV0R0FJYU1mJmQ9WVdrOU1Hc3dlSEp3YzNFbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWNk",
-                beta = "dj0yJmk9Rjc5SXlhQjltcjhnJmQ9WVdrOVkxTmtZbmxDVjNrbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PThm",
-                daily = "dj0yJmk9TTQ2U1JNTlBPQXdJJmQ9WVdrOWVIaHdkMFU0V0hZbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTBi",
+                debug = "dj0yJmk9bXRhTkZod2xmY3JrJmQ9WVdrOVUyUTRXRGQ0Tlc4" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTkx",
+                release = "dj0yJmk9SW1VbkV0R0FJYU1mJmQ9WVdrOU1Hc3dlSEp3YzNF" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWNk",
+                beta = "dj0yJmk9Rjc5SXlhQjltcjhnJmQ9WVdrOVkxTmtZbmxDVjNr" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PThm",
+                daily = "dj0yJmk9TTQ2U1JNTlBPQXdJJmQ9WVdrOWVIaHdkMFU0V0hZ" +
+                    "bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTBi",
             ),
             scopes = listOf("mail-w"),
             authorizationEndpoint = "https://api.login.yahoo.com/oauth2/request_auth",
@@ -110,7 +143,12 @@ class TbOAuthConfigurationFactory : OAuthConfigurationFactory {
             redirectUri = "${BuildConfig.APPLICATION_ID}://oauth2redirect",
         )
 
-    private fun buildVariantValue(debug: String, release: String, beta: String, daily: String): String = when (BuildConfig.BUILD_TYPE) {
+    private fun buildVariantValue(
+        debug: String,
+        release: String,
+        beta: String,
+        daily: String,
+    ): String = when (BuildConfig.BUILD_TYPE) {
         "debug" -> debug
         "beta" -> beta
         "daily" -> daily

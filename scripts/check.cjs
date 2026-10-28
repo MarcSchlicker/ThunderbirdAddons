@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
-const excluded = new Set(['.git', 'dist', 'build', 'release', 'node_modules', 'apps']);
+const excluded = new Set(['.git', 'dist', 'build', 'release', 'node_modules', 'apps', 'third_party']);
 function walk(directory) {
   return fs.readdirSync(directory, {withFileTypes:true}).sort((a,b) => a.name.localeCompare(b.name)).flatMap(entry => {
     const file = path.join(directory, entry.name);

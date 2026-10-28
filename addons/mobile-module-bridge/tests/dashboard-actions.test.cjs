@@ -34,7 +34,7 @@ const { chromium } = require('playwright');
           if (message.type === 'listNextcloudCalendars') return {ok:true,calendars:[{name:'Privat',color:'#168a63',url:'https://cloud.test/remote.php/dav/calendars/test/private/'}]};
           if (message.type === 'connectNextcloudCalendar') return {ok:true,name:message.name || 'Privat',alreadyRegistered:true};
           if (message.type === 'addModuleSource') return {ok:true,module:{name:'Testmodul'}};
-          if (message.type === 'startPairing') return {ok:true,status:{port:47832,addresses:['192.168.1.100']},sessionId:'fixture-session',secret:'fixture-secret'};
+          if (message.type === 'startPairing') return {ok:true,status:{port:47832,tlsPort:47833,tlsFingerprint:'a'.repeat(64),addresses:['192.168.1.100']},sessionId:'fixture-session',secret:'fixture-secret'};
           throw new Error('Unhandled action: ' + message.type);
         }}
       };
@@ -70,7 +70,7 @@ const { chromium } = require('playwright');
     for (const id of ['refresh-button','connection-refresh-button','module-refresh-button']) await page.locator('#'+id).click();
     await page.locator('#pair-button').click();
     await page.waitForFunction(() => !document.querySelector('#pairing-card').hidden);
-    assert((await page.locator('#pairing-code').inputValue()).startsWith('tb-connect://pair?host='));
+    assert((await page.locator('#pairing-code').inputValue()).startsWith('tb-connect://pair?host=https%3A'));
     assert.deepEqual(errors, []);
     console.log('PASS: dashboard login, app-password, success/error feedback, CalDAV list/add/create, module source, refresh and pairing action');
   } finally { await browser.close(); }

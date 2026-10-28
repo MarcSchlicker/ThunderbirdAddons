@@ -1,36 +1,42 @@
-# Release-Vorbereitung · 28. Oktober 2026
+# Gemeinsamer Release-Kandidat · 28. Oktober 2026
 
-Status: **Entwurf, nicht als stabile Version freigegeben.** Enthalten sind vier Desktop-Erweiterungen und die Android-App samt Quellcode. Der Entwurf benennt den letzten geprüften Entwicklungsstand; keine bisherige Test-APK wird automatisch nach Release kopiert.
+Status: **Entwurf, noch keine stabile öffentliche Binärfreigabe.** App und vier Desktop-Erweiterungen gehören zum gemeinsamen Satz. Die App ist nun ein eigener signierter, optimierter Produktionskandidat; fehlende Anbieter-/Nutzerabnahmen werden dadurch nicht ersetzt.
 
 | Komponente | Stand | Lizenz |
 | --- | --- | --- |
 | Kalender Raster | 1.4.19 | MPL 2.0 |
 | Tagesplaner | 2.0.9 | MPL 2.0 |
 | Mail-Ablage | 1.4.2 | MPL 2.0 |
-| Modul-Hub | 2.0.29 | MPL 2.0; QR-Bibliothek MIT |
-| Android-App | 2.0.60-SNAPSHOT / Code 61, Teststand | Apache 2.0; Fremdlizenzen erhalten |
+| Modul-Hub | 2.0.30 | MPL 2.0; QR-MIT und node-forge-BSD separat |
+| Android-App | 2.0.61 / Code 62 | Apache 2.0; Fremdlizenzen erhalten |
 
-## Änderungen
+## Neu fertiggestellt
 
-- Sichtbarer Tagesplan in der App mit zwei Zeitspalten und direktem Terminaufruf.
-- Warnungen bei den betroffenen Kalendern; keine allgemeinen falschen Warnsymbole.
-- Manuelles Senden/Empfangen mit getrennten Ergebnissen und ehrlichen Teilfehlern.
-- Tagesplaner gruppiert vorgemerkte Desktop-Mails und Aufgaben nach Datum.
-- Verspätete Desktop-Syncantworten erhalten neuere lokale Mail-/Aufgabenänderungen.
-- Abschließender Desktop-Empfang nach der Handyphase; Empfangsfehler verhindern Erfolgsmeldung.
-- Eigene Personen-Konfiguration und native Kalenderfarben am Desktop.
+- Eigene Produktionskennung eu.mschlicker.tbconnect und eigener dauerhafter Signierschlüssel; die bisherige Testinstallation bleibt getrennt erhalten.
+- Normaler Release-Name mit deaktivierter Testdiagnose, DEBUG=false und R8-Optimierung. Produktions-HTTP gesperrt.
+- Produktion verwendet nur konfigurierte eigene Mail-OAuth-Clients; vorhandene Debug-Zugänge bleiben erhalten.
+- Natives Hub-HTTPS mit TLS 1.2/1.3 und exakter Zertifikatbindung auf Android. HTTP-Desktopadapter nur noch auf Loopback. Start-/Abbruchrennen abgesichert.
+- Eigene Kennzeichnung des Begrüßungsbildschirms statt falscher Produktzugehörigkeit; ursprüngliche Urheberhinweise bleiben in Quellen und Lizenzanzeige erhalten.
+- Optionales Kamera-Hardwaremerkmal, damit Installation keine zwingende Kamera voraussetzt.
+- Wiederholbare synthetische native Thunderbird-TLS-Prüfung sowie Android-Emulatorprüfung mit künstlichen Aufgaben.
 
-## Prüfstand und Freigabe
+Die bereits enthaltenen Kalender-/Planerverbesserungen bleiben erhalten: vollständiger Tagesplan, gezielte Kalenderwarnungen, explizites Senden/Empfangen, vorgemerkte Desktop-Mails sowie Schutz lokaler Änderungen vor verspäteten Syncantworten.
 
-Am zugrunde liegenden Entwicklungsstand bestanden 38 Node-Tests und sechs GitHub-Checks. Im bereinigten öffentlichen Release-Baum wurden die 38 Node-Tests erneut erfolgreich ausgeführt; eigene Dokumentlinks, JavaScript und JSON bestanden ebenfalls. Alle vier normalen XPIs wurden mit beigefügten Lizenztexten gebaut; der automatische Paketcheck bestätigt deaktivierte Testdiagnose sowie MIT-Hinweise in Tagesplaner und Hub. FÃ¼r die unverÃ¤nderte App bestanden zuletzt 23 gezielte Android-Ansichts-/Rastertests. Sichtbarer Tagesdialog und das Verschwinden des falschen oberen Warnsymbols wurden am GerÃ¤t bestÃ¤tigt. Das ist keine Gesamtfreigabe. Android-Detekt meldet weiterhin 542 Befunde, Lint 4771 Warnungen bei null Fehlern. Instrumentierung und vollstÃ¤ndiger Upstream-Gesamtbuild wurden nicht abgeschlossen.
+## Prüfstand
 
-Noch offen vor stabiler Binärfreigabe:
+Am neuen Stand bestanden 114 ausgewählte Android-JVM-Tests (36 Legacy-Ansicht/Editor/TLS, 9 OAuth, 69 Kalender). Vier TLS-Policytests wurden nach der letzten Verschärfung separat erneut geprüft. Native Thunderbird-Verbindungen mit TLS 1.2 und 1.3 sowie falschem Pin bestanden im getrennten Testprofil. Zwei echte Android-Instrumentierungstests im frischen API-34-Emulator bestanden: künstliche Aufgabe senden und vorbereitete Desktop-Aufgabe empfangen; falsches Zertifikat abweisen.
 
-- Neue Desktoppakete in Thunderbird installieren und realen Sende-/Empfangsrundweg sowie Mailerhalt mit der App prüfen; das Testgerät ist aktuell nicht verfügbar.
-- Kalenderfarbe über Neustart/Anbieterabgleich und echte kalenderbezogene Fehleranzeige abnehmen.
-- Nextcloud mit erreichbarem Server in beide Richtungen prüfen; bisher nur Trockenprüfungen. QR-Neukopplung bleibt ausgesetzt.
-- Android: eigene Produktions-Paketkennung, dauerhaft eigener Signierschlüssel und Update-/Migrationsweg; eigene Mail-OAuth-Clients statt Upstream-Konfiguration. Kalender-OAuth-Testkonfiguration vor Produktionsverteilung ablösen.
-- Android: aktive Upstream-Dienste/Datenschutz und sichtbare Markenverwendung final prüfen. Normale Appvariante mit deaktivierter Testdiagnose bauen und am Gerät abnehmen.
-- Modul-Hub: verschlüsselten Transport für sensible Daten und Thunderbird-Reviewanforderungen klären/umsetzen; aktuelles lokales HTTP ist keine TLS-Verbindung.
+Signatur, eigene Paketkennung, deaktivierter Debug-/Diagnosemodus und desugarter Zeitzonenprovider wurden am optimierten APK-Artefakt geprüft. Der Produktionskandidat ließ sich separat im Emulator installieren und ohne Crash starten. Die finale Begrüßung mit eigenem TC-Logo und Unabhängigkeitshinweis wurde am optimierten Paket im leeren Emulator visuell geprüft. Keine Installation oder Datenlöschung am POCO und keine Kopie nach Release/.
 
-Keine offenen Issues werden durch diese Vorbereitung automatisch geschlossen. [Veröffentlichungswege](DISTRIBUTION.md), [Lizenzen](../LICENSING.md), [Datenschutz](PRIVACY.md).
+Die vollständige Android-Analyse ist weiterhin nicht insgesamt grün: letzter Release-Lint 0 Fehler, 5934 Warnungen und 2 Hinweise; App-Detekt 0 Befunde, Legacy-Detekt 552 Befunde. Kein Befund in HubTls. Der vorhandene Legacy-Rückstand wird nicht versteckt. Die Zahlen beziehen sich auf den beschriebenen Prüflauf, nicht auf eine manuelle Abnahme aller Funktionen.
+
+## Vor stabiler Veröffentlichung offen
+
+- Eigene Google-Produktionsregistrierung und passende Anbieterfreigaben einrichten; das Formular für den Produktionsclient ist vorbereitet, die ausdrückliche Freigabe steht aus. Keine bestehenden Test-Clients oder Kontorechte geändert.
+- Mit den eigenen Clients neu bauen und Google-Mail/Kalender tatsächlich freigeben und prüfen; andere nicht konfigurierte OAuth-Anbieter ausdrücklich begrenzen.
+- Neuen Desktop-/App-Satz mit sichtbarer TLS-Gerätefreigabe und echten eigenen Konten abnehmen. Bestehende Konten und Test-App nicht löschen, um eine Installation zu erzwingen.
+- Kalenderfarben über Neustart/Anbieterabgleich, echte kalenderbezogene Warnungen und reale Mailverweise prüfen.
+- Nextcloud bleibt bisher ausschließlich trocken geprüft; reale QR-/POCO-Abnahme bleibt ausgesetzt.
+- Thunderbird-Katalogeinreichung durchführen und manuelle Review abwarten; noch keine Katalogfreigabe behaupten.
+
+Keine Issues werden durch Paketbau oder Emulatorprüfungen automatisch geschlossen. [Android-Build](ANDROID_RELEASE.md), [Hub-TLS](HUB_TLS.md), [Veröffentlichung](DISTRIBUTION.md), [Datenschutz](PRIVACY.md).

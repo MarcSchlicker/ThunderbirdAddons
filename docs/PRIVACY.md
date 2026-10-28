@@ -8,9 +8,11 @@ Einstellungen, Personen-/Kalenderzuordnungen, Aufgaben, Notizen und Mailverweise
 
 ## Geräteabgleich
 
-Der optionale Modul-Hub überträgt ausgewählte Kalender-/Planerdaten und Mailmetadaten an gekoppelte Geräte. Der Hub nutzt einen lokalen HTTP-Dienst auf TCP 47832 mit Kopplungstoken. **Der HTTP-Transport selbst ist nicht verschlüsselt.** Ein Token ist keine Transportverschlüsselung. Kein Portforwarding und keine Nutzung in ungeschützten Netzen; für externen Zugriff ist ein eigenes geschütztes Netz erforderlich. Eine allgemeine sichere öffentliche Hub-Freigabe und die Erfüllung der Thunderbird-Reviewvorgaben für diesen Transport sind noch offen. QR-Neukopplung ist für diesen Release noch nicht abgenommen.
+Der optionale Modul-Hub überträgt ausgewählte Kalender-/Planerdaten und Mailmetadaten an gekoppelte Geräte. Ab Hub2.0.30/App2.0.61 nutzt die mobile Verbindung HTTPS mit TLS1.2/1.3. Die App prüft das exakte Zertifikat des sichtbar freigegebenen Desktops und dessen Gültigkeit. Der private Hub-Schlüssel liegt in Thunderbirds NSS-Profil, die Verbindung und der Fingerabdruck im geschützten Android-Speicher. Es wird kein allgemein vertrauenswürdiges CA-Zertifikat installiert. [Technischer Ablauf und Testgrenzen](HUB_TLS.md).
 
-Android speichert die Verbindung mit Android-Keystore-Schutz; das schützt nicht den HTTP-Transport. Kalenderrechte werden über Android angefragt. Google-Kalenderanmeldung führt zur Anbieterfreigabe; OAuth-Tokens gehören nicht in Logs oder Fehlerberichte. Anmeldungen vom Desktop werden nicht kopiert. Kalenderdaten gehen bei aktiviertem Anbieterabgleich an den jeweils gewählten Anbieter.
+Der lokale HTTP-Dienst auf TCP47832 ist ausschließlich vom eigenen PC über Loopback erreichbar und dient vorhandenen Desktopadaptern. Mobile Geräte nutzen standardmäßig TLS47833. Ein TLS-Fehler aktiviert keinen unverschlüsselten Netzwerkersatz. Produktions-Android sperrt HTTP; ältere unverschlüsselte Testkopplungen werden nicht still als neue TLS-Freigabe übernommen. Keine öffentliche Portfreigabe für den Hub einrichten.
+
+Kalenderrechte werden sichtbar über Android angefragt. Google-Freigaben und Tokens sind von der Desktopanmeldung getrennt. Anmeldungen werden nicht kopiert; vorhandene Test-App-Daten werden beim parallelen Produktionsbuild nicht gelöscht. Anbieter können eine erneute Anmeldung verlangen. Ein Google-Mailzugang umfasst nicht automatisch Kalenderrechte.
 
 ## Optionale externe Verbindungen
 
@@ -19,7 +21,7 @@ Android speichert die Verbindung mit Android-Keystore-Schutz; das schützt nicht
 - Modulquellen: Abruf der vom Nutzer eingerichteten HTTPS-Beschreibungen und Paketdownloads; Installationen bleiben sichtbar.
 - E-Mail-Sicherungen: nur nach Einrichtung; können Kalenderdaten enthalten und gehen an die gewählten Empfänger.
 
-Der Android-Unterbau enthält weitere Mailanbieter- und optionale Thunderbird-Dienste. Deren vollständige Datenwege werden durch diese Kurzbeschreibung nicht ersetzt; vor einer öffentlichen App-Binärfreigabe müssen Buildkonfiguration, Dienstaktivierung und dazugehörige Datenschutzhinweise abschließend geprüft werden. Es wird keine pauschale Telemetrie-Freiheit des gesamten Upstream-Builds behauptet.
+Der vorliegende App-Build bindet für Telemetrie die No-op-Implementierung ein. Der Android-Unterbau enthält außerdem weitere Mailanbieter- und optionale Thunderbird-Dienste. Deren vollständige Datenwege werden durch diese Kurzbeschreibung nicht ersetzt; vor einer öffentlichen App-Binärfreigabe müssen Buildkonfiguration, Dienstaktivierung und dazugehörige Datenschutzhinweise abschließend geprüft werden. Es wird keine pauschale Telemetrie-Freiheit des gesamten Upstream-Builds behauptet.
 
 ## Diagnose, Entfernen und Kontakt
 

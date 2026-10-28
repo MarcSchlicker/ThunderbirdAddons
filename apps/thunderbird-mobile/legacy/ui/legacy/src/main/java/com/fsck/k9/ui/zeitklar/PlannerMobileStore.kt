@@ -146,6 +146,8 @@ data class PlannerConnection(
     val username: String? = null,
     /** Human-readable app folder directly in the Nextcloud file root. */
     val appFolder: String? = null,
+    /** SHA-256 of the exact desktop leaf, obtained from the visible pairing code. */
+    val tlsFingerprint: String? = null,
 ) {
     enum class Mode { MODULE_BRIDGE, LEGACY_DAILY_PLANNER, NEXTCLOUD }
 
@@ -163,6 +165,7 @@ data class PlannerConnection(
         .put("workspaceId", workspaceId)
         .put("username", username)
         .put("appFolder", appFolder)
+        .put("tlsFingerprint", tlsFingerprint)
 
     companion object {
         fun fromJson(source: JSONObject): PlannerConnection? {
@@ -189,6 +192,7 @@ data class PlannerConnection(
                 workspaceId = source.optString("workspaceId").takeIf { it.isNotEmpty() },
                 username = source.optString("username").takeIf { it.isNotEmpty() },
                 appFolder = source.optString("appFolder").takeIf { it.isNotEmpty() },
+                tlsFingerprint = source.optString("tlsFingerprint").takeIf { it.isNotEmpty() },
             )
         }
     }
@@ -889,7 +893,7 @@ object PlannerSyncClient {
         require(connection.mode == PlannerConnection.Mode.MODULE_BRIDGE) { "Für Kalenderänderungen ist eine lokale Hub-Verbindung erforderlich." }
         val token = requireNotNull(connection.token) { "Der Hub-Zugang fehlt." }
         return postJson(context, connection.endpoint.trimEnd('/') + "/v1/calendar-edit",
-            request.put("protocol", MODULE_PROTOCOL), mapOf("x-tb-connect-module-token" to token))
+            request.put("protocol", MODULE_PROTOCOL), mapOf("x-tb-connect-module-token" to token), connection.tlsFingerprint)
     }
     data class NextcloudLoginFlow(
         val serverUrl: String,
@@ -920,6 +924,8 @@ object PlannerSyncClient {
         return when (uri.scheme) {
             "tb-connect", "thunderbird-module" -> {
                 val endpoint = localEndpoint(uri.getQueryParameter("host"))
+                val tlsFingerprint = uri.getQueryParameter("cert")
+                HubTls.requireSecureEndpoint(URL(endpoint), tlsFingerprint, com.fsck.k9.ui.BuildConfig.DEBUG)
                 val fallbackEndpoints = uri.getQueryParameter("hosts")
                     ?.split(',')
                     ?.mapNotNull { candidate -> runCatching { localEndpoint(candidate.trim()) }.getOrNull() }
@@ -932,6 +938,7 @@ object PlannerSyncClient {
                     ?: throw IllegalArgumentException("Der Kopplungscode enthält kein Geheimnis.")
                 PlannerConnection(
                     id = endpoint,
+                    tlsFingerprint = tlsFingerprint,
                     name = uri.getQueryParameter("name") ?: "TB-Connect Desktop",
                     endpoint = endpoint,
                     fallbackEndpoints = fallbackEndpoints,
@@ -1088,7 +1095,7 @@ object PlannerSyncClient {
             throw (lastError ?: IllegalStateException("Der Desktop ist nicht erreichbar."))
         }
 
-        val recoveredEndpoint = findEndpointOnCurrentWifi(context, workspaceId, connection.endpoint)
+        val recoveredEndpoint = findEndpointOnCurrentWifi(context, workspaceId, connection.endpoint, connection.tlsFingerprint)
             ?: throw (lastError ?: IllegalStateException("Der Desktop ist nicht erreichbar."))
         return syncModuleBridge(context, state, connection.copy(endpoint = recoveredEndpoint)).copy(endpoint = recoveredEndpoint)
     }
@@ -1106,6 +1113,7 @@ object PlannerSyncClient {
         val response = postModuleState(
             context = context,
             endpoint = connection.endpoint,
+            tlsFingerprint = connection.tlsFingerprint,
             clientId = state.clientId,
             moduleId = MODULE_ID,
             moduleState = localPlannerPayload,
@@ -1132,6 +1140,7 @@ object PlannerSyncClient {
                 postModuleState(
                     context = context,
                     endpoint = connection.endpoint,
+            tlsFingerprint = connection.tlsFingerprint,
                     clientId = state.clientId,
                     moduleId = CALENDAR_MODULE_ID,
                     moduleState = localCalendar,
@@ -1166,7 +1175,7 @@ object PlannerSyncClient {
                     postJson(context, connection.endpoint.trimEnd('/') + "/v1/ack", JSONObject()
                         .put("protocol", MODULE_PROTOCOL).put("moduleId", module)
                         .put("client", JSONObject().put("id", state.clientId))
-                        .put("receivedUpdatedAt", version), mapOf("x-tb-connect-module-token" to syncToken))
+                        .put("receivedUpdatedAt", version), mapOf("x-tb-connect-module-token" to syncToken), connection.tlsFingerprint)
                 }
             }
         }
@@ -1176,6 +1185,7 @@ object PlannerSyncClient {
     private fun postModuleState(
         context: Context,
         endpoint: String,
+        tlsFingerprint: String?,
         clientId: String,
         moduleId: String,
         moduleState: JSONObject,
@@ -1201,7 +1211,7 @@ object PlannerSyncClient {
                 ?: throw IllegalArgumentException("Für diesen Desktop fehlt der Zugang.")
             "/v1/sync"
         }
-        return postJson(context, endpoint.trimEnd('/') + path, payload, headers)
+        return postJson(context, endpoint.trimEnd('/') + path, payload, headers, tlsFingerprint)
     }
 
     private fun moduleRecords(catalog: JSONArray): List<MobileModuleRecord> = buildList {
@@ -1555,6 +1565,7 @@ object PlannerSyncClient {
                 "content-type" to "application/json",
                 "x-zeitklar-token" to (connection.token ?: throw IllegalArgumentException("Für diesen Desktop fehlt der Zugang.")),
             ),
+            connection.tlsFingerprint,
         )
         val snapshot = response.optJSONObject("snapshot") ?: JSONObject()
         val remote = snapshot.optJSONObject("state") ?: JSONObject(state.payload)
@@ -1564,10 +1575,11 @@ object PlannerSyncClient {
         )
     }
 
-    private fun postJson(context: Context, endpoint: String, payload: JSONObject, headers: Map<String, String>): JSONObject {
+    private fun postJson(context: Context, endpoint: String, payload: JSONObject, headers: Map<String, String>, tlsFingerprint: String? = null): JSONObject {
         val url = URL(endpoint)
+        HubTls.requireSecureEndpoint(url, tlsFingerprint, com.fsck.k9.ui.BuildConfig.DEBUG)
         val localWifi = wifiForLocalEndpoint(context, url)
-        val firstAttempt = openHttpConnection(localWifi, url)
+        val firstAttempt = HubTls.configure(openHttpConnection(localWifi, url), tlsFingerprint, com.fsck.k9.ui.BuildConfig.DEBUG)
         return try {
             postJson(firstAttempt, payload, headers)
         } catch (localError: Exception) {
@@ -1576,7 +1588,7 @@ object PlannerSyncClient {
             // address, retrying the default route covers VPNs that explicitly
             // route that local subnet themselves.
             if (localWifi == null) throw localError
-            postJson(openHttpConnection(null, url), payload, headers)
+            postJson(HubTls.configure(openHttpConnection(null, url), tlsFingerprint, com.fsck.k9.ui.BuildConfig.DEBUG), payload, headers)
         }
     }
 
@@ -1606,7 +1618,8 @@ object PlannerSyncClient {
     private fun localEndpoint(rawValue: String?): String {
         val value = rawValue?.trim().orEmpty()
         val url = runCatching { URL(value) }.getOrElse { throw IllegalArgumentException("Die Desktop-Adresse ist ungültig.") }
-        require(url.protocol == "http") { "Die lokale Modul-Schnittstelle verwendet eine HTTP-Adresse im privaten Netz." }
+        require(url.protocol in setOf("http", "https")) { "Die lokale Modul-Schnittstelle benötigt eine HTTP(S)-Adresse im privaten Netz." }
+        require(url.userInfo == null && url.query == null && url.ref == null) { "Ungültige Hub-Adresse." }
         require(isPrivateAddress(url.host)) { "Der Kopplungscode darf nur auf eine private Netzwerkadresse zeigen." }
         return value.trimEnd('/')
     }
@@ -1618,7 +1631,8 @@ object PlannerSyncClient {
      * exact workspace created during pairing; the regular authenticated sync then
      * updates the stored endpoint.
      */
-    private fun findEndpointOnCurrentWifi(context: Context, workspaceId: String, failedEndpoint: String): String? {
+    private fun findEndpointOnCurrentWifi(context: Context, workspaceId: String, failedEndpoint: String, tlsFingerprint: String?): String? {
+        val scheme = URL(failedEndpoint).protocol
         val failedPort = runCatching { URL(failedEndpoint).port }.getOrDefault(-1).let { if (it in 1..65535) it else 47832 }
         val localAddress = currentWifiPrivateIpv4Address(context) ?: return null
         val octets = localAddress.address.map { it.toInt() and 0xff }
@@ -1635,7 +1649,7 @@ object PlannerSyncClient {
             repeat(24) {
                 if (candidates.hasNext()) {
                     val host = "$prefix${candidates.next()}"
-                    completion.submit { healthMatchesWorkspace(context, "http://$host:$failedPort", workspaceId) }
+                    completion.submit { healthMatchesWorkspace(context, "$scheme://$host:$failedPort", workspaceId, tlsFingerprint) }
                     inFlight += 1
                 }
             }
@@ -1649,7 +1663,7 @@ object PlannerSyncClient {
                     result.get()?.let { return it }
                     if (candidates.hasNext()) {
                         val host = "$prefix${candidates.next()}"
-                        completion.submit { healthMatchesWorkspace(context, "http://$host:$failedPort", workspaceId) }
+                        completion.submit { healthMatchesWorkspace(context, "$scheme://$host:$failedPort", workspaceId, tlsFingerprint) }
                         inFlight += 1
                     }
                 }
@@ -1662,10 +1676,10 @@ object PlannerSyncClient {
         }
     }
 
-    private fun healthMatchesWorkspace(context: Context, endpoint: String, workspaceId: String): String? {
+    private fun healthMatchesWorkspace(context: Context, endpoint: String, workspaceId: String, tlsFingerprint: String?): String? {
         return try {
             val url = URL("$endpoint/v1/health")
-            val connection = openHttpConnection(wifiForLocalEndpoint(context, url), url).apply {
+            val connection = HubTls.configure(openHttpConnection(wifiForLocalEndpoint(context, url), url), tlsFingerprint, com.fsck.k9.ui.BuildConfig.DEBUG).apply {
                 requestMethod = "GET"
                 instanceFollowRedirects = false
                 connectTimeout = 550

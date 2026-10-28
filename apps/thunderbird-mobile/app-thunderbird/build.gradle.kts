@@ -30,19 +30,42 @@ require(
     "Invalid TB-Connect Google Calendar OAuth client ID"
 }
 
+val mailOAuthClientProperties = mapOf(
+    "GOOGLE" to "Google",
+    "MICROSOFT" to "Microsoft",
+    "YAHOO" to "Yahoo",
+    "AOL" to "Aol",
+    "FASTMAIL" to "Fastmail",
+    "THUNDERMAIL" to "Thundermail",
+)
+val mailOAuthClientIds = mailOAuthClientProperties.mapValues { (provider, property) ->
+    providers.gradleProperty("tb.mail${property}ClientId")
+        .orElse(providers.environmentVariable("TB_MAIL_${provider}_CLIENT_ID"))
+        .orElse("")
+        .get()
+        .also { value ->
+            require(value.isEmpty() || value.matches(Regex("[A-Za-z0-9._~+/=-]{1,1024}"))) {
+                "Invalid TB-Connect $provider mail OAuth client ID"
+            }
+        }
+}
+
 android {
     namespace = "net.thunderbird.android"
 
     defaultConfig {
-        applicationId = "net.thunderbird.android"
+        applicationId = "eu.mschlicker.tbconnect"
         testApplicationId = "net.thunderbird.android.tests"
 
-        versionCode = 61
-        versionName = "2.0.60"
+        versionCode = 62
+        versionName = "2.0.61"
 
         buildConfigField("String", "GOOGLE_CALENDAR_CLIENT_ID", "\"$googleCalendarClientId\"")
 
         buildConfigField("String", "CLIENT_INFO_APP_NAME", "\"TB-Connect\"")
+        mailOAuthClientIds.forEach { (provider, value) ->
+            buildConfigField("String", "TB_MAIL_${provider}_CLIENT_ID", "\"$value\"")
+        }
     }
 
     androidResources {
@@ -131,7 +154,7 @@ android {
                 "proguard-rules.pro",
             )
 
-            buildConfigField("String", "GLEAN_RELEASE_CHANNEL", "\"release\"")
+            buildConfigField("String", "GLEAN_RELEASE_CHANNEL", "null")
         }
 
         create("beta") {
@@ -303,6 +326,8 @@ dependencies {
     testImplementation(projects.feature.changelog.internal)
 
     testImplementation(libs.appauth)
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.runner)
 }
 
 dependencyGuard {
@@ -329,4 +354,11 @@ tasks.register("printConfigurations") {
 codeCoverage {
     branchCoverage = 0
     lineCoverage = 25
+}
+
+// Keep existing test installations and their Android Keystore data separate from production.
+androidComponents {
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.applicationId.set("net.thunderbird.android.debug")
+    }
 }

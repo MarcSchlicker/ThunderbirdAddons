@@ -5,3 +5,5 @@ This source distribution contains modifications by the TB-Connect project (2026)
 Modified areas include app-thunderbird (product identity, build flags and calendar OAuth configuration), app-common (wiring), feature/calendar (provider and remote calendar integration), legacy/ui/legacy (calendar, editor, planner and connection screens), legacy/core (module transport and state), and associated resources and tests. Added TB-Connect components retain the Android tree's Apache-2.0 terms. Existing per-file third-party notices remain applicable.
 
 The public Git commit introducing this tree identifies the distributed version. The repository's release documentation distinguishes test builds from a future production application. No signing keys, personal accounts, live credentials or private device logs are included.
+
+Production preparation adds an independent package/signing identity, an own-provider OAuth gate, a product logo and independent welcome attribution, native pinned TLS transport, a release network policy and synthetic integration tests. Original notices remain intact.

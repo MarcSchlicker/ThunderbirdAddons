@@ -32,6 +32,7 @@ $packageItems = @(
   "README.md",
   "BEDIENUNG.md",
   "api",
+  "vendor",
   "dashboard",
   "icons"
 )

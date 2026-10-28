@@ -18,8 +18,14 @@ Voraussetzungen und SDK-/JDK-Versionen stehen in [Upstream README](README.md) un
 
 Ergebnis: `app-thunderbird/build/outputs/apk/foss/debug/app-thunderbird-foss-debug.apk`. Das ist ein Testbuild. Nur Release-Namen mit `test_` aktivieren die lokale Diagnose. Ein öffentlicher Produktionsbuild benötigt die in [Release-Status](../../docs/RELEASE.md) aufgeführten Freigaben; bloßes Umbenennen macht aus der Test-APK keinen Release.
 
-Bestehende Installationen nur mit derselben Paketkennung und Signatur aktualisieren. Ein Wechsel zur späteren eigenen Produktionskennung ist eine getrennte Migration; nicht deinstallieren oder App-Daten löschen, um eine Installation zu erzwingen.
+Bestehende Installationen nur mit derselben Paketkennung und Signatur aktualisieren. Der eigene Produktionskandidat verwendet eu.mschlicker.tbconnect, die bisherige Test-App net.thunderbird.android.debug. Beide haben getrennte Speicher. Ein Wechsel ist eine getrennte Migration; nicht deinstallieren oder App-Daten löschen, um eine Installation zu erzwingen.
 
 ## Herkunft
 
 Basiert auf Thunderbird für Android / K-9 Mail. TB-Connect-Änderungen: Modul-Hub-Anbindung, Kalender, Tagesplaner und eigene sichtbare Identität. Die Änderungen sind im öffentlichen Git-Verlauf nachvollziehbar; [LICENSE](LICENSE) und [NOTICE](NOTICE) gelten unverändert. Fremde Datei- und Bibliothekslizenzen bleiben erhalten. [Datenschutz](../../docs/PRIVACY.md).
+
+## Produktionskandidat und Desktop-Verbindung
+
+2.0.61 wird mit eigener Signatur und R8 gebaut. Anleitung und offene Anbieterfreigaben: [Android-Release](../../docs/ANDROID_RELEASE.md). Fehlende eigene OAuth-Clients schalten den betreffenden Produktionsanbieter aus; vorhandene Debug-Clients werden nicht als Produktionszugang verwendet.
+
+Ab Hub2.0.30 und App2.0.61 nutzt der mobile Datenaustausch TLS1.2/1.3 mit exakter Zertifikatbindung. Eine bewusste neue Gerätefreigabe ist für alte HTTP-Kopplungen nötig. [Transport, Speicherung und Grenzen](../../docs/HUB_TLS.md).
