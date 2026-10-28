@@ -5,5 +5,12 @@
   "googleMailClientId": "965975247401-hgp2en6com0d8cmi97ss1e34soc36omi.apps.googleusercontent.com",
   "customUriScheme": true,
   "access": "registered-test-users",
-  "publicProviderApproval": false
+  "publicProviderApproval": false,
+  "googleMailScopeDeclared": true,
+  "declaredScopes": [
+    "https://www.googleapis.com/auth/calendar",
+    "openid",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://mail.google.com/"
+  ]
 }

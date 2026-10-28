@@ -41,7 +41,7 @@ node scripts/check.cjs
 
 Die Paketvorbereitung baut vier normale XPIs nach `dist/`, prüft Lizenz und Diagnosekennung und erzeugt SHA-256-Prüfsummen. Sie veröffentlicht und installiert nichts. Nur Namen mit Präfix `test_` aktivieren die Diagnose in den drei dafür ausgestatteten Add-ons; normale Pakete bleiben deaktiviert. [Diagnose](docs/DIAGNOSTICS.md).
 
-Android hat einen eigenen [signierten Produktionsbuild](docs/ANDROID_RELEASE.md) mit der Paketkennung eu.mschlicker.tbconnect. Der eigene Google-Client ist registriert und im Kandidaten konfiguriert; öffentliche Anbieterfreigabe, Gmail-Bereich und reale Geräteabnahme sind noch offen. Signierschlüssel, Konten, lokale SDK-Pfade und persönliche Prüfprotokolle sind nicht enthalten. Der öffentliche Quellcode ist ein bereinigter Snapshot; private Entwicklungshistorie wird nicht übernommen. [Veröffentlichung in Thunderbird und Android](docs/DISTRIBUTION.md).
+Android hat einen eigenen [signierten Produktionsbuild](docs/ANDROID_RELEASE.md) mit der Paketkennung eu.mschlicker.tbconnect. Der eigene Google-Client ist registriert und im Kandidaten konfiguriert; Gmail-Bereich ist deklariert; öffentliche Anbieterfreigabe und reale Geräteabnahme sind noch offen. Signierschlüssel, Konten, lokale SDK-Pfade und persönliche Prüfprotokolle sind nicht enthalten. Der öffentliche Quellcode ist ein bereinigter Snapshot; private Entwicklungshistorie wird nicht übernommen. [Veröffentlichung in Thunderbird und Android](docs/DISTRIBUTION.md).
 
 ## Lizenz und Kontakt
 

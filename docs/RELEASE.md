@@ -32,7 +32,7 @@ Die vollständige Android-Analyse ist weiterhin nicht insgesamt grün: letzter R
 
 ## Vor stabiler Veröffentlichung offen
 
-- Eigener Google-Android-Produktionsclient mit Zustimmung erstellt; bestehender Testclient erhalten. Google-App weiterhin Testmodus, öffentliche Anbieterfreigabe und Gmail-Bereich noch offen.
+- Eigener Google-Android-Produktionsclient mit Zustimmung erstellt; bestehender Testclient erhalten. Google-App weiterhin Testmodus, öffentliche Anbieterfreigabe und persönliche Kontenabnahme noch offen; Gmail-Bereich mit ausdrücklicher Zustimmung gespeichert.
 - Eigener Client ist in der neu gebauten APK enthalten; persönliche Google-Mail/Kalender-Freigabe tatsächlich prüfen; andere nicht konfigurierte OAuth-Anbieter ausdrücklich begrenzen.
 - Neuen Desktop-/App-Satz mit sichtbarer TLS-Gerätefreigabe und echten eigenen Konten abnehmen. Bestehende Konten und Test-App nicht löschen, um eine Installation zu erzwingen.
 - Kalenderfarben über Neustart/Anbieterabgleich, echte kalenderbezogene Warnungen und reale Mailverweise prüfen.
@@ -43,4 +43,4 @@ Keine Issues werden durch Paketbau oder Emulatorprüfungen automatisch geschloss
 
 ## Aktualisierung Google-Produktionsclient
 
-Der freigegebene eigene Android-Client ist registriert und über scripts/google-oauth-production.json reproduzierbar konfiguriert. production_google_tls_20261028 bestand neun OAuth- und vier TLS-Tests sowie den optimierten signierten Paketbau. Finale APK-SHA256: 2ace60a6a3483f03518f0cc82d1af42f8c765971067100a27b2587d9130756db. Im eigenen leeren Emulator aktualisiert, gestartet und TC-Begrüßung visuell geprüft; Crashbuffer leer. Das bestätigt keine persönliche Google-Anmeldung. Gmail-Bereich noch nicht deklariert; Google weiterhin Testmodus.
+Der freigegebene eigene Android-Client ist registriert und über scripts/google-oauth-production.json reproduzierbar konfiguriert. production_google_tls_20261028 bestand neun OAuth- und vier TLS-Tests sowie den optimierten signierten Paketbau. Finale APK-SHA256: 2ace60a6a3483f03518f0cc82d1af42f8c765971067100a27b2587d9130756db. Im eigenen leeren Emulator aktualisiert, gestartet und TC-Begrüßung visuell geprüft; Crashbuffer leer. Das bestätigt keine persönliche Google-Anmeldung. Gmail-Bereich mit ausdrücklicher Zustimmung deklariert und gespeichert; Google weiterhin Testmodus.
