@@ -29,7 +29,7 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 $stagingParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
 $staging = Join-Path $stagingParent ('tb-addon-build-' + [Guid]::NewGuid().ToString('N'))
 $archivePath = Join-Path $outputDirectory ('package-' + [Guid]::NewGuid().ToString('N') + '.zip')
-$items = @('LICENSE','THIRD_PARTY_NOTICES.md','manifest.json','background.js','core.js','README.md','BEDIENUNG.md','THIRD_PARTY_NOTICES.md','tb-connect-module.json','tb-connect-mobile.json','api','icons','planner','popup','vendor','diagnostics')
+$items = @('LICENSE','THIRD_PARTY_NOTICES.md','manifest.json','background.js','core.js','README.md','BEDIENUNG.md','tb-connect-module.json','tb-connect-mobile.json','api','icons','planner','popup','vendor','diagnostics')
 New-Item -ItemType Directory -Path $staging | Out-Null
 try {
   foreach ($item in $items) {
@@ -55,6 +55,7 @@ try {
       throw 'Manifest oder Buildkennung fehlt.'
     }
     if (@($archive.Entries | Where-Object { $_.FullName.Contains('\') }).Count) { throw 'Ungültige Archivpfade.' }
+    if (@($archive.Entries | Group-Object FullName | Where-Object Count -gt 1).Count) { throw 'Doppelte Archivpfade.' }
   } finally { $archive.Dispose() }
   Copy-Item -LiteralPath $archivePath -Destination $OutputPath -Force
   Write-Output $OutputPath

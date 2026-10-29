@@ -274,34 +274,11 @@ function mobileBridge() {
 }
 
 async function startMobilePairing() {
-  const status = await ensureMobileSync();
-  const bridge = mobileBridge();
-  if (typeof bridge.setMobilePairingSession !== "function") {
-    throw new Error("Die automatische Handy-Verbindung ist in dieser Add-on-Version noch nicht verfÃ¼gbar.");
-  }
-  const session = {
-    sessionId: newMobileToken(),
-    secret: newMobileToken(),
-    expiresAt: new Date(Date.now() + MOBILE_PAIRING_SESSION_MS).toISOString()
-  };
-  await bridge.setMobilePairingSession(JSON.stringify(session));
-  return {
-    ...status,
-    pairingMode: true,
-    pairingExpiresAt: session.expiresAt
-  };
+  throw new Error("Die direkte Handy-Verbindung wurde durch den verschlüsselten TB-Connect Modul-Hub ersetzt. Bitte die Verbindung dort einrichten.");
 }
 
 async function ensureMobileSync() {
-  const pairing = await mobilePairing();
-  const bridge = mobileBridge();
-  const status = await bridge.startMobileSync(MOBILE_SYNC_PORT, pairing.token);
-  mobileSyncStarted = Boolean(status?.running);
-  if (!mobileSyncStarted) {
-    throw new Error("Thunderbird konnte den lokalen Handy-Dienst nicht starten.");
-  }
-  await publishMobileSnapshot();
-  return status;
+  throw new Error("Die direkte Handy-Verbindung wurde durch den verschlüsselten TB-Connect Modul-Hub ersetzt. Bitte die Verbindung dort einrichten.");
 }
 
 async function publishMobileSnapshot() {
@@ -453,26 +430,7 @@ async function pullMobileChanges() {
 }
 
 async function mobileSyncStatus() {
-  let startupError = "";
-  if (!mobileSyncStarted) {
-    try {
-      await ensureMobileSync();
-    } catch (error) {
-      startupError = errorText(error);
-    }
-  }
-  let status = {
-    running: false,
-    port: MOBILE_SYNC_PORT,
-    addresses: [],
-    connected: false
-  };
-  try {
-    status = await mobileBridge().getMobileSyncStatus();
-  } catch (error) {
-    startupError = startupError || errorText(error);
-  }
-  return { ...status, error: startupError };
+  return { running: false, connected: false, addresses: [], requiresModuleHub: true };
 }
 
 function isPrivateMobileAddress(value) {
@@ -486,26 +444,12 @@ function isPrivateMobileAddress(value) {
     || (parts[0] === 192 && parts[1] === 168);
 }
 
-async function mobilePairingCode(address) {
-  const status = await mobileSyncStatus();
-  const host = String(address || "").trim();
-  if (!status.running) {
-    throw new Error(status.error || "Der lokale Handy-Dienst läuft nicht.");
-  }
-  if (!(status.addresses || []).includes(host) && !isPrivateMobileAddress(host)) {
-    throw new Error("Bitte eine private WLAN-, VPN- oder WireGuard-Adresse dieses PCs eingeben.");
-  }
-  const pairing = await mobilePairing();
-  const endpoint = `http://${host}:${status.port || MOBILE_SYNC_PORT}`;
-  return `zeitklar://pair?host=${encodeURIComponent(endpoint)}&token=${encodeURIComponent(pairing.token)}&v=3&source=thunderbird`;
+async function mobilePairingCode(_address) {
+  throw new Error("Die direkte Handy-Verbindung wurde durch den verschlüsselten TB-Connect Modul-Hub ersetzt. Bitte die Verbindung dort einrichten.");
 }
 
 async function rotateMobilePairing() {
-  const pairing = { token: newMobileToken(), createdAt: new Date().toISOString() };
-  await tb.storage.local.set({ [MOBILE_PAIRING_KEY]: pairing });
-  mobileSyncStarted = false;
-  const status = await ensureMobileSync();
-  return { ok: true, ...status };
+  throw new Error("Die direkte Handy-Verbindung wurde durch den verschlüsselten TB-Connect Modul-Hub ersetzt. Bitte die Verbindung dort einrichten.");
 }
 
 async function updateState(mutator) {
@@ -1274,7 +1218,7 @@ loadState().then(state => saveState(state, { broadcast: false })).catch(() => {}
 ensurePlannerSpace().catch(error => console.error(error));
 syncReminderAlarms().catch(error => console.error(error));
 createMenus();
-ensureMobileSync().catch(error => console.warn("Tagesplaner: Handy-Dienst konnte nicht gestartet werden.", error));
+// The former direct mobile listener is no longer started; the Hub owns TLS transport.
 setInterval(() => pullMobileChanges().catch(() => {}), 4000);
 setInterval(() => syncStateWithModuleBridge().catch(() => {}), 4000);
 

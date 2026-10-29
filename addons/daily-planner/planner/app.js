@@ -668,6 +668,7 @@ function renderHeader() {
 }
 
 function formatMobileSyncStatus(status) {
+  if (status?.requiresModuleHub) return "Verbindung im Modul-Hub";
   if (!status?.running) {
     return "Hub: nicht verfügbar";
   }
@@ -718,7 +719,9 @@ function renderMobileSyncStatus(status = mobileSync) {
   label.classList.toggle("is-connected", Boolean(status?.connected));
   const detail = $("#mobile-connection-detail");
   if (detail) {
-    if (status?.connected) {
+    if (status?.requiresModuleHub) {
+      detail.textContent = "Die verschlüsselte Geräteverbindung wird im TB-Connect Modul-Hub verwaltet.";
+    } else if (status?.connected) {
       const time = status.lastSeenAt ? new Date(status.lastSeenAt) : null;
       detail.textContent = time && Number.isFinite(time.getTime())
         ? `Hub verbunden – zuletzt abgeglichen um ${new Intl.DateTimeFormat("de-DE", { hour: "2-digit", minute: "2-digit" }).format(time)}.`
@@ -789,18 +792,11 @@ async function refreshMobileSyncStatus({ refreshCode = false } = {}) {
 }
 
 async function openMobileSync() {
-  const started = await send({ type: "startMobilePairing" });
-  if (!started?.ok || !started.running) {
-    showToast(started?.error || "Die automatische Handy-Suche konnte nicht gestartet werden.", true);
-    return;
-  }
-  mobileSync = started;
-  renderMobileSyncStatus(started);
-  populateMobileAddresses(started);
+  await refreshMobileSyncStatus();
+  $("#mobile-advanced-pairing").hidden = true;
+  $("#restart-mobile-pairing").hidden = true;
   const dialog = $("#mobile-sync-dialog");
-  if (!dialog.open) {
-    dialog.showModal();
-  }
+  if (!dialog.open) dialog.showModal();
 }
 
 function closeMobileSync() {

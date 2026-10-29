@@ -28,3 +28,5 @@ Der vorliegende App-Build bindet für Telemetrie die No-op-Implementierung ein. 
 Diagnose ist in normalen Add-on-Paketen deaktiviert. Testpakete erzeugen nur auf Nutzeraktion lokale technische Ergebnisse; Export vor Weitergabe prüfen. Keine vollständigen Mail-/Kalenderlogs oder Bildschirmaufnahmen öffentlich hochladen. Ein Entfernen eines Add-ons löscht keine Providerkonten. Lokale und entfernte Daten sowie widerrufbare Providerfreigaben müssen bei Bedarf getrennt entfernt werden.
 
 Projektkontakt: [GitHub Issues](https://github.com/MarcSchlicker/ThunderbirdAddons/issues). Für Konten-/Datenschutzanfragen keine Zugangsdaten in öffentliche Issues schreiben. Eine abschließende Verantwortlichen- und Kontaktangabe für Store-Veröffentlichungen ist noch bereitzustellen.
+
+Ab Tagesplaner2.0.10 ist der frühere automatische direkte Handy-HTTP-/Discovery-Weg abgeschaltet. Mobile Verbindungen erfolgen bewusst über den TLS-Hub; alte Daten und Tokens werden nicht gelöscht. Die getrennten Volltexte je Erweiterung für den Thunderbird-Katalog stehen unter [ATN-Einreichungsunterlagen](ATN_SUBMISSION.md#vollständige-datenschutztexte-für-das-atn-formular).

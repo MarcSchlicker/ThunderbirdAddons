@@ -2,7 +2,7 @@
   "name": "thunderbird-addon-checks",
   "private": true,
   "scripts": {
-    "test": "node --test addons/mobile-module-bridge/tests/*.test.cjs addons/calendar-raster/test-person-calendar.cjs addons/mail-address-filer/test-background.js addons/daily-planner/tests/core.test.js addons/daily-planner/tests/navigation.test.cjs addons/calendar-raster/test-calendar-refresh.cjs addons/calendar-raster/test-calendar-settings.cjs addons/calendar-raster/test-people-panel.cjs addons/calendar-raster/test-calendar-manual-sync.cjs addons/daily-planner/tests/manual-sync.test.cjs"
+    "test": "node --test addons/mobile-module-bridge/tests/*.test.cjs addons/calendar-raster/test-person-calendar.cjs addons/mail-address-filer/test-background.js addons/daily-planner/tests/core.test.js addons/daily-planner/tests/navigation.test.cjs addons/calendar-raster/test-calendar-refresh.cjs addons/calendar-raster/test-calendar-settings.cjs addons/calendar-raster/test-people-panel.cjs addons/calendar-raster/test-calendar-manual-sync.cjs addons/daily-planner/tests/manual-sync.test.cjs addons/daily-planner/tests/release-safety.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.64.1"

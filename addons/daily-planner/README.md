@@ -27,7 +27,7 @@ Die [Bedienungsanleitung](BEDIENUNG.md) erklärt Aufgaben und Mail-Verknüpfunge
 
 Aufgaben, Notizen, Einstellungen und Mail-Verweise liegen im lokalen Add-on-Speicher. Bei eingeplanten Nachrichten werden Metadaten wie Betreff, Absender und Ordner gespeichert, keine Nachrichtentexte oder Anhänge. Die ursprünglichen Nachrichten verbleiben in ihren Mailkonten.
 
-Die optionale Geräteverbindung kann Planerdaten an gekoppelte Geräte übertragen. Für den gemeinsamen Modulabgleich ist der separat installierte **TB-Connect Modul-Hub** erforderlich. Hub und Android-App sind ebenfalls Teil dieses Repositories; die lokale Planung funktioniert unabhängig davon. Die direkte lokale Verbindung bleibt zur Kompatibilität erhalten.
+Die optionale Geräteverbindung kann Planerdaten an gekoppelte Geräte übertragen. Für den gemeinsamen Modulabgleich ist der separat installierte **TB-Connect Modul-Hub** erforderlich. Hub und Android-App sind ebenfalls Teil dieses Repositories; die lokale Planung funktioniert unabhängig davon. Ab2.0.10 startet die frühere direkte unverschlüsselte Handy-Verbindung nicht mehr. Einrichtung und mobile Verbindung erfolgen über den TLS-Hub; vorhandene Aufgaben, Mail-Verweise und Zugangsdaten bleiben erhalten.
 
 ## Entwicklung
 

@@ -12,6 +12,7 @@ foreach ($module in @('calendar-raster','daily-planner','mail-address-filer','mo
   & (Join-Path $source 'build-xpi.ps1') -OutputPath $target
   $zip = [IO.Compression.ZipFile]::OpenRead($target)
   try {
+    if (@($zip.Entries | Group-Object FullName | Where-Object Count -gt 1).Count) { throw "Doppelte Archivpfade: $module" }
     if (!$zip.GetEntry('LICENSE')) { throw "Lizenz fehlt: $module" }
     $info = $zip.GetEntry('diagnostics/build-info.json')
     if ($module -ne 'mobile-module-bridge') {

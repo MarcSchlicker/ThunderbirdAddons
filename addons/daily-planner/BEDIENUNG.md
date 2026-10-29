@@ -20,7 +20,9 @@ Aufgaben können einen optionalen Mailbezug enthalten.
 
 ## Mit Android abgleichen
 
-Den TB-Connect Modul-Hub installieren und dort das Handy lokal oder über Nextcloud verbinden.
+Den TB-Connect Modul-Hub installieren und dort die TLS-Verbindung zum Handy einrichten.
+Die frühere direkte Handy-Suche ist ab2.0.10 abgeschaltet. Nextcloud bleibt im aktuellen
+Release ausschließlich trocken geprüft.
 In der App **Tagesplaner** öffnen oder aktualisieren. Aufgaben, Notizen, App-Termine und
 Löschmarker werden abgeglichen. Bei mehreren Geräten nach Änderungen erneut synchronisieren.
 Ein grüner Kontakt allein ist noch kein bestätigter Datenempfang: den Modulstatus im Hub prüfen.

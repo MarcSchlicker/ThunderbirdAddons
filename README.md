@@ -5,7 +5,7 @@ Kalender übersichtlich darstellen, Aufgaben und vorgemerkte Mails planen, Nachr
 | Bestandteil | Version | Plattform |
 | --- | --- | --- |
 | [Kalender Raster](addons/calendar-raster/README.md) | 1.4.19 | Thunderbird Desktop |
-| [Tagesplaner](addons/daily-planner/README.md) | 2.0.9 | Thunderbird Desktop |
+| [Tagesplaner](addons/daily-planner/README.md) | 2.0.10 | Thunderbird Desktop |
 | [Mail-Ablage nach Adresse](addons/mail-address-filer/README.md) | 1.4.2 | Thunderbird Desktop |
 | [TB-Connect Modul-Hub](addons/mobile-module-bridge/README.md) | 2.0.30 | Thunderbird Desktop, optionaler Geräteabgleich |
 | [TB-Connect Android](apps/thunderbird-mobile/TB_CONNECT.md) | 2.0.61, Produktionskandidat | Android |
@@ -48,3 +48,5 @@ Android hat einen eigenen [signierten Produktionsbuild](docs/ANDROID_RELEASE.md)
 Desktop-Erweiterungen: **MPL 2.0**, wie Thunderbird Desktop. Android: **Apache 2.0**, wie Thunderbird für Android. Fremdlizenzen bleiben erhalten; [Details](LICENSING.md). Fehler bitte über [Issues](https://github.com/MarcSchlicker/ThunderbirdAddons/issues) mit Version und Reproduktionsschritten melden, ohne Nachrichten, Kontodaten oder Zugangsdaten.
 
 TB-Connect ist unabhängig und kein offizielles Mozilla- oder Thunderbird-Produkt.
+
+Der Planer2.0.10 verwendet für mobile Verbindungen den TLS-Hub. Der frühere direkte Handy-LAN-Dienst ist abgeschaltet; vorhandene Planerdaten und Zugangsdaten bleiben erhalten. [ATN-Vorprüfung und Datenschutztexte](docs/ATN_SUBMISSION.md).

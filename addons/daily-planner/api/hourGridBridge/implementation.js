@@ -1419,7 +1419,7 @@ MobileDiscoveryServer.prototype = {
     );
     socket.init(
       this.port,
-      false,
+      true,
       Services.scriptSecurityManager.getSystemPrincipal(),
       true
     );
@@ -1594,20 +1594,13 @@ MobileSyncServer.prototype = {
       const socket = Cc["@mozilla.org/network/server-socket;1"].createInstance(
         Ci.nsIServerSocket
       );
-      socket.init(this.port, false, -1);
+      socket.init(this.port, true, -1);
       socket.asyncListen(this);
       this.socket = socket;
       this.port = socket.port;
     }
-    mobileSyncAddresses()
-      .then(addresses => { this.addresses = addresses; })
-      .catch(() => { this.addresses = []; });
-    try {
-      this.discovery.start();
-      this.discoveryError = this.discovery.error;
-    } catch (error) {
-      this.discoveryError = serializedError(error);
-    }
+    // Retained API compatibility is local only. Mobile connections use the TLS Hub.
+    this.addresses = ["127.0.0.1"];
     return this.status();
   },
 

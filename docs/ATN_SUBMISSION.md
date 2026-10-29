@@ -8,7 +8,7 @@ Kurzbeschreibung: Kalender im Stundenraster mit Tages-, Wochen- und Monatsansich
 
 Testprofil: einen lokalen Kalender und einen künstlichen Termin anlegen, Raster öffnen, Ansichten wechseln, Person in den Einstellungen anlegen/zuordnen, Farbe ändern, Fenster erneut öffnen. Anschließend kontrolliert Termin bearbeiten. Kalenderdaten stammen aus Thunderbird, ein externes Konto ist für diese Basisprüfung nicht nötig. `storage`, `tabs`, `alarms` und Experiment-Schnittstelle dienen Einstellungen, eigener Ansicht und Kalenderzugriff. `accountsRead`, `compose` und `compose.send` gehören zu optionalen konfigurierten E-Mail-Sicherungen. HTTPS-/HTTP-Hosts unterstützen eingerichtete Quellen und die optionale lokale Hub-Verbindung; ihre Erforderlichkeit ist im Review einzeln zu begründen. OpenHolidays und Backups in der Beschreibung und Datenschutzerklärung nennen.
 
-## Tagesplaner · 2.0.9
+## Tagesplaner · 2.0.10
 
 Kurzbeschreibung: Termine, Aufgaben mit Notizen und vorgemerkte Nachrichten in einem eigenen Thunderbird-Bereich.
 
@@ -31,3 +31,23 @@ Noch nicht abschließend abgenommen: echter Konten-/Geräterundweg und ausgesetz
 Lizenz im Einreichungsformular: MPL 2.0 für den eigenen Desktopcode, mit separaten MIT-Hinweisen. Source: dieses Repository zum jeweiligen Release-Commit. Bauen: Windows, PowerShell, tar.exe, `./scripts/prepare-release.ps1`; keine Transpilation des eigenen Desktopcodes. `npm ci`, Playwright und `npm test` werden für die Tests benötigt, nicht zum Ausführen der Add-ons. Testdiagnose ist in normalen Paketen deaktiviert. Alle vier Add-ons enthalten Experiments, daher manuelle Prüfung und weitreichende Berechtigungswarnung. Screenshots müssen aus einem sauberen Testprofil stammen; noch keine persönlichen Aufnahmen zur Einreichung übernehmen.
 
 Support: öffentliche Projekt-Issues, Datenschutz: docs/PRIVACY.md. Thunderbird-Mindestversion laut Manifest 128; nativer TLS-Transport synthetisch mit Thunderbird153.5.1 geprüft; vollständige manuelle Add-on-/Versionsabnahme vor Einreichung ergänzen. Store-Verfügbarkeit oder eine bestandene manuelle Review wird hier nicht behauptet.
+
+
+## Vollständige Datenschutztexte für das ATN-Formular
+
+Die ATN-Richtlinie verlangt den vollständigen, auf die einzelne Erweiterung bezogenen Text im Datenschutzfeld. Ein bloßer Link genügt nicht. Die folgenden Texte können nach fachlicher Prüfung als jeweiliger Volltext übernommen werden:
+
+- [Kalender Raster](atn/privacy/calendar-raster.md)
+- [Tagesplaner](atn/privacy/daily-planner.md)
+- [Mail-Ablage](atn/privacy/mail-address-filer.md)
+- [Modul-Hub](atn/privacy/mobile-module-bridge.md)
+
+Die endgültige Betreiber-/Datenschutzkontaktangabe bleibt vor Einreichung zu ergänzen. Die Texte sind keine Bestätigung einer bereits erfolgten ATN- oder rechtlichen Freigabe. Keine persönlichen Daten in Screenshots oder Reviewer-Zugänge übernehmen.
+
+## Vorprüfung29.10.2026
+
+Mozilla addons-linter10.15.0 meldete im bisherigen Tagesplaner2.0.9 DUPLICATE_XPI_ENTRY. Ursache: THIRD_PARTY_NOTICES.md zweimal in der tar-Dateiliste. In2.0.10 korrigiert; Paketbau und gemeinsame Paketvorbereitung weisen doppelte Pfade nun zurück. Neue Regression baut tatsächlich ein XPI und prüft dessen Eintragsliste.
+
+Das Werkzeug verwendet Firefox-Schemas. Thunderbird-Experiments und Mailberechtigungen werden damit nicht vollständig verstanden. MANIFEST_FIELD_PRIVILEGED, Firefox-only MISSING_DATA_COLLECTION_PERMISSIONS und nicht erkannte Thunderbird-Mailrechte sind daher keine automatische ATN-Ablehnung. Keine Firefox-Zertifikatsrechte hinzufügen, um diese Meldungen zu verstecken. Originales node-forge und die QR-SVG-Erzeugung benötigen menschliche Quellprüfung; enthaltene Bibliotheken bleiben unverändert. Die lokale Vorprüfung ist keine ATN-Servervalidierung oder manuelle Review.
+
+Zusätzlich wurde ein älterer direkter Planer-LAN-Listener entdeckt und ab2.0.10 abgeschaltet. Er erzeugt keine neuen HTTP-Kopplungscodes oder UDP-Freigaben; erhaltene native Kompatibilitätsschnittstellen sind auf Loopback begrenzt. Mobile Einrichtung erfolgt bewusst über den TLS-Hub. Aufgaben, Konten und gespeicherte Kopplungstokens werden nicht gelöscht.

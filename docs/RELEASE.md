@@ -1,11 +1,11 @@
-# Gemeinsamer Release-Kandidat · 28. Oktober 2026
+# Gemeinsamer Release-Kandidat · 29. Oktober 2026
 
 Status: **Entwurf, noch keine stabile öffentliche Binärfreigabe.** App und vier Desktop-Erweiterungen gehören zum gemeinsamen Satz. Die App ist nun ein eigener signierter, optimierter Produktionskandidat; fehlende Anbieter-/Nutzerabnahmen werden dadurch nicht ersetzt.
 
 | Komponente | Stand | Lizenz |
 | --- | --- | --- |
 | Kalender Raster | 1.4.19 | MPL 2.0 |
-| Tagesplaner | 2.0.9 | MPL 2.0 |
+| Tagesplaner | 2.0.10 | MPL 2.0 |
 | Mail-Ablage | 1.4.2 | MPL 2.0 |
 | Modul-Hub | 2.0.30 | MPL 2.0; QR-MIT und node-forge-BSD separat |
 | Android-App | 2.0.61 / Code 62 | Apache 2.0; Fremdlizenzen erhalten |
@@ -44,3 +44,12 @@ Keine Issues werden durch Paketbau oder Emulatorprüfungen automatisch geschloss
 ## Aktualisierung Google-Produktionsclient
 
 Der freigegebene eigene Android-Client ist registriert und über scripts/google-oauth-production.json reproduzierbar konfiguriert. production_google_tls_20261028 bestand neun OAuth- und vier TLS-Tests sowie den optimierten signierten Paketbau. Finale APK-SHA256: 2ace60a6a3483f03518f0cc82d1af42f8c765971067100a27b2587d9130756db. Im eigenen leeren Emulator aktualisiert, gestartet und TC-Begrüßung visuell geprüft; Crashbuffer leer. Das bestätigt keine persönliche Google-Anmeldung. Gmail-Bereich mit ausdrücklicher Zustimmung deklariert und gespeichert; Google weiterhin Testmodus.
+
+
+## ATN-Vorprüfung29.10.2026
+
+Tagesplaner2.0.10 korrigiert doppelte XPI-Einträge und schaltet den automatisch gestarteten alten direkten Klartext-Handyweg ab. Neue HTTP-Kopplungscodes/UDP-Freigaben werden nicht mehr erstellt; erhaltene native Kompatibilität ist ausschließlich Loopback. Der sichtbare Dialog verweist auf den vorhandenen TLS-Hub. Aufgaben, Konten und Tokens werden nicht gelöscht; bestehende direkte Handyverbindungen benötigen später bewusst eine Hub-Einrichtung. QR-Abnahme bleibt ausgesetzt.
+
+47 Desktoptests bestanden. Vier neue Regressionen waren vorher rot; eine fünfte prüft die Dialogumleitung ohne alte Kopplungsanforderung. Die Paketregression baut tatsächlich ein XPI. Nativer Test mit Thunderbird153.5.1 in getrenntem synthetischem Profil bestätigt echten Loopback-TCP-Listener, lokale Health-Antwort und abgeschaltete Discovery. Neuer Dialog mit künstlichen Daten im tatsächlichen DOM visuell geprüft, alte QR-/Suchoptionen unsichtbar. Alle vier normalen XPIs gebaut, doppelte Pfade durch gemeinsamen Paketbau abgefangen. Android2.0.61 bleibt unverändert; kein neuer Geräte-/Cloudtest.
+
+Mozilla addons-linter10.15.0 reproduzierte DUPLICATE_XPI_ENTRY im alten Planer; im neuen Paket beseitigt. Das Werkzeug verwendet Firefox-Schemas und meldet weiterhin Thunderbird-Experiments/Mailrechte sowie zu prüfende SVG-/Bibliotheksstellen. Keine bestandene ATN-Validierung oder manuelle Review behaupten. Vier getrennte vollständige Datenschutztexte für die ATN-Formulare vorbereitet; endgültige Betreiber-/Kontaktangabe bleibt offen. Die Browsersteuerung ist lokal technisch nicht startfähig und POCO nicht angeschlossen; Google-Veröffentlichungsstatus und echte Geräteabnahme nicht geändert.

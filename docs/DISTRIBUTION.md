@@ -1,6 +1,6 @@
 # Veröffentlichung: Thunderbird und Android
 
-Stand: 28. Oktober 2026.
+Stand: 29. Oktober 2026.
 
 ## Thunderbird-Add-ons
 
@@ -21,8 +21,10 @@ Alle vier Erweiterungen verwenden Experiments und benötigen daher nach der Rich
 
 Die App gehört in das gemeinsame GitHub-Repository und später als APK in dasselbe [GitHub Release](https://github.com/MarcSchlicker/ThunderbirdAddons/releases). Eine APK ist keine Desktop-Erweiterung und wird nicht als XPI im Thunderbird-Katalog eingereicht. In den Katalogbeschreibungen kann die passende App-Dokumentation verlinkt werden.
 
-Eine spätere Android-Store-Verteilung ist ein eigener Vorgang. Vor einem öffentlichen APK-/Store-Release müssen eigene Paketkennung, Signierung, Updateweg, Providerfreigaben, Datenschutz und Markenprüfung abgeschlossen sein. Das [Upstream-Projekt](https://github.com/thunderbird/thunderbird-android#forking) verlangt für Forks eigene OAuth-Konfigurationen und unterschiedliche Redirect-URIs. Die bisherige Test-APK wird nicht als Produktionsrelease umbenannt. Eigene Kennung und Signatur sind für den neuen Produktionskandidaten eingerichtet; eigene Anbieter-Clients und die echte Kontenabnahme bleiben offen. [Buildanleitung](ANDROID_RELEASE.md).
+Eine spätere Android-Store-Verteilung ist ein eigener Vorgang. Vor einem öffentlichen APK-/Store-Release müssen eigene Paketkennung, Signierung, Updateweg, Providerfreigaben, Datenschutz und Markenprüfung abgeschlossen sein. Das [Upstream-Projekt](https://github.com/thunderbird/thunderbird-android#forking) verlangt für Forks eigene OAuth-Konfigurationen und unterschiedliche Redirect-URIs. Die bisherige Test-APK wird nicht als Produktionsrelease umbenannt. Eigene Kennung und Signatur sind für den neuen Produktionskandidaten eingerichtet; der eigene Google-Android-Client samt Gmail-/Kalenderbereichen ist registriert, öffentliche Anbieterfreigabe und die echte Kontenabnahme bleiben offen. [Buildanleitung](ANDROID_RELEASE.md).
 
 Der GitHub-Entwurf enthält die App bereits als Bestandteil mit Quellen und dokumentiertem Teststand. Die Freigabeschritte stehen in [RELEASE.md](RELEASE.md). Ein Entwurf, ein öffentlicher Quellstand und eine Katalogfreigabe sind getrennte Zustände.
 
 Konkrete Beschreibungstexte, Berechtigungsgründe und künstliche Prüfschritte: [Einreichungsunterlagen](ATN_SUBMISSION.md).
+
+Für das Datenschutzfeld pro Eintrag den jeweiligen vollständigen [ATN-Datenschutztext](ATN_SUBMISSION.md#vollständige-datenschutztexte-für-das-atn-formular) nach Prüfung übernehmen. Die allgemeine Datenschutzdatei allein als Link genügt der Richtlinie nicht. Die lokale Firefox-Linter-Vorprüfung ersetzt keine ATN-Servervalidierung.
