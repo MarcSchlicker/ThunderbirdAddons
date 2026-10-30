@@ -2,11 +2,12 @@
   "manifest_version": 2,
   "name": "Tagesplaner",
   "description": "Verbindet Termine, datumsbezogene Mails und dauerhafte To-dos in einem Tagesplaner.",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "browser_specific_settings": {
     "gecko": {
       "id": "daily-planner@example.local",
-      "strict_min_version": "128.0"
+      "strict_min_version": "128.0",
+      "strict_max_version": "153.*"
     }
   },
   "icons": {

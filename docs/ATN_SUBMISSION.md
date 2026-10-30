@@ -51,3 +51,8 @@ Mozilla addons-linter10.15.0 meldete im bisherigen Tagesplaner2.0.9 DUPLICATE_XP
 Das Werkzeug verwendet Firefox-Schemas. Thunderbird-Experiments und Mailberechtigungen werden damit nicht vollständig verstanden. MANIFEST_FIELD_PRIVILEGED, Firefox-only MISSING_DATA_COLLECTION_PERMISSIONS und nicht erkannte Thunderbird-Mailrechte sind daher keine automatische ATN-Ablehnung. Keine Firefox-Zertifikatsrechte hinzufügen, um diese Meldungen zu verstecken. Originales node-forge und die QR-SVG-Erzeugung benötigen menschliche Quellprüfung; enthaltene Bibliotheken bleiben unverändert. Die lokale Vorprüfung ist keine ATN-Servervalidierung oder manuelle Review.
 
 Zusätzlich wurde ein älterer direkter Planer-LAN-Listener entdeckt und ab2.0.10 abgeschaltet. Er erzeugt keine neuen HTTP-Kopplungscodes oder UDP-Freigaben; erhaltene native Kompatibilitätsschnittstellen sind auf Loopback begrenzt. Mobile Einrichtung erfolgt bewusst über den TLS-Hub. Aufgaben, Konten und gespeicherte Kopplungstokens werden nicht gelöscht.
+
+
+## ATN-Korrektur 30.10.2026: Experiment-Versionsgrenze
+
+ATN meldete die fehlende strict_max_version. Alle vier Experiment-Erweiterungen begrenzen die Kompatibilität nun auf153.* bei unverändertem Minimum128.0. Neue Versionen: Raster1.4.20, Tagesplaner2.0.11, Mail-Ablage1.4.3, Hub2.0.32. Die Obergrenze folgt dem tatsächlich für native Prüfungen verwendeten Thunderbird153.5.1; keine Vollabnahme jeder Version128–153 behaupten. Paketvorbereitung weist Experiments ohne begrenzte Obergrenze zurück. Alle vier tatsächlichen XPIs auf die Grenze geprüft; erneute ATN-Servervalidierung bleibt nötig. Keine manuelle Katalogfreigabe vorwegnehmen. Quelle: https://developer.thunderbird.net/add-ons/mailextensions.

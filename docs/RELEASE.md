@@ -58,3 +58,8 @@ Mozilla addons-linter10.15.0 reproduzierte DUPLICATE_XPI_ENTRY im alten Planer; 
 ## Hub-Ergänzung 30.10.2026
 
 Hub2.0.31 korrigiert die Download-Paketierung: getrennte HTTPS-Basen für mobile Beschreibungen und XPI-Assets, aktuelle Paketnamen aus Manifesten, standardmäßig keine Desktop-Downloadlinks.49 Desktoptests einschließlich zweier neuer Katalogprüfungen bestanden; tatsächliche XPI-Dateien geprüft. Keine Nutzerinstallation oder echte Asset-Erreichbarkeit behauptet. Der bisherige gemeinsame Release-Entwurf bleibt unverändert; die neue Hub-Version ist eine separat bereitgestellte Ergänzung. Google-Veröffentlichung/Domain auf Nutzerwunsch zurückgestellt.
+
+
+## ATN-Korrektur 30.10.2026: Experiment-Versionsgrenze
+
+ATN meldete die fehlende strict_max_version. Alle vier Experiment-Erweiterungen begrenzen die Kompatibilität nun auf153.* bei unverändertem Minimum128.0. Neue Versionen: Raster1.4.20, Tagesplaner2.0.11, Mail-Ablage1.4.3, Hub2.0.32. Die Obergrenze folgt dem tatsächlich für native Prüfungen verwendeten Thunderbird153.5.1; keine Vollabnahme jeder Version128–153 behaupten. Paketvorbereitung weist Experiments ohne begrenzte Obergrenze zurück. Alle vier tatsächlichen XPIs auf die Grenze geprüft; erneute ATN-Servervalidierung bleibt nötig. Keine manuelle Katalogfreigabe vorwegnehmen. Quelle: https://developer.thunderbird.net/add-ons/mailextensions.

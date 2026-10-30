@@ -8,6 +8,9 @@ $checksums = @()
 foreach ($module in @('calendar-raster','daily-planner','mail-address-filer','mobile-module-bridge')) {
   $source = Join-Path $root "addons/$module"
   $manifest = Get-Content -Raw -LiteralPath (Join-Path $source 'manifest.json') | ConvertFrom-Json
+  if ($manifest.experiment_apis -and (!$manifest.browser_specific_settings.gecko.strict_max_version -or $manifest.browser_specific_settings.gecko.strict_max_version -eq '*')) {
+    throw "Experiment benoetigt eine begrenzte strict_max_version: $module"
+  }
   $target = Join-Path $dist "$module-$($manifest.version).xpi"
   & (Join-Path $source 'build-xpi.ps1') -OutputPath $target
   $zip = [IO.Compression.ZipFile]::OpenRead($target)

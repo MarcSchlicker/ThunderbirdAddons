@@ -2,11 +2,12 @@
   "manifest_version": 2,
   "name": "Mail-Ablage nach Adresse",
   "description": "Legt Nachrichten per Knopfdruck in einen je eigener Mailadresse konfigurierten Ordner und markiert sie auf Wunsch als ungelesen.",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "browser_specific_settings": {
     "gecko": {
       "id": "mail-address-filer@example.local",
-      "strict_min_version": "128.0"
+      "strict_min_version": "128.0",
+      "strict_max_version": "153.*"
     }
   },
   "icons": {

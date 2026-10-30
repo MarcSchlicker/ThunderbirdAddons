@@ -2,12 +2,13 @@
   "manifest_version": 2,
   "name": "TB-Connect Modul-Hub",
   "description": "Lokaler Modul-Hub für TB-Connect auf Desktop und Mobilgeräten.",
-  "version": "2.0.31",
+  "version": "2.0.32",
   "author": "Marc",
   "browser_specific_settings": {
     "gecko": {
       "id": "tb-connect-module-hub@tbconnect.local",
-      "strict_min_version": "128.0"
+      "strict_min_version": "128.0",
+      "strict_max_version": "153.*"
     }
   },
   "icons": {
