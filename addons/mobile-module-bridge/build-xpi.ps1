@@ -1,16 +1,28 @@
 param(
   [string]$OutputPath,
-  [string]$DownloadBaseUrl = ""
+  [string]$DownloadBaseUrl = "",
+  [string]$XpiBaseUrl = ""
 )
 
 $ErrorActionPreference = "Stop"
 $sourceRoot = $PSScriptRoot
-if ($DownloadBaseUrl) {
-  $downloadUri = [Uri]$DownloadBaseUrl
+foreach ($base in @($DownloadBaseUrl, $XpiBaseUrl)) {
+  if (!$base) { continue }
+  $downloadUri = [Uri]$base
   if (-not $downloadUri.IsAbsoluteUri -or $downloadUri.Scheme -ne 'https' -or $downloadUri.UserInfo -or $downloadUri.Query -or $downloadUri.Fragment) {
-    throw 'DownloadBaseUrl muss eine HTTPS-Basisadresse ohne Zugangsdaten sein.'
+    throw 'Downloadadressen muessen HTTPS-Basisadressen ohne Zugangsdaten, Query oder Fragment sein.'
   }
-  $DownloadBaseUrl = $DownloadBaseUrl.TrimEnd('/')
+}
+$DownloadBaseUrl = $DownloadBaseUrl.TrimEnd('/')
+$XpiBaseUrl = $XpiBaseUrl.TrimEnd('/')
+$xpiUrls = [ordered]@{}
+if ($XpiBaseUrl) {
+  foreach ($module in @('daily-planner', 'calendar-raster', 'mail-address-filer')) {
+    $moduleManifest = Get-Content -Raw -LiteralPath (Join-Path $sourceRoot "../$module/manifest.json") | ConvertFrom-Json
+    $moduleVersion = [string]$moduleManifest.version
+    if ($moduleVersion -notmatch '^\d+(\.\d+){0,3}$') { throw "Ungueltige Paketversion: $module" }
+    $xpiUrls[$module] = "$XpiBaseUrl/$module-$moduleVersion.xpi"
+  }
 }
 $manifest = Get-Content -Raw -LiteralPath (Join-Path $sourceRoot "manifest.json") | ConvertFrom-Json
 $version = [string]$manifest.version
@@ -59,12 +71,16 @@ foreach ($item in $packageItems) {
   Copy-Item -LiteralPath (Join-Path $sourceRoot $item) -Destination (Join-Path $stagingDirectory $item) -Recurse
 }
 Copy-Item -LiteralPath $qrCodeSource -Destination (Join-Path $stagingDirectory "dashboard\qrcode.min.js")
-if ($DownloadBaseUrl) {
-  $catalogPath = Join-Path $stagingDirectory 'module-catalog.js'
-  $catalog = [IO.File]::ReadAllText($catalogPath).Replace('const TB_CONNECT_REPOSITORY = "";',
-    ('const TB_CONNECT_REPOSITORY = ' + (ConvertTo-Json -InputObject $DownloadBaseUrl -Compress) + ';'))
-  [IO.File]::WriteAllText($catalogPath, $catalog, [Text.UTF8Encoding]::new($false))
+$catalogPath = Join-Path $stagingDirectory 'module-catalog.js'
+$catalog = [IO.File]::ReadAllText($catalogPath)
+foreach ($marker in @('const TB_CONNECT_REPOSITORY = "";', 'const TB_CONNECT_XPI_URLS = {};')) {
+  if (!$catalog.Contains($marker)) { throw 'Katalog-Buildmarker fehlt.' }
 }
+$catalog = $catalog.Replace('const TB_CONNECT_REPOSITORY = "";',
+  ('const TB_CONNECT_REPOSITORY = ' + (ConvertTo-Json -InputObject $DownloadBaseUrl -Compress) + ';'))
+$catalog = $catalog.Replace('const TB_CONNECT_XPI_URLS = {};',
+  ('const TB_CONNECT_XPI_URLS = ' + (ConvertTo-Json -InputObject $xpiUrls -Compress) + ';'))
+[IO.File]::WriteAllText($catalogPath, $catalog, [Text.UTF8Encoding]::new($false))
 
 Push-Location $stagingDirectory
 try {

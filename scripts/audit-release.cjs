@@ -20,7 +20,9 @@ for(const f of files){
  const fixture=rule==='credential-url'&&f.endsWith('/message/html/HttpUriParserTest.kt')&&line.trim()==='assertValidUri("'+['http', '://', 'test', ':secret@google.com/")'].join('');
  const invalidDavFixture=rule==='credential-url'&&f.endsWith('/Dav4jvmCalDavClientTest.kt')&&line.trim()==='"'+['https', '://', 'user', ':pass@cloud.example.invalid/",'].join('');
  const invalidHubFixture=rule==='credential-url'&&f.endsWith('/zeitklar/HubTlsTest.kt')&&line.trim()==='HubTls.requireSecureEndpoint(URL("'+['https', '://', 'user', ':pass@192.168.1.2/v1/sync"), fingerprint, false)'].join('');
- if(!fixture&&!invalidDavFixture&&!invalidHubFixture&&re.test(line))findings.push({file:f,line:i+1,rule});
+ // Exact synthetic build-rejection fixture; no endpoint is contacted.
+ const invalidCatalogFixture=rule==='credential-url'&&f==='addons/mobile-module-bridge/tests/download-catalog.test.cjs'&&line.trim()==="for (const url of ['http://example.invalid', 'https\u003a//user:password@example.invalid', 'https://example.invalid/?token=x', 'https://example.invalid/#fragment']) {";
+ if(!fixture&&!invalidDavFixture&&!invalidHubFixture&&!invalidCatalogFixture&&re.test(line))findings.push({file:f,line:i+1,rule});
  }});
 }
 console.log(JSON.stringify({files:files.length,findings},null,2));

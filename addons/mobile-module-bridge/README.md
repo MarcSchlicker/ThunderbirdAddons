@@ -112,3 +112,12 @@ Die reale Browser-Freigabe und ein Test in beide Richtungen bleiben erforderlich
 ## Lizenz und Datenschutz
 
 Eigener Code: [MPL 2.0](LICENSE). [Lizenzübersicht](../../LICENSING.md), [Datenschutz](../../docs/PRIVACY.md) und [Release-Status](../../docs/RELEASE.md).
+
+
+## Download-Paketierung ab Hub 2.0.31
+
+Quellbeschreibungen und installierbare XPIs verwenden getrennte HTTPS-Basen. `build-xpi.ps1 -DownloadBaseUrl` benennt ausschließlich die Basis für mobile JSON-Beschreibungen. Erst `-XpiBaseUrl` aktiviert Desktop-Downloads. Der Builder erzeugt Namen wie daily-planner-2.0.10.xpi aus den jeweiligen aktuellen Manifesten; dieselben Namen erzeugt scripts/prepare-release.ps1. Alte fest eingetragene Release-Pfade werden nicht verwendet.
+
+Ohne XpiBaseUrl bleiben Desktop-Downloads deaktiviert, auch wenn eine Quellbasis angegeben ist. Ohne Quellbasis bleiben die eingebetteten mobilen Beschreibungen verfügbar. Beide Basen müssen HTTPS verwenden und dürfen keine Zugangsdaten, Query oder Fragmente enthalten. Nur eine tatsächliche öffentliche Release-Assetbasis konfigurieren; ein GitHub-Entwurf ist kein öffentlich erreichbarer Download. Der Build prüft die Adressstruktur, nicht die externe Erreichbarkeit oder eine Store-Freigabe.
+
+Prüfung: `node --test addons/mobile-module-bridge/tests/download-catalog.test.cjs` im Projektordner. Windows baut tatsächliche XPI-Dateien und liest den erzeugten Katalog; künstliche URLs werden nicht abgerufen. Gesamter Desktopstand: 49 Tests erfolgreich. Kein echter Download oder automatische Installation.

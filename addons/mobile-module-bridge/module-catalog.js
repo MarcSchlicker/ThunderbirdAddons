@@ -8,6 +8,8 @@
  */
 // Set through build-xpi.ps1 -DownloadBaseUrl when publishing a distribution.
 const TB_CONNECT_REPOSITORY = "";
+// Filled only by an explicit -XpiBaseUrl build, independently of source URLs.
+const TB_CONNECT_XPI_URLS = {};
 const downloadUrl = path => TB_CONNECT_REPOSITORY ? `${TB_CONNECT_REPOSITORY}/${path}` : null;
 
 globalThis.ModuleBridgeCatalog = Object.freeze([
@@ -19,7 +21,7 @@ globalThis.ModuleBridgeCatalog = Object.freeze([
     transport: "tb-connect-module-bridge-v1",
     desktop: {
       extensionId: "daily-planner@example.local",
-      install: { xpi: downloadUrl("Release/Tagesplaner-2.0.4.xpi") }
+      install: { xpi: TB_CONNECT_XPI_URLS["daily-planner"] || null }
     },
     mobile: {
       entry: "daily-planner",
@@ -46,7 +48,7 @@ globalThis.ModuleBridgeCatalog = Object.freeze([
     transport: "tb-connect-module-bridge-v1",
     desktop: {
       extensionId: "hour-grid-month-view@example.local",
-      install: { xpi: downloadUrl("Release/Kalender-Raster-1.4.12.xpi") }
+      install: { xpi: TB_CONNECT_XPI_URLS["calendar-raster"] || null }
     },
     mobile: {
       entry: "calendar",
@@ -73,7 +75,7 @@ globalThis.ModuleBridgeCatalog = Object.freeze([
     transport: "tb-connect-module-bridge-v1",
     desktop: {
       extensionId: "mail-address-filer@example.local",
-      install: { xpi: downloadUrl("Release/Mail-Ablage-nach-Adresse-1.4.0.xpi") }
+      install: { xpi: TB_CONNECT_XPI_URLS["mail-address-filer"] || null }
     },
     mobile: null,
     bundled: true
